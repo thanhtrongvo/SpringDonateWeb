@@ -1,4 +1,4 @@
 package com.example.springdonateweb.Services.interfaces;
 
-public interface IPaymentmethodService {
+public interface IProgramsService {
 }
