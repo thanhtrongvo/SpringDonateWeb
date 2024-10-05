@@ -1,9 +1,20 @@
 package com.example.springdonateweb.Models.Entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.xml.sax.Attributes;
 
 import java.sql.Timestamp;
 import java.util.Objects;
+
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 
 @Entity
 @Table(name = "users", schema = "webmomo", catalog = "")
@@ -110,4 +121,7 @@ public class UsersEntity {
     public int hashCode() {
         return Objects.hash(userId, name, email, password, roleId, address, phoneNumber, createdAt);
     }
+
+
+
 }
