@@ -2,12 +2,11 @@ package com.example.springdonateweb.Models.Dtos.Users;
 
 import lombok.*;
 
-import java.sql.Timestamp;
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDtoResponse {
+public class UsersResponseDto {
     private int userId;
     public String name;
     public String email;

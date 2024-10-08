@@ -2,9 +2,17 @@ package com.example.springdonateweb.Repositories;
 
 import com.example.springdonateweb.Models.Entities.UsersEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
-public interface UsersRepository extends JpaRepository<UsersEntity, Integer> {
+import java.util.List;
+import java.util.Optional;
 
-    public UsersEntity findByEmail(String email);
+public interface UsersRepository extends CrudRepository<UsersEntity, Integer> {
 
+
+
+
+    Optional<UsersEntity> findByEmail(String email);
 }
