@@ -3,7 +3,15 @@ package com.example.springdonateweb.Models.Dtos.Users;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class UserCreateDto {
     @NotBlank(message = "Id is required")
     @Pattern(regexp = "^[0-9]*$", message = "Id must be a number")

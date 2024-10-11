@@ -1,30 +1,112 @@
 package com.example.springdonateweb.Services;
 
+import com.example.springdonateweb.Models.Dtos.Users.UserCreateDto;
 import com.example.springdonateweb.Models.Dtos.Users.UsersResponseDto;
 import com.example.springdonateweb.Models.Entities.UsersEntity;
 import com.example.springdonateweb.Repositories.UsersRepository;
+import com.example.springdonateweb.Services.interfaces.IUsersService;
 import com.example.springdonateweb.Services.mappers.UsersMapper;
+import jakarta.servlet.http.HttpSession;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class UsersService  {
-//    UsersEntity usersEntity;
-//    UsersMapper usersMapper;
-//    UsersRepository usersRepository;
-//    @Override
-//    public UsersResponseDto findByEmail(String email) {
-//        Optional<UsersEntity> usersEntity = usersRepository.findByEmail(email);
-//        return usersEntity.map(usersMapper::toResponseDto).orElse(null);
-//    }
+public class UsersService implements IUsersService {
+
+
+
+    private final PasswordEncoder passwordEncoder;
+
+    private final UsersMapper usersMapper;
+    private final UsersRepository usersRepository;
+
+    private final HttpSession session;
+
+    @Override
+    public List<UsersResponseDto> findAll() {
+        return null;
+    }
+
+    @Override
+    public UsersResponseDto findById(int id) {
+        return null;
+    }
+
+    @Override
+    public UsersResponseDto create(UsersResponseDto usersResponseDto) {
+        return null;
+    }
+
+    @Override
+    public UsersResponseDto update(UsersResponseDto usersResponseDto) {
+        return null;
+    }
+
+    @Override
+    public UsersResponseDto delete(int id) {
+        return null;
+    }
+
+    @Override
+    public boolean existsById(int id) {
+        return usersRepository.existsById(id);
+    }
+
+    @Override
+    public void changePassword(int id, String password) {
+
+    }
+
+    public UsersResponseDto findByEmail(String email) {
+        Optional<UsersEntity> usersEntity = usersRepository.findByEmail(email);
+        return usersEntity.map(usersMapper::toResponseDto).orElse(null);
+    }
+
+    @Override
+    public void sendEmail(String email) {
+
+    }
+
+    @Override
+    public UsersResponseDto register(UserCreateDto userCreateDto) {
+        UsersEntity usersEntity = usersMapper.toEntity(userCreateDto);
+        usersEntity.setPassword(passwordEncoder.encode(usersEntity.getPassword()));
+        usersEntity.setStatus(true);
+        usersEntity.setRoleId(2);
+        UsersEntity result = usersRepository.save(usersEntity);
+        UserDetails userDetails = createUserDetailFromRegister(result);
+
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        // Lưu Authentication vào SecurityContextHolder
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                SecurityContextHolder.getContext());
+        return usersMapper.toResponseDto(result);
+    }
+
+    @Override
+    public UserDetails createUserDetailFromRegister(UsersEntity usersEntity) {
+        return new org.springframework.security.core.userdetails.User(
+                usersEntity.getEmail(),
+                usersEntity.getPassword(),
+                List.of(new SimpleGrantedAuthority(usersEntity.getRoleId().toString()))
+        );
+    }
+
 
 }

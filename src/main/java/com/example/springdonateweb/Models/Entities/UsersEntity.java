@@ -46,6 +46,9 @@ public class UsersEntity {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Column(name = "status", nullable = false)
+    private Boolean status;
+
 
 
 

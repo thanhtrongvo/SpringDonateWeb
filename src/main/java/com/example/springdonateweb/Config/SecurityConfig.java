@@ -25,19 +25,16 @@ public class SecurityConfig {
     @Autowired
     private CustomUserDetailService customUserDetailService;
 
-    // Cấu hình encoder cho mật khẩu
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // Cấu hình UserDetailsService
     @Bean
     public UserDetailsService userDetailsService() {
         return customUserDetailService;
     }
 
-    // Cấu hình DaoAuthenticationProvider để sử dụng UserDetailsService và PasswordEncoder
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -46,38 +43,41 @@ public class SecurityConfig {
         return authProvider;
     }
 
-    // Cấu hình SecurityFilterChain để xử lý các yêu cầu HTTP
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .authorizeHttpRequests(auth -> auth
 
-                        .requestMatchers("/login", "/register", "/register/**", "/css/**", "/fonts/**", "/images/**", "/js/**", "/scss/**")
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/","/home","/index").permitAll()
+                        .requestMatchers("/login","/auth/**", "/register","/404")
+                        .permitAll()
+                        .requestMatchers("/lib/**","/css/**", "/fonts/**", "/img/**", "/js/**", "/scss/**", "/vendor/**")
                         .permitAll()
                         .requestMatchers("/admin/**")
-                        .hasAnyAuthority("ROlE_ADMIN")
+                        .hasAnyAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
-
+                        .loginPage("/login")
                         .defaultSuccessUrl("/", true)
-
-                        .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
+//                        .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
                         .failureUrl("/login?error=true")
                         .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                        .logoutSuccessUrl("/login")
+                        .logoutSuccessUrl("/")
                         .invalidateHttpSession(true) // Hủy session
                         .deleteCookies("JSESSIONID")
+                        .permitAll()
                 )
-                .csrf(csrf -> csrf.disable())
+
                 .build();
 
     }
 
-    // Cấu hình AuthenticationManager để quản lý xác thực
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
