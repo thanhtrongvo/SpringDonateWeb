@@ -8,13 +8,19 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+
+/**
+ * DTO for {@link UsersEntity}
+ */
 public class UsersResponseDto implements Serializable {
-    private int userId;
+    private int id;
     public String name;
     public String email;
     public String password;
     public Integer roleId;
     public String address;
     public String phoneNumber;
+    public boolean status;
+
 
 }

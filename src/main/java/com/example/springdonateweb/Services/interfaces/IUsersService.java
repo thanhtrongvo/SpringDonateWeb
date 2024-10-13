@@ -1,5 +1,6 @@
 package com.example.springdonateweb.Services.interfaces;
 
+import com.example.springdonateweb.Models.Dtos.Users.UserAddDto;
 import com.example.springdonateweb.Models.Dtos.Users.UserCreateDto;
 import com.example.springdonateweb.Models.Dtos.Users.UsersResponseDto;
 import com.example.springdonateweb.Models.Entities.UsersEntity;
@@ -10,7 +11,6 @@ import java.util.List;
 public interface IUsersService {
     List<UsersResponseDto> findAll();
     UsersResponseDto findById(int id);
-    UsersResponseDto create(UsersResponseDto usersResponseDto);
     UsersResponseDto register(UserCreateDto userCreateDto);
     UsersResponseDto update(UsersResponseDto usersResponseDto);
     UsersResponseDto delete(int id);
@@ -21,4 +21,8 @@ public interface IUsersService {
     UserDetails createUserDetailFromRegister(UsersEntity usersEntity);
 
 
+    List<UsersResponseDto> findByStatusTrue();
+    UsersResponseDto findByIdAndStatusTrue(int id);
+
+    UsersResponseDto create(UserAddDto userAddDto);
 }

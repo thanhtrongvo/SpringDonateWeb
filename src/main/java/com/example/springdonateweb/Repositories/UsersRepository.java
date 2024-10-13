@@ -10,12 +10,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 @Repository
-public interface UsersRepository extends CrudRepository<UsersEntity, Integer> {
+public interface UsersRepository extends JpaRepository<UsersEntity, Integer> {
     Optional<UsersEntity> findByEmail(String email);
 //    Optional<UsersEntity> findByIdAndStatusTrue(Integer id);
-//    Exits by id
-
-
 //    boolean existsByMail(String email);
+    List<UsersEntity> findByStatusTrue();
+    Optional<UsersEntity> findByIdAndStatusTrue(int id);
 //    boolean existsByIdAndStatusTrue(Integer id);
 }

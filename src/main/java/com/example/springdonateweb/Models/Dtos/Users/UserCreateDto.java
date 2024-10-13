@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class UserCreateDto {
     @NotBlank(message = "Id is required")
     @Pattern(regexp = "^[0-9]*$", message = "Id must be a number")
-    public int userId;
+    public int id;
 
     @NotBlank(message = "Name is required")
     public String name;

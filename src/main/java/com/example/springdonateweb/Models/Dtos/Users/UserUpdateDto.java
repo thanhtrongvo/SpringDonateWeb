@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 
 public class UserUpdateDto {
     @NotBlank(message = "Id is required")
-    public int userId;
+    public int id;
 
     @NotBlank(message = "Name is required")
     public String name;

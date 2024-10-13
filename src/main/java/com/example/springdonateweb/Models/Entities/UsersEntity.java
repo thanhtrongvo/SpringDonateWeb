@@ -21,12 +21,12 @@ import java.util.Objects;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "users", schema = "webmomo", catalog = "")
+@Table(name = "users", schema = "webmomo")
 public class UsersEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "user_id")
-    private int userId;
+    @Column(name = "id")
+    private int id;
     @Basic
     @Column(name = "name")
     private String name;
@@ -46,6 +46,7 @@ public class UsersEntity {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Basic
     @Column(name = "status", nullable = false)
     private Boolean status;
 

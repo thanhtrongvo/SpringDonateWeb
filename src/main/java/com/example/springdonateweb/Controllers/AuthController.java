@@ -45,7 +45,7 @@ public class AuthController {
         }
 
         // Check if user already exists
-        if (usersService.existsById(register.getUserId())) {
+        if (usersService.existsById(register.getId())) {
             redirectAttributes.addFlashAttribute("existUser", "true");
             redirectAttributes.addFlashAttribute("register", register);
             return "redirect:/register"; // Redirect with error message
