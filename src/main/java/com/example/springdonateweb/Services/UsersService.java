@@ -121,10 +121,19 @@ public class UsersService implements IUsersService {
                 .collect(Collectors.toList());
 
     }
+    @Override
+    public boolean existsByEmail(String email) {
+        return usersRepository.existsByEmail(email);
+    }
 
     @Override
     public UsersResponseDto findByIdAndStatusTrue(int id) {
         Optional<UsersEntity> usersEntity = usersRepository.findByIdAndStatusTrue(id);
+        return usersEntity.map(usersMapper::toResponseDto).orElse(null);
+    }
+    @Override
+    public UsersResponseDto findByEmailAndStatusTrue(String email) {
+        Optional<UsersEntity> usersEntity = usersRepository.findByEmailAndStatusTrue(email);
         return usersEntity.map(usersMapper::toResponseDto).orElse(null);
     }
 

@@ -23,6 +23,8 @@ public interface IUsersService {
 
     List<UsersResponseDto> findByStatusTrue();
     UsersResponseDto findByIdAndStatusTrue(int id);
+    UsersResponseDto findByEmailAndStatusTrue(String email);
 
     UsersResponseDto create(UserAddDto userAddDto);
+    boolean existsByEmail(String email);
 }

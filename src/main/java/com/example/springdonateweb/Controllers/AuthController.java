@@ -28,7 +28,7 @@ public class AuthController {
     public String registerPage(@ModelAttribute("register") UserCreateDto register) {
         String user = SecurityUtil.getSessionUser();
         if (user != null) {
-            return "redirect:/"; // Redirect logged-in users to home
+            return "redirect:/login"; // Redirect logged-in users to home
         } else {
             return "auth/register"; // Show registration page
         }
@@ -40,8 +40,14 @@ public class AuthController {
             BindingResult result,
             RedirectAttributes redirectAttributes
     ) {
+
         if (result.hasErrors()) {
             return "auth/register"; // Return to the registration page with errors
+        }
+        if(usersService.existsByEmail(register.getEmail())){
+            redirectAttributes.addFlashAttribute("existEmail", "true");
+            redirectAttributes.addFlashAttribute("register", register);
+            return "redirect:/register";
         }
 
         // Check if user already exists

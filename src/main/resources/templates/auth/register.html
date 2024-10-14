@@ -29,6 +29,9 @@
               <label for="email" class="form-label">Email</label>
               <input type="email" class="form-control" id="email" th:field="*{email}" required>
               <div class="validate text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+              <div class="validate text-danger" th:if="${existEmail}" th:errors="*{email}">
+                <span th:text="${existEmail}"></span>
+              </div>
             </div>
 
             <!-- Password -->
@@ -45,6 +48,11 @@
               <div class="validate text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
             </div>
 
+            <div class="mb-3">
+              <label for="address" class="form-label">Number Phone</label>
+              <input type="text" class="form-control" id="number-phone" th:field="*{phoneNumber}" required>
+              <div class="validate text-danger" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></div>
+            </div>
             <!-- Submit Button -->
             <div class="d-grid">
               <button type="submit" class="btn btn-primary">Register</button>

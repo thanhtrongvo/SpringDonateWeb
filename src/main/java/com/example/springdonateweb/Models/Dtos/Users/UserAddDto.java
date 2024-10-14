@@ -3,12 +3,18 @@ package com.example.springdonateweb.Models.Dtos.Users;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class UserAddDto implements Serializable {
-    @NotBlank
-    @Pattern(regexp = "\\d{10}", message = "Mã thành viên chỉ được chứa 10 ký tự và chỉ được là ký tự số")
+    @NotBlank(message = "Mã thành viên không được để trống")
     private int id;
     @NotBlank(message = "Email không được để trống")
     @Email
