@@ -7,8 +7,12 @@ import com.example.springdonateweb.Models.Entities.UsersEntity;
 import com.example.springdonateweb.Repositories.UsersRepository;
 import com.example.springdonateweb.Services.interfaces.IUsersService;
 import com.example.springdonateweb.Services.mappers.UsersMapper;
+import com.example.springdonateweb.util.AppUtil;
+import com.example.springdonateweb.util.EmailService;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,6 +41,13 @@ public class UsersService implements IUsersService {
     private final UsersRepository usersRepository;
 
     private final HttpSession session;
+
+    private final AppUtil appUtil;
+
+    private final EmailService emailService;
+
+    @Value("${pass.length-of-pass}")
+    public Integer lengthOfPass;
 
     @Override
     public List<UsersResponseDto> findAll() {
@@ -81,10 +93,6 @@ public class UsersService implements IUsersService {
         return usersEntity.map(usersMapper::toResponseDto).orElse(null);
     }
 
-    @Override
-    public void sendEmail(String email) {
-
-    }
 
     @Override
     public UsersResponseDto register(UserCreateDto userCreateDto) {
@@ -127,6 +135,23 @@ public class UsersService implements IUsersService {
     }
 
     @Override
+    public boolean checkPassword(int id, String password) {
+        return false;
+    }
+
+    @Override
+    public boolean checkComfirmPassword(String password, String confirmPassword) {
+        return false;
+    }
+
+    @Override
+    public void changePassword(String email, String password) {
+
+    }
+
+
+
+    @Override
     public UsersResponseDto findByIdAndStatusTrue(int id) {
         Optional<UsersEntity> usersEntity = usersRepository.findByIdAndStatusTrue(id);
         return usersEntity.map(usersMapper::toResponseDto).orElse(null);
@@ -146,24 +171,69 @@ public class UsersService implements IUsersService {
         return usersMapper.toResponseDto(result);
     }
 
-//    @Override
-//    @Transactional
-//    public void resetPassword(int id) {
-//        Optional<UsersEntity> personEntity = usersRepository.findByIdAndStatusTrue(id);
-//        personEntity.ifPresent(person -> {
-//            String rawPass = appUtil.generateRandomString(lengthOfPass);
-//            person.setPassword(passwordEncoder.encode(rawPass));
-//            try {
-//                emailService.sendEmail(
-//                        person.getEmail(),
-//                        "Cấp lại mật khẩu",
-//                        "Mật khẩu mới của bạn là " + rawPass + " , vui lòng không chia sẽ mật khẩu này cho bất kì ai!!"
-//                );
-//            } catch (MessagingException | UnsupportedEncodingException e) {
-//                throw new RuntimeException(e);
-//            }
-//        });
-//    }
+    @Override
+    @Transactional
+    public void resetPassword(String email) {
+        Optional<UsersEntity> personEntity = usersRepository.findByEmailAndStatusTrue(email);
+        personEntity.ifPresent(person -> {
+            String rawPass = appUtil.generateRandomString(lengthOfPass);
+            person.setPassword(passwordEncoder.encode(rawPass));
+            try {
+                emailService.sendEmail(
+                        person.getEmail(),
+                        "Cấp lại mật khẩu",
+                        "Mật khẩu mới của bạn là " + rawPass + " , vui lòng không chia sẽ mật khẩu này cho bất kì ai!!"
+                );
+            } catch (MessagingException | UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    @Override
+    public void sendOtp(int id, String email) {
+        try {
+            String opt = appUtil.generateOtp(6);
+            emailService.sendEmail(
+                    email,
+                    "OTP",
+                    "Mã OTP của bạn là: " + opt
+            );
+            Optional<UsersEntity> usersEntity = usersRepository.findByIdAndStatusTrue(id);
+            usersEntity.ifPresent(user -> {
+                user.setChangeEmail(email + ";" + opt + LocalDateTime.now().plusMinutes(5));
+            });
+        }
+        catch (MessagingException | UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void changeEmail(int id, String email) {
+        Optional<UsersEntity> usersOptional = usersRepository.findByIdAndStatusTrue(id);
+        if(usersOptional.isPresent()) {
+            UsersEntity usersEntity = usersOptional.get();
+            String[] data =  usersEntity.getChangeEmail().split(";");
+            usersEntity.setEmail(data[0]);
+        }
+    }
+    @Override
+    public boolean checkOtp(int id, String otp) {
+        Optional<UsersEntity> personOptional = usersRepository.findByIdAndStatusTrue(id);
+        if (personOptional.isPresent()) {
+            UsersEntity usersEntity = personOptional.get();
+            String[] data = usersEntity.getChangeEmail().split(";");
+            if (otp.equals(data[1])) {
+                return LocalDateTime.now().isBefore(appUtil.dateFromString(data[2]));
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
 
 
 }

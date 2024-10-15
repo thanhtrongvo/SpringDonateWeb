@@ -50,6 +50,12 @@ public class UsersEntity implements UserDetails {
     @Column(name = "status", nullable = false)
     private Boolean status;
 
+    @Column(name = "verify_code", length = 6, nullable = true)
+    private String verifyCode;
+
+    @Column(name = "change_email", length = 100, nullable = true)
+    private String changeEmail;
+
     @Override
     public String toString() {
         return "UsersEntity{" +
