@@ -1,0 +1,114 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Login</title>-->
+<!--    &lt;!&ndash; Bootstrap CSS &ndash;&gt;-->
+<!--    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">-->
+<!--    <style>-->
+<!--        body {-->
+<!--            background-color: #f7f7f7;-->
+<!--            display: flex;-->
+<!--            justify-content: center;-->
+<!--            align-items: center;-->
+<!--            height: 100vh;-->
+<!--        }-->
+<!--        .login-container {-->
+<!--            background: #fff;-->
+<!--            padding: 2rem;-->
+<!--            border-radius: 10px;-->
+<!--            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);-->
+<!--            max-width: 400px;-->
+<!--            width: 100%;-->
+<!--        }-->
+<!--        .form-title {-->
+<!--            text-align: center;-->
+<!--            margin-bottom: 1.5rem;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<div class="login-container">-->
+<!--    <h2 class="form-title">Login</h2>-->
+<!--    <form th:action="@{/login}" method="post">-->
+<!--        <div class="mb-3">-->
+<!--            <label for="email" class="form-label">Email address</label>-->
+<!--            <input type="email" name="username" class="form-control" id="email" placeholder="Enter email" required>-->
+<!--        </div>-->
+<!--        <div class="mb-3">-->
+<!--            <label for="password" class="form-label">Password</label>-->
+<!--            <input type="password" name="password" class="form-control" id="password" placeholder="Password" required>-->
+<!--        </div>-->
+<!--        <div class="d-grid gap-2">-->
+<!--            <button type="submit" class="btn btn-primary">Login</button>-->
+<!--        </div>-->
+<!--        <div class="text-center mt-3">-->
+<!--            <a href="#">Forgot your password?</a>-->
+<!--        </div>-->
+<!--        <div class="text-center mt-2">-->
+<!--            <a href="#" th:href="@{/register}">Don't have an account? Sign up</a>-->
+<!--        </div>-->
+<!--    </form>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Bootstrap JS and Popper.js &ndash;&gt;-->
+<!--<script th:src="@{/js/bootstrap.bundle.min.js}"></script>-->
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Đăng nhập</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Login Form Template" name="keywords">
+    <meta content="Login Form Template" name="description">
+
+    <!-- Favicon -->
+    <link th:href="@{img/favicon.ico}" rel="icon">
+
+    <!-- Stylesheet -->
+    <link th:href="@{css/styleLogin.css}" rel="stylesheet">
+</head>
+<body>
+<div class="wrapper login-3">
+    <div class="container">
+        <div class="col-left">
+            <div class="login-text">
+                <h2><img th:src="@{img/logo.png}" alt="Logo"></h2>
+                <p>
+                    Chào bạn! :>
+                </p>
+
+            </div>
+        </div>
+        <div class="col-right">
+            <div class="login-form">
+                <h2>Đăng nhập</h2>
+                <form th:action="@{/login}" method="post">
+                    <p>
+<!--                        <label for="email" class="form-label">Email address</label>-->
+                        <input type="email" name="username" class="form-control" id="email" placeholder="Enter email" required>
+                    </p>
+                    <p>
+                        <input type="password" name="password" class="form-control" id="password" placeholder="Password" required>
+                    </p>
+                    <p>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </p>
+                    <p>
+                        <a th:href="@{/forgot-password}">Quên tài khoản</a>
+                        <a th:href="@{/register}">Tạo tài khoản </a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
+
