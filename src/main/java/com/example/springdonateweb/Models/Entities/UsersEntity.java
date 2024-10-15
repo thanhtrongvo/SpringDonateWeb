@@ -22,7 +22,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "users", schema = "webmomo")
-public class UsersEntity {
+public class UsersEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
@@ -50,11 +50,70 @@ public class UsersEntity {
     @Column(name = "status", nullable = false)
     private Boolean status;
 
+    @Column(name = "verify_code", length = 6, nullable = true)
+    private String verifyCode;
+
+    @Column(name = "change_email", length = 100, nullable = true)
+    private String changeEmail;
+
+    @Override
+    public String toString() {
+        return "UsersEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", roleId=" + roleId +
+                ", address='" + address + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", status=" + status +
+                '}';
+    }
 
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        String roleName = switch (getRoleId()) {
+            case 1 -> "ROLE_ADMIN";
+            case 2 -> "ROLE_USER";
+            default -> "ROLE_GUEST"; // Vai trò mặc định nếu không khớp
+        };
+
+        authorities.add(new SimpleGrantedAuthority(roleName));
+        return authorities;
+    }
 
 
+    @Override
+    public String getUsername() {
+        return getEmail();
+    }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
+
+
+
+
+
+

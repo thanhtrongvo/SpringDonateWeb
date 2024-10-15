@@ -47,5 +47,14 @@ public class UserTest {
         System.out.println(result);
 
     }
+    @Test
+    public void existsByEmail() {
+        boolean result = usersService.existsByEmail("votrong471@gmail.com");
+        if (result) {
+            System.out.println("Email exists");
+        } else {
+            System.out.println("Email not exists");
+        }
+    }
 
 }
