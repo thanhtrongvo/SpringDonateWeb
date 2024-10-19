@@ -1,6 +1,8 @@
 package com.example.springdonateweb.Controllers;
 
 import com.example.springdonateweb.Models.Dtos.Users.UserCreateDto;
+import com.example.springdonateweb.Models.Dtos.Users.UsersResponseDto;
+import com.example.springdonateweb.Models.Entities.UsersEntity;
 import com.example.springdonateweb.Services.interfaces.IUsersService;
 import com.example.springdonateweb.util.SecurityUtil;
 import jakarta.validation.Valid;
@@ -69,6 +71,9 @@ public class AuthController {
     @GetMapping("/login")
     public String login() {
         String user = SecurityUtil.getSessionUser();
+
+
+
         if (user != null) {
             return "redirect:/"; // Redirect logged-in users to home
         }

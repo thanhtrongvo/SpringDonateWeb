@@ -29,7 +29,7 @@ public class HomeController {
             if (user != null) {
                 // Check if the user has an admin role
                 if (user.getRoleId() == 1) {  // Assuming roleId 1 is for Admin
-                    return "redirect:/admin"; // Redirect to admin page if the user is an admin
+                    return "redirect:/admin/user"; // Redirect to admin page if the user is an admin
                 }
 
                 // If not admin, proceed as a normal user

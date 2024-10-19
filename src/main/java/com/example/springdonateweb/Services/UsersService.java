@@ -2,6 +2,7 @@ package com.example.springdonateweb.Services;
 
 import com.example.springdonateweb.Models.Dtos.Users.UserAddDto;
 import com.example.springdonateweb.Models.Dtos.Users.UserCreateDto;
+import com.example.springdonateweb.Models.Dtos.Users.UserUpdateDto;
 import com.example.springdonateweb.Models.Dtos.Users.UsersResponseDto;
 import com.example.springdonateweb.Models.Entities.UsersEntity;
 import com.example.springdonateweb.Repositories.UsersRepository;
@@ -62,8 +63,15 @@ public class UsersService implements IUsersService {
 
 
     @Override
-    public UsersResponseDto update(UsersResponseDto usersResponseDto) {
-        return null;
+    public UsersResponseDto update(UserUpdateDto usersUpdateDto) {
+        Optional<UsersEntity> usersEntity = usersRepository.findByIdAndStatusTrue(usersUpdateDto.getId());
+        return usersEntity
+                .map(user -> {
+                    UsersEntity updatedUser = usersMapper.partialUpdate(usersUpdateDto, user);
+                    UsersEntity result = usersRepository.save(updatedUser);
+                    return usersMapper.toResponseDto(result);
+                })
+                .orElse(null);
     }
 
     @Override

@@ -27,7 +27,7 @@ public class EmailService {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
         helper.setPriority(1);
-        helper.setFrom(fromEmail, "Management");
+        helper.setFrom(fromEmail, "SGU Heart");
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(body, false);
@@ -39,7 +39,7 @@ public class EmailService {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
         helper.setPriority(1);
-        helper.setFrom(fromEmail, "The Cinema");
+        helper.setFrom(fromEmail, "SGU Heart");
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(text, true);

@@ -1,5 +1,6 @@
 package com.example.springdonateweb.TestServices;
 
+import com.example.springdonateweb.Models.Dtos.Users.UserUpdateDto;
 import com.example.springdonateweb.Models.Dtos.Users.UsersResponseDto;
 import com.example.springdonateweb.Services.UsersService;
 import com.example.springdonateweb.Services.interfaces.IUsersService;
@@ -26,6 +27,7 @@ public class UserTest {
         assertNotNull(users);
 
     }
+
     @Test
     public void create() {
         UsersResponseDto usersResponseDto = new UsersResponseDto();
@@ -41,12 +43,14 @@ public class UserTest {
         }
 
     }
+
     @Test
     public void findByIdAndStatusTrue() {
         UsersResponseDto result = usersService.findByIdAndStatusTrue(8);
         System.out.println(result);
 
     }
+
     @Test
     public void existsByEmail() {
         boolean result = usersService.existsByEmail("votrong471@gmail.com");
@@ -57,4 +61,26 @@ public class UserTest {
         }
     }
 
+    @Test
+    public void update() {
+        UsersResponseDto result = usersService.findByIdAndStatusTrue(9);
+        if(result == null) {
+            System.out.println("User not found");
+
+        }
+        else {
+            UserUpdateDto userUpdateDto = new UserUpdateDto();
+            userUpdateDto.setId(result.getId());
+            userUpdateDto.setName("Vo Trong");
+            userUpdateDto.setAddress("Ha Noi");
+            userUpdateDto.setPhoneNumber("0987654321");
+
+            if(usersService.update(userUpdateDto) != null) {
+                System.out.println("Update success");
+            } else {
+                System.out.println("Update fail");
+            }
+        }
+
+    }
 }

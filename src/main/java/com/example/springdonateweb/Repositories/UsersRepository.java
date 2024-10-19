@@ -18,4 +18,6 @@ public interface UsersRepository extends JpaRepository<UsersEntity, Integer> {
     Optional<UsersEntity> findByIdAndStatusTrue(int id);
 //    boolean existsByIdAndStatusTrue(Integer id);
     Optional<UsersEntity> findByEmailAndStatusTrue(String email);
+
+
 }

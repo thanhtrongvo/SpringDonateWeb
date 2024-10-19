@@ -14,7 +14,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Builder
 public class UserAddDto implements Serializable {
-    @NotBlank(message = "Mã thành viên không được để trống")
+    
     private int id;
     @NotBlank(message = "Email không được để trống")
     @Email

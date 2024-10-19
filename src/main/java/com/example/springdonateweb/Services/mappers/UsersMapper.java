@@ -16,11 +16,17 @@ public interface UsersMapper {
     UsersEntity toEntity(UsersEntity usersEntity);
     UsersEntity toEntity(UserCreateDto userCreateDto);
     UsersEntity toEntity(UserUpdateDto userUpdateDto);
+
     UsersEntity toEntity(UsersResponseDto usersResponseDto);
+
+    //    UsersEntity toEntity(UsersResponseDto usersResponseDto);
     UsersEntity toEntity(UserAddDto userAddDto);
 
 
     UsersResponseDto toResponseDto(UsersEntity usersEntity);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    UsersEntity partialUpdate(UserUpdateDto userUpdateDto, @MappingTarget UsersEntity usersEntity);
 
 
 
