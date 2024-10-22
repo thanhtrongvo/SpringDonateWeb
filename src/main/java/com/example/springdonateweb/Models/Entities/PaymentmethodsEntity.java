@@ -1,8 +1,16 @@
 package com.example.springdonateweb.Models.Entities;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.Objects;
+
+
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 
 @Entity
 @Table(name = "paymentmethods", schema = "webmomo", catalog = "")
@@ -21,37 +29,7 @@ public class PaymentmethodsEntity {
     @Column(name = "is_active")
     private Byte isActive;
 
-    public int getPaymentMethodId() {
-        return paymentMethodId;
-    }
 
-    public void setPaymentMethodId(int paymentMethodId) {
-        this.paymentMethodId = paymentMethodId;
-    }
-
-    public String getMethodName() {
-        return methodName;
-    }
-
-    public void setMethodName(String methodName) {
-        this.methodName = methodName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Byte getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(Byte isActive) {
-        this.isActive = isActive;
-    }
 
     @Override
     public boolean equals(Object o) {

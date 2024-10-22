@@ -25,6 +25,10 @@ public class ProgramsEntity {
     @Basic
     @Column(name = "current_amount")
     private BigDecimal currentAmount;
+
+    @Basic
+    @Column(name = "image")
+    private String image;
     @Basic
     @Column(name = "donation_count")
     private Integer donationCount;
