@@ -110,7 +110,7 @@ div.credit a {
 }
 
 .login-3 h2 img {
-    width: 120px;
+    width: 250px;
 }
 
 .login-3 p {
@@ -127,16 +127,17 @@ div.credit a {
     letter-spacing: 1px;
     text-decoration: none;
     border-radius: 5px;
-    color: #ffffff;
+    color: #faedda;
+    background: #ff6f0f;
     outline: none;
-    border: 1px solid #ffffff;
+    border: 1px solid #ff6f0f;
     transition: .3s;
     -webkit-transition: .3s;
 }
 
 .login-3 .btn:hover {
     color: #ff6f0f;
-    background: #ffffff;
+    background: #fac398;
 }
 
 .login-3 .login-form {
