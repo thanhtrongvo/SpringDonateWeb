@@ -1,16 +1,27 @@
 package com.example.springdonateweb.Controllers;
 
+import com.example.springdonateweb.Models.Dtos.Categories.CategoriesResponseDto;
+import com.example.springdonateweb.Models.Dtos.Programs.ProgramResponseDto;
 import com.example.springdonateweb.Models.Dtos.Users.UsersResponseDto;
+import com.example.springdonateweb.Models.Entities.ProgramsEntity;
+import com.example.springdonateweb.Services.CategoriesService;
+import com.example.springdonateweb.Services.ProgramsService;
 import com.example.springdonateweb.Services.interfaces.IUsersService;
 import com.example.springdonateweb.util.SecurityUtil;
+import com.example.springdonateweb.util.AmountFormatter;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -18,11 +29,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Log4j2
 public class HomeController {
 
+    private final ProgramsService programsService;
+    private final CategoriesService categoriesService;
+
+
     IUsersService usersService;
 
     @GetMapping("/")
     public String index(Model model, @RequestParam(value = "filter", required = false) String filter) {
         String userId = SecurityUtil.getSessionUser(); // Assuming this returns an email now
+
 
         if (userId != null) {
             UsersResponseDto user = usersService.findByEmail(userId); // Change to find by email
@@ -34,6 +50,7 @@ public class HomeController {
 
                 // If not admin, proceed as a normal user
                 model.addAttribute("userEmail", user.getEmail());
+
                 return "index"; // Return home.html (ensure this is the correct view name)
             } else {
                 return "redirect:/login"; // Redirect to login if user not found
@@ -41,6 +58,21 @@ public class HomeController {
         } else {
             return "index"; // Redirect to login if userId is null
         }
+    }
+    @GetMapping("/program")
+    public String program(Model model){
+        List<ProgramResponseDto> program = programsService.findAll();
+        model.addAttribute("program",program);
+        model.addAttribute("amountFormatter", new AmountFormatter());
+        return "client/program";
+
+    }
+    @GetMapping("/program/{id}")
+    public String showProgramDetail(@PathVariable int id, Model model) {
+        // Assume programService.getProgramById(id) fetches the ProgramResponseDto
+        ProgramResponseDto program = programsService.findByProgramId(id);
+        model.addAttribute("program", program);
+        return "client/program-detail";
     }
 
 

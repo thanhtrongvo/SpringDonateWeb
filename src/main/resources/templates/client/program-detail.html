@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Program Details</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <div th:replace="~{fragments/_link}"></div>
+  <style>
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .progress-bar {
+      background-color: #f3f3f3;
+      border-radius: 5px;
+      overflow: hidden;
+      height: 20px;
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    .progress {
+      background-color: #4CAF50;
+      height: 100%;
+      width: 0;
+      transition: width 0.5s ease;
+    }
+  </style>
+</head>
+<body>
+<!-- Navbar Start -->
+<div th:replace="~{fragments/_header}" th:with="category=${category}"></div>
+<!-- Navbar End -->
+
+
+<div class="container-xxl py-5">
+  <div class="container">
+
+    <h1 th:text="${program.name}">Program Name</h1>
+
+    <!-- Program Image -->
+    <div class="program-image">
+      <img th:src="${program.image}" alt="Program Image" />
+    </div>
+
+    <!-- Program Details -->
+    <div class="program-details">
+      <p><strong>Category:</strong> <span th:text="${program.category}">Category Name</span></p>
+      <p><strong>Description:</strong> <span th:text="${program.description}">Program Description</span></p>
+      <p><strong>Start Date:</strong> <span th:text="${program.startDate}">2024-01-01</span></p>
+      <p><strong>End Date:</strong> <span th:text="${program.endDate}">2024-12-31</span></p>
+      <p><strong>Status:</strong> <span th:text="${program.status ? 'Active' : 'Inactive'}">Status</span></p>
+      <p><strong>Goal Amount:</strong> <span th:text="${#numbers.formatInteger(program.goalAmount, 0, 'COMMA')}">1000000</span></p>
+      <p><strong>Current Amount:</strong> <span th:text="${#numbers.formatInteger(program.currentAmount, 0, 'COMMA')}">500000</span></p>
+      <p><strong>Donations Count:</strong> <span th:text="${program.donationCount}">Donation Count</span></p>
+      <p><strong>Remaining Days:</strong> <span th:text="${program.remainingDays}">0</span></p>
+      <p><strong>Percentage Achieved:</strong> <span th:text="${program.percentageAchieved + '%'}">50%</span></p>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+      <div class="progress" th:style="'width:' + ${program.percentageAchieved} + '%'"></div>
+    </div>
+  </div>
+</div>
+<div th:insert="fragments/_footer"></div>
+
+<div th:insert="fragments/_lib"></div>
+
+</body>
+</html>

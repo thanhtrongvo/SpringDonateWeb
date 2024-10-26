@@ -1,16 +1,17 @@
 package com.example.springdonateweb.Models.Entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.util.Objects;
 
 
-@Data
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
+
 @Entity
 @Table(name = "categories", schema = "webmomo", catalog = "")
 public class CategoriesEntity {

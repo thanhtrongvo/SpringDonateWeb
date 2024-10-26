@@ -8,7 +8,7 @@ import java.util.List;
 
 
 public interface ICategoriesService {
-    CategoriesResponseDto findById(int id);
+    List<CategoriesResponseDto> findAllByCategoryId(int id);
     List<CategoriesResponseDto> findAll();
 
     CategoriesResponseDto findByName(String name);
