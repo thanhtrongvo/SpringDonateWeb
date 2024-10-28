@@ -1,21 +1,15 @@
 package com.example.springdonateweb.Services.interfaces;
 
+import com.example.springdonateweb.Models.Dtos.Categories.CategoryCreateDto;
 import com.example.springdonateweb.Models.Dtos.Categories.CategoriesResponseDto;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.example.springdonateweb.Models.Dtos.Categories.CategoryUpdateDto;
 
 import java.util.List;
 
-
 public interface ICategoriesService {
-    List<CategoriesResponseDto> findAllByCategoryId(int id);
     List<CategoriesResponseDto> findAll();
-
-    CategoriesResponseDto findByName(String name);
-    CategoriesResponseDto create(CategoriesResponseDto categoriesResponseDto);
-    CategoriesResponseDto update(CategoriesResponseDto categoriesResponseDto);
-    CategoriesResponseDto delete(int id);
-    boolean existsById(int id);
-    boolean existsByName(String name);
-
+    CategoriesResponseDto findById(int id);
+    CategoriesResponseDto create(CategoryCreateDto categoryCreateDto);
+    CategoriesResponseDto update(CategoryUpdateDto categoryUpdateDto);
+    void delete(int id);
 }

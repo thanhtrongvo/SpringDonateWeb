@@ -1,7 +1,8 @@
 package com.example.springdonateweb.Services;
 
+import com.example.springdonateweb.Models.Dtos.Categories.CategoryCreateDto;
 import com.example.springdonateweb.Models.Dtos.Categories.CategoriesResponseDto;
-import com.example.springdonateweb.Models.Dtos.Users.UsersResponseDto;
+import com.example.springdonateweb.Models.Dtos.Categories.CategoryUpdateDto;
 import com.example.springdonateweb.Models.Entities.CategoriesEntity;
 import com.example.springdonateweb.Repositories.CategoriesRepository;
 import com.example.springdonateweb.Services.interfaces.ICategoriesService;
@@ -10,53 +11,50 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CategoriesService implements ICategoriesService {
 
-    private final CategroriesMapper categroriesMapper;
     private final CategoriesRepository categoriesRepository;
-
-
-    @Override
-    public List<CategoriesResponseDto> findAllByCategoryId(int id) {
-        return null;
-    }
+    private final CategroriesMapper categoriesMapper;
 
     @Override
     public List<CategoriesResponseDto> findAll() {
-        return categoriesRepository.findAll().stream().map(categroriesMapper::toResponseDto).collect(Collectors.toList());
+        return categoriesRepository.findAll().stream()
+                .map(categoriesMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public CategoriesResponseDto findByName(String name) {
-        return null;
-    };
-
-    @Override
-    public CategoriesResponseDto create(CategoriesResponseDto categoriesResponseDto) {
-        return null;
+    public CategoriesResponseDto findById(int id) {
+        Optional<CategoriesEntity> category = categoriesRepository.findById(id);
+        return category.map(categoriesMapper::toDto).orElse(null);
     }
 
     @Override
-    public CategoriesResponseDto update(CategoriesResponseDto categoriesResponseDto) {
-        return null;
+    public CategoriesResponseDto create(CategoryCreateDto categoryCreateDto) {
+        CategoriesEntity categoriesEntity = categoriesMapper.toEntity(categoryCreateDto);
+        CategoriesEntity savedCategory = categoriesRepository.save(categoriesEntity);
+        return categoriesMapper.toDto(savedCategory);
     }
 
     @Override
-    public CategoriesResponseDto delete(int id) {
-        return null;
+    public CategoriesResponseDto update(CategoryUpdateDto categoryUpdateDto) {
+        Optional<CategoriesEntity> category = categoriesRepository.findById(categoryUpdateDto.getCategoryId());
+        return category
+                .map(cat -> {
+                    CategoriesEntity updatedCategory = categoriesMapper.partialUpdate(categoryUpdateDto, cat);
+                    CategoriesEntity result = categoriesRepository.save(updatedCategory);
+                    return categoriesMapper.toDto(result);
+                })
+                .orElse(null);
     }
 
     @Override
-    public boolean existsById(int id) {
-        return false;
-    }
-
-    @Override
-    public boolean existsByName(String name) {
-        return false;
+    public void delete(int id) {
+        categoriesRepository.deleteById(id);
     }
 }
