@@ -1,8 +1,16 @@
 package com.example.springdonateweb.Models.Entities;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.Objects;
+
+
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 
 @Entity
 @Table(name = "categories", schema = "webmomo", catalog = "")
@@ -18,29 +26,7 @@ public class CategoriesEntity {
     @Column(name = "description")
     private String description;
 
-    public int getCategoryId() {
-        return categoryId;
-    }
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     @Override
     public boolean equals(Object o) {

@@ -1,10 +1,15 @@
 package com.example.springdonateweb.Models.Entities;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.sql.Timestamp;
 import java.util.Objects;
-
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "donors", schema = "webmomo", catalog = "")
 public class DonorsEntity {
@@ -25,45 +30,7 @@ public class DonorsEntity {
     @Column(name = "donation_date")
     private Timestamp donationDate;
 
-    public int getDonorId() {
-        return donorId;
-    }
 
-    public void setDonorId(int donorId) {
-        this.donorId = donorId;
-    }
-
-    public Integer getProgramId() {
-        return programId;
-    }
-
-    public void setProgramId(Integer programId) {
-        this.programId = programId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public Integer getDonationId() {
-        return donationId;
-    }
-
-    public void setDonationId(Integer donationId) {
-        this.donationId = donationId;
-    }
-
-    public Timestamp getDonationDate() {
-        return donationDate;
-    }
-
-    public void setDonationDate(Timestamp donationDate) {
-        this.donationDate = donationDate;
-    }
 
     @Override
     public boolean equals(Object o) {

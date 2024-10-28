@@ -1,10 +1,17 @@
 package com.example.springdonateweb.Models.Entities;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.Objects;
+
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 
 @Entity
 @Table(name = "programs", schema = "webmomo", catalog = "")
@@ -21,10 +28,14 @@ public class ProgramsEntity {
     private String description;
     @Basic
     @Column(name = "goal_amount")
-    private BigDecimal goalAmount;
+    private Integer goalAmount;
     @Basic
     @Column(name = "current_amount")
-    private BigDecimal currentAmount;
+    private Integer currentAmount;
+
+    @Basic
+    @Column(name = "image")
+    private String image;
     @Basic
     @Column(name = "donation_count")
     private Integer donationCount;
@@ -36,79 +47,13 @@ public class ProgramsEntity {
     private Date endDate;
     @Basic
     @Column(name = "status")
-    private int status;
+    private boolean status;
 
-    public int getProgramId() {
-        return programId;
-    }
 
-    public void setProgramId(int programId) {
-        this.programId = programId;
-    }
+    @ManyToOne
+    @JoinColumn(name = "category_id", referencedColumnName = "category_id")
+    private CategoriesEntity category;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public BigDecimal getGoalAmount() {
-        return goalAmount;
-    }
-
-    public void setGoalAmount(BigDecimal goalAmount) {
-        this.goalAmount = goalAmount;
-    }
-
-    public BigDecimal getCurrentAmount() {
-        return currentAmount;
-    }
-
-    public void setCurrentAmount(BigDecimal currentAmount) {
-        this.currentAmount = currentAmount;
-    }
-
-    public Integer getDonationCount() {
-        return donationCount;
-    }
-
-    public void setDonationCount(Integer donationCount) {
-        this.donationCount = donationCount;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
 
     @Override
     public boolean equals(Object o) {

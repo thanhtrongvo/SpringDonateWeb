@@ -1,17 +1,32 @@
 package com.example.springdonateweb.Models.Entities;
 
 import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.xml.sax.Attributes;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
+
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+
 @Entity
-@Table(name = "users", schema = "webmomo", catalog = "")
-public class UsersEntity {
+@Table(name = "users", schema = "webmomo")
+public class UsersEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "user_id")
-    private int userId;
+    @Column(name = "id")
+    private int id;
     @Basic
     @Column(name = "name")
     private String name;
@@ -30,84 +45,75 @@ public class UsersEntity {
     @Basic
     @Column(name = "phone_number")
     private String phoneNumber;
+
     @Basic
-    @Column(name = "created_at")
-    private Timestamp createdAt;
+    @Column(name = "status", nullable = false)
+    private Boolean status;
 
-    public int getUserId() {
-        return userId;
+    @Column(name = "verify_code", length = 6, nullable = true)
+    private String verifyCode;
+
+    @Column(name = "change_email", length = 100, nullable = true)
+    private String changeEmail;
+
+    @Override
+    public String toString() {
+        return "UsersEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", roleId=" + roleId +
+                ", address='" + address + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", status=" + status +
+                '}';
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        String roleName = switch (getRoleId()) {
+            case 1 -> "ROLE_ADMIN";
+            case 2 -> "ROLE_USER";
+            default -> "ROLE_GUEST"; // Vai trò mặc định nếu không khớp
+        };
+
+        authorities.add(new SimpleGrantedAuthority(roleName));
+        return authorities;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Integer getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Integer roleId) {
-        this.roleId = roleId;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
+    @Override
+    public String getUsername() {
+        return getEmail();
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UsersEntity that = (UsersEntity) o;
-        return userId == that.userId && Objects.equals(name, that.name) && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(roleId, that.roleId) && Objects.equals(address, that.address) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(createdAt, that.createdAt);
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(userId, name, email, password, roleId, address, phoneNumber, createdAt);
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
+
+
+
+
+
+
