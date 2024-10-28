@@ -10,6 +10,10 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+
+/**
+ * DTO for {@link CategoriesEntity}
+ */
 @Data
 @Builder
 @NoArgsConstructor

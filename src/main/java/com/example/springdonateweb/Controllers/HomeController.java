@@ -1,24 +1,20 @@
 package com.example.springdonateweb.Controllers;
 
-import com.example.springdonateweb.Models.Dtos.Categories.CategoriesResponseDto;
 import com.example.springdonateweb.Models.Dtos.Programs.ProgramResponseDto;
 import com.example.springdonateweb.Models.Dtos.Users.UsersResponseDto;
-import com.example.springdonateweb.Models.Entities.ProgramsEntity;
 import com.example.springdonateweb.Services.CategoriesService;
 import com.example.springdonateweb.Services.ProgramsService;
 import com.example.springdonateweb.Services.interfaces.IUsersService;
-import com.example.springdonateweb.util.SecurityUtil;
 import com.example.springdonateweb.util.AmountFormatter;
+import com.example.springdonateweb.util.SecurityUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -59,14 +55,16 @@ public class HomeController {
             return "index"; // Redirect to login if userId is null
         }
     }
+
     @GetMapping("/program")
-    public String program(Model model){
+    public String program(Model model) {
         List<ProgramResponseDto> program = programsService.findAll();
-        model.addAttribute("program",program);
+        model.addAttribute("program", program);
         model.addAttribute("amountFormatter", new AmountFormatter());
         return "client/program";
 
     }
+
     @GetMapping("/program/{id}")
     public String showProgramDetail(@PathVariable int id, Model model) {
         // Assume programService.getProgramById(id) fetches the ProgramResponseDto
@@ -75,6 +73,20 @@ public class HomeController {
         return "client/program-detail";
     }
 
+    @GetMapping("/test")
+    public String admin() {
+        return "admin/index";
+    }
+
+    @GetMapping("/test2")
+    public String test() {
+        return "admin/user/index";
+    }
+
+    @GetMapping("/test3")
+    public String testt() {
+        return "admin/user/add";
+    }
 
 
 }
