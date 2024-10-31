@@ -1,31 +1,24 @@
 package com.example.springdonateweb.Models.Dtos.Programs;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Date;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProgramResponseDto implements Serializable {
+public class ProgramDto {
     private int programId;
     private String name;
     private String description;
-    private String image;
+    private BigDecimal goalAmount;
+    private BigDecimal currentAmount;
     private Integer donationCount;
-    private String startDate;
-    private String endDate;
-    private boolean status;
-    private Integer goalAmount;
-    private Integer currentAmount;
-    private String category;
-
-    private int percentageAchieved;
-    private long remainingDays;
-
+    private Date startDate;
+    private Date endDate;
+    private int status;
 }
