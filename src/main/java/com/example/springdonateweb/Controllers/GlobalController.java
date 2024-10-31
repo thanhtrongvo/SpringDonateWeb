@@ -2,7 +2,7 @@ package com.example.springdonateweb.Controllers;
 
 
 import com.example.springdonateweb.Models.Dtos.Categories.CategoriesResponseDto;
-import com.example.springdonateweb.Models.Dtos.Programs.ProgramResponseDto;
+import com.example.springdonateweb.Models.Dtos.Programs.ProgramsResponseDto;
 import com.example.springdonateweb.Services.CategoriesService;
 import com.example.springdonateweb.Services.ProgramsService;
 import lombok.AccessLevel;

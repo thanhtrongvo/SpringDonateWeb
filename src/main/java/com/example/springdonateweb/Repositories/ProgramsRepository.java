@@ -5,14 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ProgramsRepository extends JpaRepository<ProgramsEntity, Integer> {
-    List<ProgramsEntity> findAll();
-    Optional<ProgramsEntity> findByProgramId(int id);
-
-
-
-
+    List<ProgramsEntity> findByStatusTrue(); // Lấy danh sách các chương trình đang hoạt động
 }

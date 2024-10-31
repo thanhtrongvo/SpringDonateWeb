@@ -3,6 +3,7 @@ package com.example.springdonateweb.Models.Entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 
@@ -14,18 +15,21 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "categories", schema = "webmomo", catalog = "")
-public class CategoriesEntity {
+public class CategoriesEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "category_id")
     private int categoryId;
+
     @Basic
     @Column(name = "name")
     private String name;
+
     @Basic
     @Column(name = "description")
     private String description;
-
 
 
     @Override

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html layout:decorate="~{admin/fragments/_layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Methods</title>
+</head>
+<body>
+<div layout:fragment="content">
+  <h3>Payment Methods</h3>
+  <a class="btn btn-primary" th:href="@{/admin/paymentmethods/create}">Add Payment Method</a>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Method Name</th>
+      <th>Description</th>
+      <th>Active</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="method : ${paymentMethods}">
+      <td th:text="${method.paymentMethodId}">ID</td>
+      <td th:text="${method.methodName}">Method Name</td>
+      <td th:text="${method.description}">Description</td>
+      <td th:text="${method.isActive ? 'Yes' : 'No'}">Active</td>
+      <td>
+        <a th:href="@{/admin/paymentmethods/edit/{id}(id=${method.paymentMethodId})}" class="btn btn-warning btn-sm">Edit</a>
+        <a th:href="@{/admin/paymentmethods/delete/{id}(id=${method.paymentMethodId})}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

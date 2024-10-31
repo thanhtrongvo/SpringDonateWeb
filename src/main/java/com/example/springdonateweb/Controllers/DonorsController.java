@@ -1,19 +1,13 @@
 package com.example.springdonateweb.Controllers;
 
-import com.example.springdonateweb.Models.Dtos.Donors.DonorAddDto;
 import com.example.springdonateweb.Models.Dtos.Donors.DonorCreateDto;
-import com.example.springdonateweb.Models.Dtos.Donors.DonorDto;
+import com.example.springdonateweb.Models.Dtos.Donors.DonorResponseDto;
 import com.example.springdonateweb.Models.Dtos.Donors.DonorUpdateDto;
 import com.example.springdonateweb.Services.interfaces.IDonorsService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -23,59 +17,40 @@ public class DonorsController {
     private final IDonorsService donorsService;
 
     @GetMapping("")
-    public String listDonors(Model model) {
-        List<DonorDto> donors = donorsService.findAll();
-        model.addAttribute("donors", donors);
-        return "donors/list";
+    public String index(Model model) {
+        model.addAttribute("donors", donorsService.findAll());
+        return "admin/Donors/index";
     }
 
     @GetMapping("/create")
-    public String createDonorForm(Model model) {
+    public String createForm(Model model) {
         model.addAttribute("donor", new DonorCreateDto());
-        return "donors/create";
+        return "admin/Donors/create";
     }
 
     @PostMapping("/create")
-    public String createDonor(
-            @Valid @ModelAttribute("donor") DonorCreateDto donorCreateDto,
-            BindingResult result,
-            RedirectAttributes redirectAttributes) {
-        if (result.hasErrors()) {
-            return "donors/create";
-        }
+    public String create(@ModelAttribute DonorCreateDto donorCreateDto) {
         donorsService.create(donorCreateDto);
-        redirectAttributes.addFlashAttribute("success", "Donor created successfully");
         return "redirect:/admin/donors";
     }
 
     @GetMapping("/edit/{id}")
-    public String editDonorForm(@PathVariable int id, Model model) {
-        DonorDto donor = donorsService.findById(id);
-        if (donor == null) {
-            return "redirect:/admin/donors";
-        }
+    public String editForm(@PathVariable int id, Model model) {
+        DonorResponseDto donor = donorsService.findById(id);
+        if (donor == null) return "redirect:/admin/donors";
         model.addAttribute("donor", donor);
-        return "donors/edit";
+        return "admin/Donors/edit";
     }
 
     @PostMapping("/edit/{id}")
-    public String editDonor(
-            @PathVariable int id,
-            @Valid @ModelAttribute("donor") DonorUpdateDto donorUpdateDto,
-            BindingResult result,
-            RedirectAttributes redirectAttributes) {
-        if (result.hasErrors()) {
-            return "donors/edit";
-        }
-        donorsService.update(donorUpdateDto);
-        redirectAttributes.addFlashAttribute("success", "Donor updated successfully");
+    public String update(@PathVariable int id, @ModelAttribute DonorUpdateDto donorUpdateDto) {
+        donorsService.update(id, donorUpdateDto);
         return "redirect:/admin/donors";
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteDonor(@PathVariable int id, RedirectAttributes redirectAttributes) {
+    public String delete(@PathVariable int id) {
         donorsService.delete(id);
-        redirectAttributes.addFlashAttribute("success", "Donor deleted successfully");
         return "redirect:/admin/donors";
     }
 }

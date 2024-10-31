@@ -63,12 +63,14 @@ public class UsersService implements IUsersService {
 
 
     @Override
-    public UsersResponseDto update(UserUpdateDto usersUpdateDto) {
-        Optional<UsersEntity> usersEntity = usersRepository.findByIdAndStatusTrue(usersUpdateDto.getId());
+    public UsersResponseDto update(UserAddDto userAddDto) {
+        Optional<UsersEntity> usersEntity = usersRepository.findByIdAndStatusTrue(userAddDto.getId());
         return usersEntity
                 .map(user -> {
-                    UsersEntity updatedUser = usersMapper.partialUpdate(usersUpdateDto, user);
-                    UsersEntity result = usersRepository.save(updatedUser);
+                    user.setName(userAddDto.getName());
+                    user.setEmail(userAddDto.getEmail());
+                    user.setRoleId(userAddDto.getRoleId());
+                    UsersEntity result = usersRepository.save(user);
                     return usersMapper.toResponseDto(result);
                 })
                 .orElse(null);
@@ -118,6 +120,11 @@ public class UsersService implements IUsersService {
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
                 SecurityContextHolder.getContext());
         return usersMapper.toResponseDto(result);
+    }
+
+    @Override
+    public UsersResponseDto update(UserUpdateDto userUpdateDto) {
+        return null;
     }
 
     @Override
@@ -241,6 +248,7 @@ public class UsersService implements IUsersService {
             return false;
         }
     }
+
 
 
 

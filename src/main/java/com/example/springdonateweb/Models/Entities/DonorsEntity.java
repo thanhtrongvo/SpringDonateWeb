@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 @Getter
 @Setter
@@ -28,7 +29,7 @@ public class DonorsEntity {
     private Integer donationId;
     @Basic
     @Column(name = "donation_date")
-    private Timestamp donationDate;
+    private LocalDateTime donationDate;
 
 
 

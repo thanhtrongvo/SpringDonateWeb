@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+
 
 @Data
 @Builder
@@ -24,5 +24,5 @@ public class CommentUpdateDto {
     @NotBlank(message = "Content is required")
     private String content;
 
-    private Timestamp createdAt;
+
 }

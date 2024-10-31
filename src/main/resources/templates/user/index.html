@@ -101,11 +101,12 @@
           <button class="btn btn-primary btn-sm" onclick="openModal('${user.id}', '${user.name}', '${user.email}', '${user.roleId}')">
             View
           </button>
-
+          <a th:href="@{/admin/user/edit/{id}(id=${user.id})}" class="btn btn-warning btn-sm text-white" style="text-decoration: none">Edit</a>
           <button class="btn btn-danger btn-sm">
             <a th:href="@{/admin/user/delete/{id}(id=${user.id})}" style="text-decoration: none" class="text-white">Delete</a>
           </button>
         </td>
+
       </tr>
       </tbody>
     </table>

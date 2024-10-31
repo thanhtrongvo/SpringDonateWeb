@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html layout:decorate="~{admin/fragments/_layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Donations Management</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h3>Donations</h3>
+    <a class="btn btn-primary" th:href="@{/admin/donations/create}">Add Donation</a>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Donation ID</th>
+            <th>User ID</th>
+            <th>Program ID</th>
+            <th>Amount</th>
+            <th>Donation Date</th>
+            <th>Donor Name</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="donation : ${donations}">
+            <td th:text="${donation.donationId}">ID</td>
+            <td th:text="${donation.userId}">User ID</td>
+            <td th:text="${donation.programId}">Program ID</td>
+            <td th:text="${donation.amount}">Amount</td>
+            <td th:text="${donation.donationDate}">Date</td>
+            <td th:text="${donation.donorName}">Donor</td>
+            <td>
+                <a th:href="@{/admin/donations/edit/{id}(id=${donation.donationId})}" class="btn btn-warning btn-sm">Edit</a>
+                <a th:href="@{/admin/donations/delete/{id}(id=${donation.donationId})}" class="btn btn-danger btn-sm"
+                   onclick="return confirm('Are you sure you want to delete this donation?');">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

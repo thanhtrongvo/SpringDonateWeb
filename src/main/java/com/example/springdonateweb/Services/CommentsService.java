@@ -1,7 +1,7 @@
 package com.example.springdonateweb.Services;
 
 import com.example.springdonateweb.Models.Dtos.Comments.CommentCreateDto;
-import com.example.springdonateweb.Models.Dtos.Comments.CommentDto;
+import com.example.springdonateweb.Models.Dtos.Comments.CommentResponseDto;
 import com.example.springdonateweb.Models.Dtos.Comments.CommentUpdateDto;
 import com.example.springdonateweb.Models.Entities.CommentsEntity;
 import com.example.springdonateweb.Repositories.CommentsRepository;
@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,36 +21,44 @@ public class CommentsService implements ICommentsService {
     private final CommentsMapper commentsMapper;
 
     @Override
-    public List<CommentDto> findAll() {
+    public List<CommentResponseDto> findAll() {
         return commentsRepository.findAll().stream()
                 .map(commentsMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public CommentDto findById(int id) {
-        Optional<CommentsEntity> comment = commentsRepository.findById(id);
-        return comment.map(commentsMapper::toDto).orElse(null);
+    public CommentResponseDto findById(int id) {
+        return commentsRepository.findById(id)
+                .map(commentsMapper::toDto)
+                .orElse(null);
     }
 
     @Override
-    public CommentDto create(CommentCreateDto commentCreateDto) {
-        CommentsEntity comment = commentsMapper.toEntity(commentCreateDto);
-        CommentsEntity savedComment = commentsRepository.save(comment);
+    public CommentResponseDto create(CommentCreateDto commentCreateDto) {
+        CommentsEntity commentsEntity = commentsMapper.toEntity(commentCreateDto);
+        CommentsEntity savedComment = commentsRepository.save(commentsEntity);
         return commentsMapper.toDto(savedComment);
     }
-
     @Override
-    public CommentDto update(CommentUpdateDto commentUpdateDto) {
-        Optional<CommentsEntity> comment = commentsRepository.findById(commentUpdateDto.getCommentId());
-        return comment
-                .map(c -> {
-                    CommentsEntity updatedComment = commentsMapper.partialUpdate(commentUpdateDto, c);
-                    CommentsEntity result = commentsRepository.save(updatedComment);
-                    return commentsMapper.toDto(result);
+    public CommentResponseDto update(int id, CommentUpdateDto commentUpdateDto) {
+        return commentsRepository.findById(id)
+                .map(existingComment -> {
+                    // Thực hiện cập nhật mà không thay đổi commentId
+                    if (commentUpdateDto.getUserId() != null) {
+                        existingComment.setUserId(commentUpdateDto.getUserId());
+                    }
+                    if (commentUpdateDto.getProgramId() != null) {
+                        existingComment.setProgramId(commentUpdateDto.getProgramId());
+                    }
+                    if (commentUpdateDto.getContent() != null) {
+                        existingComment.setContent(commentUpdateDto.getContent());
+                    }
+                    return commentsMapper.toDto(commentsRepository.save(existingComment));
                 })
                 .orElse(null);
     }
+
 
     @Override
     public void delete(int id) {

@@ -1,11 +1,16 @@
 package com.example.springdonateweb.Models.Entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "transactions", schema = "webmomo", catalog = "")
 public class TransactionsEntity {
@@ -24,58 +29,10 @@ public class TransactionsEntity {
     private Integer paymentMethodId;
     @Basic
     @Column(name = "transaction_date")
-    private Timestamp transactionDate;
+    private LocalDateTime transactionDate;
     @Basic
     @Column(name = "status")
     private String status;
-
-    public int getTransactionId() {
-        return transactionId;
-    }
-
-    public void setTransactionId(int transactionId) {
-        this.transactionId = transactionId;
-    }
-
-    public Integer getDonationId() {
-        return donationId;
-    }
-
-    public void setDonationId(Integer donationId) {
-        this.donationId = donationId;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public Integer getPaymentMethodId() {
-        return paymentMethodId;
-    }
-
-    public void setPaymentMethodId(Integer paymentMethodId) {
-        this.paymentMethodId = paymentMethodId;
-    }
-
-    public Timestamp getTransactionDate() {
-        return transactionDate;
-    }
-
-    public void setTransactionDate(Timestamp transactionDate) {
-        this.transactionDate = transactionDate;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     @Override
     public boolean equals(Object o) {

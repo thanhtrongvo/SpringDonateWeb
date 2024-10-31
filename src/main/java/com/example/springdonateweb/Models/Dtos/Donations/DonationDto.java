@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -20,6 +21,6 @@ public class DonationDto {
     private Integer userId;
     private Integer programId;
     private BigDecimal amount;
-    private Timestamp donationDate;
+    private LocalDateTime donationDate;
     private String donorName;
 }

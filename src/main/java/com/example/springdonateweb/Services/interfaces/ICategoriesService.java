@@ -1,15 +1,15 @@
 package com.example.springdonateweb.Services.interfaces;
 
 import com.example.springdonateweb.Models.Dtos.Categories.CategoryCreateDto;
-import com.example.springdonateweb.Models.Dtos.Categories.CategoriesResponseDto;
+import com.example.springdonateweb.Models.Dtos.Categories.CategoryResponseDto;
 import com.example.springdonateweb.Models.Dtos.Categories.CategoryUpdateDto;
 
 import java.util.List;
 
 public interface ICategoriesService {
-    List<CategoriesResponseDto> findAll();
-    CategoriesResponseDto findById(int id);
-    CategoriesResponseDto create(CategoryCreateDto categoryCreateDto);
-    CategoriesResponseDto update(CategoryUpdateDto categoryUpdateDto);
+    List<CategoryResponseDto> findAll();
+    CategoryResponseDto findById(int id);
+    CategoryResponseDto create(CategoryCreateDto categoryCreateDto);
+    CategoryResponseDto update(int id, CategoryUpdateDto categoryUpdateDto);
     void delete(int id);
 }
