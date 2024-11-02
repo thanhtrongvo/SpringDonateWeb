@@ -7,7 +7,7 @@
 <body>
 <div class="container mt-5">
     <h3>Edit Category</h3>
-    <form th:action="@{/templates/admin/Categories/edit/{id}(id=${category.categoryId})}" th:object="${category}" method="POST">
+    <form th:action="@{/admin/categories/edit/{id}(id=${category.categoryId})}" th:object="${category}" method="POST">
         <div class="form-group mb-3">
             <label for="name">Name</label>
             <input type="text" id="name" class="form-control" th:field="*{name}" required>
@@ -17,7 +17,7 @@
             <textarea id="description" class="form-control" th:field="*{description}" required></textarea>
         </div>
         <button type="submit" class="btn btn-primary mt-3">Update Category</button>
-        <a th:href="@{/templates/admin/Categories}" class="btn btn-secondary mt-3">Cancel</a>
+        <a th:href="@{/admin/categories}" class="btn btn-secondary mt-3">Cancel</a>
     </form>
 </div>
 </body>
