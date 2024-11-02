@@ -138,12 +138,11 @@ public class UsersService implements IUsersService {
 
     @Override
     public List<UsersResponseDto> findByStatusTrue() {
-        List<UsersEntity> usersEntities = usersRepository.findByStatusTrue();
-        return usersEntities.stream()
+        return usersRepository.findByStatusTrue().stream()
                 .map(usersMapper::toResponseDto)
                 .collect(Collectors.toList());
-
     }
+
     @Override
     public boolean existsByEmail(String email) {
         return usersRepository.existsByEmail(email);
