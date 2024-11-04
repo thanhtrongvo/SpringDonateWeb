@@ -1,15 +1,15 @@
 package com.example.springdonateweb.Services.interfaces;
 
 import com.example.springdonateweb.Models.Dtos.Comments.CommentCreateDto;
-import com.example.springdonateweb.Models.Dtos.Comments.CommentDto;
+import com.example.springdonateweb.Models.Dtos.Comments.CommentResponseDto;
 import com.example.springdonateweb.Models.Dtos.Comments.CommentUpdateDto;
 
 import java.util.List;
 
 public interface ICommentsService {
-    List<CommentDto> findAll();
-    CommentDto findById(int id);
-    CommentDto create(CommentCreateDto commentCreateDto);
-    CommentDto update(CommentUpdateDto commentUpdateDto);
+    List<CommentResponseDto> findAll();
+    CommentResponseDto findById(int id);
+    CommentResponseDto create(CommentCreateDto commentCreateDto);
+    CommentResponseDto update(int id, CommentUpdateDto commentUpdateDto);
     void delete(int id);
 }

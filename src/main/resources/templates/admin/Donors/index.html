@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html layout:decorate="~{admin/fragments/_layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="UTF-8">
+  <title>Donor Management</title>
+</head>
+<body>
+<div layout:fragment="content">
+  <h3>Donors</h3>
+  <a class="btn btn-primary" th:href="@{/admin/donors/create}">Add New Donor</a>
+
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Donor ID</th>
+      <th>Program ID</th>
+      <th>User ID</th>
+      <th>Donation ID</th>
+      <th>Donation Date</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="donor : ${donors}">
+      <td th:text="${donor.donorId}">ID</td>
+      <td th:text="${donor.programId}">Program ID</td>
+      <td th:text="${donor.userId}">User ID</td>
+      <td th:text="${donor.donationId}">Donation ID</td>
+      <td th:text="${#temporals.format(donor.donationDate, 'yyyy-MM-dd HH:mm')}">Donation Date</td>
+      <td>
+        <a th:href="@{/admin/donors/edit/{id}(id=${donor.donorId})}" class="btn btn-warning btn-sm">Edit</a>
+        <a th:href="@{/admin/donors/delete/{id}(id=${donor.donorId})}" class="btn btn-danger btn-sm"
+           onclick="return confirm('Are you sure you want to delete this donor?');">Delete</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
+<!DOCTYPE html>
+<html layout:decorate="~{admin/fragments/_layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="UTF-8">
+  <title>Donor Management</title>
+</head>
+<body>
+<div layout:fragment="content">
+  <h3>Donors</h3>
+  <a class="btn btn-primary" th:href="@{/admin/donors/create}">Add New Donor</a>
+
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Donor ID</th>
+      <th>Program ID</th>
+      <th>User ID</th>
+      <th>Donation ID</th>
+      <th>Donation Date</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="donor : ${donors}">
+      <td th:text="${donor.donorId}">ID</td>
+      <td th:text="${donor.programId}">Program ID</td>
+      <td th:text="${donor.userId}">User ID</td>
+      <td th:text="${donor.donationId}">Donation ID</td>
+      <td th:text="${#temporals.format(donor.donationDate, 'yyyy-MM-dd HH:mm')}">Donation Date</td>
+      <td>
+        <a th:href="@{/admin/donors/edit/{id}(id=${donor.donorId})}" class="btn btn-warning btn-sm">Edit</a>
+        <a th:href="@{/admin/donors/delete/{id}(id=${donor.donorId})}" class="btn btn-danger btn-sm"
+           onclick="return confirm('Are you sure you want to delete this donor?');">Delete</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

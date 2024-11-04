@@ -1,8 +1,8 @@
 package com.example.springdonateweb.Controllers;
 
 
-import com.example.springdonateweb.Models.Dtos.Categories.CategoriesResponseDto;
-import com.example.springdonateweb.Models.Dtos.Programs.ProgramResponseDto;
+import com.example.springdonateweb.Models.Dtos.Categories.CategoryResponseDto;
+import com.example.springdonateweb.Models.Dtos.Programs.ProgramsResponseDto;
 import com.example.springdonateweb.Services.CategoriesService;
 import com.example.springdonateweb.Services.ProgramsService;
 import lombok.AccessLevel;
@@ -23,10 +23,6 @@ public class GlobalController {
     private final CategoriesService categoriesService;
     private final ProgramsService programsService;
 
-    @ModelAttribute("category")
-    public List<CategoriesResponseDto> getCategories() {
-        return categoriesService.findAll();
-    }
 
 
 

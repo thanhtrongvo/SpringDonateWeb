@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -23,8 +24,9 @@ public class DonationsEntity {
     @Column(name = "amount")
     private BigDecimal amount;
     @Basic
+
     @Column(name = "donation_date")
-    private Timestamp donationDate;
+    private LocalDateTime donationDate;
     @Basic
     @Column(name = "donor_name")
     private String donorName;
@@ -61,11 +63,12 @@ public class DonationsEntity {
         this.amount = amount;
     }
 
-    public Timestamp getDonationDate() {
+
+    public LocalDateTime getDonationDate() {
         return donationDate;
     }
 
-    public void setDonationDate(Timestamp donationDate) {
+    public void setDonationDate(LocalDateTime donationDate) {
         this.donationDate = donationDate;
     }
 

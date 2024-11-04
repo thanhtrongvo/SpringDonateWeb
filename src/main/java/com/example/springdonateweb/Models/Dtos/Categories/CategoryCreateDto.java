@@ -1,8 +1,6 @@
 package com.example.springdonateweb.Models.Dtos.Categories;
 
-import java.io.Serializable;
-import jakarta.persistence.Basic;
-import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +10,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryCreateDto implements Serializable {
+public class CategoryCreateDto {
+    @NotNull(message = "Name is required")
     private String name;
     private String description;
 }

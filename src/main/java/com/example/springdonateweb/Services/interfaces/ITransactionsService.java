@@ -1,15 +1,15 @@
 package com.example.springdonateweb.Services.interfaces;
 
 import com.example.springdonateweb.Models.Dtos.Transactions.TransactionCreateDto;
-import com.example.springdonateweb.Models.Dtos.Transactions.TransactionDto;
+import com.example.springdonateweb.Models.Dtos.Transactions.TransactionResponseDto;
 import com.example.springdonateweb.Models.Dtos.Transactions.TransactionUpdateDto;
 
 import java.util.List;
 
 public interface ITransactionsService {
-    List<TransactionDto> findAll();
-    TransactionDto findById(int id);
-    TransactionDto create(TransactionCreateDto transactionCreateDto);
-    TransactionDto update(TransactionUpdateDto transactionUpdateDto);
+    List<TransactionResponseDto> findAll();
+    TransactionResponseDto findById(int id);
+    TransactionResponseDto create(TransactionCreateDto transactionCreateDto);
+    TransactionResponseDto update(int id, TransactionUpdateDto transactionUpdateDto);
     void delete(int id);
 }

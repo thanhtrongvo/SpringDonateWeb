@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DonationsRepository extends JpaRepository<DonationsEntity, Integer> {
+    // Các phương thức tìm kiếm bổ sung nếu cần
 }

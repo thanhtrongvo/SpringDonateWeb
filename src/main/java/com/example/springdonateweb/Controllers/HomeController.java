@@ -1,6 +1,6 @@
 package com.example.springdonateweb.Controllers;
 
-import com.example.springdonateweb.Models.Dtos.Programs.ProgramResponseDto;
+import com.example.springdonateweb.Models.Dtos.Programs.ProgramsResponseDto;
 import com.example.springdonateweb.Models.Dtos.Users.UsersResponseDto;
 import com.example.springdonateweb.Services.CategoriesService;
 import com.example.springdonateweb.Services.ProgramsService;
@@ -58,7 +58,7 @@ public class HomeController {
 
     @GetMapping("/program")
     public String program(Model model) {
-        List<ProgramResponseDto> program = programsService.findAll();
+        List<ProgramsResponseDto> program = programsService.findAll();
         model.addAttribute("program", program);
         model.addAttribute("amountFormatter", new AmountFormatter());
         return "client/program";
@@ -68,7 +68,7 @@ public class HomeController {
     @GetMapping("/program/{id}")
     public String showProgramDetail(@PathVariable int id, Model model) {
         // Assume programService.getProgramById(id) fetches the ProgramResponseDto
-        ProgramResponseDto program = programsService.findByProgramId(id);
+        ProgramsResponseDto program = programsService.findById(id);
         model.addAttribute("program", program);
         return "client/program-detail";
     }

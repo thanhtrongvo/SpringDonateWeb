@@ -14,6 +14,7 @@ public interface IUsersService {
     UsersResponseDto findById(int id);
     UsersResponseDto register(UserCreateDto userCreateDto);
     UsersResponseDto update(UserUpdateDto userUpdateDto);
+    UsersResponseDto update(UserAddDto userAddDto);
     UsersResponseDto delete(int id);
     boolean existsById(int id);
     void changePassword(int id, String password);

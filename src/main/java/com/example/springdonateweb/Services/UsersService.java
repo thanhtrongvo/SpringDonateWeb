@@ -63,12 +63,14 @@ public class UsersService implements IUsersService {
 
 
     @Override
-    public UsersResponseDto update(UserUpdateDto usersUpdateDto) {
-        Optional<UsersEntity> usersEntity = usersRepository.findByIdAndStatusTrue(usersUpdateDto.getId());
+    public UsersResponseDto update(UserAddDto userAddDto) {
+        Optional<UsersEntity> usersEntity = usersRepository.findByIdAndStatusTrue(userAddDto.getId());
         return usersEntity
                 .map(user -> {
-                    UsersEntity updatedUser = usersMapper.partialUpdate(usersUpdateDto, user);
-                    UsersEntity result = usersRepository.save(updatedUser);
+                    user.setName(userAddDto.getName());
+                    user.setEmail(userAddDto.getEmail());
+                    user.setRoleId(userAddDto.getRoleId());
+                    UsersEntity result = usersRepository.save(user);
                     return usersMapper.toResponseDto(result);
                 })
                 .orElse(null);
@@ -121,6 +123,11 @@ public class UsersService implements IUsersService {
     }
 
     @Override
+    public UsersResponseDto update(UserUpdateDto userUpdateDto) {
+        return null;
+    }
+
+    @Override
     public UserDetails createUserDetailFromRegister(UsersEntity usersEntity) {
         return new org.springframework.security.core.userdetails.User(
                 usersEntity.getEmail(),
@@ -131,12 +138,11 @@ public class UsersService implements IUsersService {
 
     @Override
     public List<UsersResponseDto> findByStatusTrue() {
-        List<UsersEntity> usersEntities = usersRepository.findByStatusTrue();
-        return usersEntities.stream()
+        return usersRepository.findByStatusTrue().stream()
                 .map(usersMapper::toResponseDto)
                 .collect(Collectors.toList());
-
     }
+
     @Override
     public boolean existsByEmail(String email) {
         return usersRepository.existsByEmail(email);
@@ -241,6 +247,7 @@ public class UsersService implements IUsersService {
             return false;
         }
     }
+
 
 
 

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -29,5 +30,5 @@ public class DonationAddDto {
     @NotBlank(message = "Donor name is required")
     private String donorName;
 
-    private Timestamp donationDate;
+    private LocalDateTime donationDate;
 }

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html layout:decorate="~{admin/fragments/_layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Program</title>
+</head>
+<body>
+<div layout:fragment="content">
+  <h3>Edit Program</h3>
+  <form th:action="@{/admin/programs/edit/{id}(id=${program.programId})}" th:object="${program}" method="POST">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" id="name" class="form-control" th:field="*{name}" placeholder="Enter program name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" class="form-control" th:field="*{description}" placeholder="Enter program description"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="goalAmount">Goal Amount</label>
+      <input type="number" id="goalAmount" class="form-control" th:field="*{goalAmount}" placeholder="Enter goal amount" required>
+    </div>
+
+    <div class="form-group">
+      <label for="currentAmount">Current Amount</label>
+      <input type="number" id="currentAmount" class="form-control" th:field="*{currentAmount}" placeholder="Enter current amount">
+    </div>
+
+    <div class="form-group">
+      <label for="startDate">Start Date</label>
+      <input type="date" id="startDate" class="form-control" th:field="*{startDate}" required>
+    </div>
+
+    <div class="form-group">
+      <label for="endDate">End Date</label>
+      <input type="date" id="endDate" class="form-control" th:field="*{endDate}" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Update Program</button>
+    <a th:href="@{/admin/programs}" class="btn btn-secondary mt-3">Cancel</a>
+  </form>
+</div>
+</body>
+</html>

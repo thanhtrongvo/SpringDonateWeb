@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -26,7 +27,7 @@ public class TransactionCreateDto {
     @NotNull(message = "Payment method ID is required")
     private Integer paymentMethodId;
 
-    private Timestamp transactionDate;
+    private LocalDateTime transactionDate;
 
     @NotBlank(message = "Status is required")
     private String status;

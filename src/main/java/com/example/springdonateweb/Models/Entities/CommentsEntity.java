@@ -3,6 +3,7 @@ package com.example.springdonateweb.Models.Entities;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -23,7 +24,7 @@ public class CommentsEntity {
     private String content;
     @Basic
     @Column(name = "created_at")
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
     public int getCommentId() {
         return commentId;
@@ -57,11 +58,11 @@ public class CommentsEntity {
         this.content = content;
     }
 
-    public Timestamp getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
