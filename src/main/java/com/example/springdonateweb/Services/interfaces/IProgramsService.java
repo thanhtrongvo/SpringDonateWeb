@@ -6,5 +6,8 @@ import java.util.List;
 
 public interface IProgramsService {
     List<ProgramResponseDto> findAll();
+
     ProgramResponseDto findByProgramId(int id);
+
+    ProgramResponseDto findByCategoryId(int id);
 }

@@ -88,5 +88,13 @@ public class HomeController {
         return "admin/user/add";
     }
 
+    @GetMapping("/category/{id}")
+    public String showProgramByCategory(@PathVariable int id, Model model) {
+        // Assume programService.getProgramById(id) fetches the ProgramResponseDto
+        ProgramResponseDto program = programsService.findByCategoryId(id);
+        model.addAttribute("program", program);
+        return "client/program";
+    }
+
 
 }

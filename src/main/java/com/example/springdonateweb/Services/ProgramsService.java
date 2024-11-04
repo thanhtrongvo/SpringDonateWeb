@@ -32,4 +32,10 @@ public class ProgramsService implements IProgramsService {
         Optional<ProgramsEntity> program = programReposotory.findByProgramId(id);
         return program.map(programsMapper::toResponseDto).orElse(null);
     }
+
+    @Override
+    public ProgramResponseDto findByCategoryId(int id) {
+        Optional<ProgramsEntity> program = programReposotory.findByCategoryId(id);
+        return program.map(programsMapper::toResponseDto).orElse(null);
+    }
 }
