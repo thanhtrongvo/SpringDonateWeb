@@ -23,6 +23,11 @@ public class GlobalController {
     private final CategoriesService categoriesService;
     private final ProgramsService programsService;
 
+    @ModelAttribute("category")
+    public List<CategoryResponseDto> categories() {
+        return categoriesService.findAll();
+    }
+    
 
 
 

@@ -12,15 +12,19 @@ import java.sql.Date;
 @NoArgsConstructor
 @Builder
 public class ProgramsResponseDto {
+
     private int programId;
     private String name;
     private String description;
-    private Integer goalAmount;
-    private Integer currentAmount;
     private String image;
     private Integer donationCount;
-    private Date startDate;
-    private Date endDate;
+    private String startDate;
+    private String endDate;
     private boolean status;
-    private int categoryId;
+    private Integer goalAmount;
+    private Integer currentAmount;
+    private String category;
+
+    private int percentageAchieved;
+    private long remainingDays;
 }

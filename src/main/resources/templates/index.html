@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" layout:decorate="~{fragments/_layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <head>
     <meta charset="utf-8">
@@ -10,36 +10,29 @@
 
     <div th:replace="~{fragments/_link}"></div>
 
-    <!-- Libraries Stylesheet -->
-    <link th:href="@{/lib/animate/animate.min.css}" rel="stylesheet">
-    <link th:href="@{/lib/owlcarousel/assets/owl.carousel.min.css}" rel="stylesheet">
-
-    <!-- Customized Bootstrap Stylesheet -->
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-
-    <!-- Template Stylesheet -->
-    <link th:href="@{/css/style.css}" rel="stylesheet">
 </head>
 
 <body>
-
-    <!-- Navbar Start -->
-    <div th:replace="~{fragments/_header}"></div>
-    <!-- Navbar End -->
-
-
-    <!-- Carousel Start -->
+<main layout:fragment="content">
     <div class="container-fluid p-0 mb-5">
-        <div id="header-carousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel slide" data-bs-ride="carousel" id="header-carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img class="w-100" th:src="@{/img/carousel-1.jpg}" alt="Image">
+                    <img alt="Image" class="w-100" th:src="@{/img/carousel-1.jpg}">
                     <div class="carousel-caption">
                         <div class="container">
                             <div class="row justify-content-center">
                                 <div class="col-lg-7 pt-5">
-                                    <h1 class="display-4 text-white mb-3 animated slideInDown">Hãy Trao Đi Cơ Hội, Chúng Ta Nhận Lại Tương Lai!</h1>
-                                    <p class="fs-5 text-white-50 mb-5 animated slideInDown">Một chút đóng góp của bạn hôm nay có thể là cả tương lai của một sinh viên ngày mai. Những sinh viên khó khăn đang cần sự giúp đỡ của bạn để tiếp tục con đường học tập và xây dựng tương lai. Hãy chung tay cùng chúng tôi, mọi sự đóng góp của bạn đều là món quà vô giá cho học</p>
+                                    <h1 class="display-4 text-white mb-3 animated slideInDown">Hãy Trao Đi Cơ Hội, Chúng
+                                        Ta
+                                        Nhận Lại Tương Lai!</h1>
+                                    <p class="fs-5 text-white-50 mb-5 animated slideInDown">Một chút đóng góp của bạn
+                                        hôm
+                                        nay có thể là cả tương lai của một sinh viên ngày mai. Những sinh viên khó khăn
+                                        đang
+                                        cần sự giúp đỡ của bạn để tiếp tục con đường học tập và xây dựng tương lai. Hãy
+                                        chung tay cùng chúng tôi, mọi sự đóng góp của bạn đều là món quà vô giá cho
+                                        học</p>
                                     <a class="btn btn-primary py-2 px-3 animated slideInDown" href="">
                                         Learn More
                                         <div class="d-inline-flex btn-sm-square bg-white text-primary rounded-circle ms-2">
@@ -52,13 +45,21 @@
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <img class="w-100" th:src="@{/img/carousel-2.jpg}" alt="Image">
+                    <img alt="Image" class="w-100" th:src="@{/img/carousel-2.jpg}">
                     <div class="carousel-caption">
                         <div class="container">
                             <div class="row justify-content-center">
                                 <div class="col-lg-7 pt-5">
-                                    <h1 class="display-4 text-white mb-3 animated slideInDown">Hành Trình Ước Mơ Không Bao Giờ Đơn Độc!</h1>
-                                    <p class="fs-5 text-white-50 mb-5 animated slideInDown">Chúng tôi tin rằng không sinh viên nào nên phải từ bỏ ước mơ học tập chỉ vì hoàn cảnh khó khăn. Mọi khoản đóng góp, dù nhỏ bé, đều giúp các sinh viên thêm vững bước trên con đường tri thức. Hãy là người bạn đồng hành và mang đến hy vọng cho họ bằng cách đóng góp ngay hôm nay</p>
+                                    <h1 class="display-4 text-white mb-3 animated slideInDown">Hành Trình Ước Mơ Không
+                                        Bao
+                                        Giờ Đơn Độc!</h1>
+                                    <p class="fs-5 text-white-50 mb-5 animated slideInDown">Chúng tôi tin rằng không
+                                        sinh
+                                        viên nào nên phải từ bỏ ước mơ học tập chỉ vì hoàn cảnh khó khăn. Mọi khoản đóng
+                                        góp, dù nhỏ bé, đều giúp các sinh viên thêm vững bước trên con đường tri thức.
+                                        Hãy
+                                        là người bạn đồng hành và mang đến hy vọng cho họ bằng cách đóng góp ngay hôm
+                                        nay</p>
                                     <a class="btn btn-primary py-2 px-3 animated slideInDown" href="">
                                         Learn More
                                         <div class="d-inline-flex btn-sm-square bg-white text-primary rounded-circle ms-2">
@@ -71,20 +72,19 @@
                     </div>
                 </div>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#header-carousel"
-                    data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <button class="carousel-control-prev" data-bs-slide="prev" data-bs-target="#header-carousel"
+                    type="button">
+                <span aria-hidden="true" class="carousel-control-prev-icon"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#header-carousel"
-                    data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <button class="carousel-control-next" data-bs-slide="next" data-bs-target="#header-carousel"
+                    type="button">
+                <span aria-hidden="true" class="carousel-control-next-icon"></span>
                 <span class="visually-hidden">Next</span>
             </button>
         </div>
     </div>
     <!-- Carousel End -->
-
 
 
     <!-- About Start -->
@@ -93,19 +93,27 @@
             <div class="row g-5">
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="position-relative overflow-hidden h-100" style="min-height: 400px;">
-                        <img class="position-absolute w-100 h-100 pt-5 pe-5" th:src="@{/img/about-1.jpg}" alt="" style="object-fit: cover;">
-                        <img class="position-absolute top-0 end-0 bg-white ps-2 pb-2" th:src="@{/img/about-2.jpg}" alt="" style="width: 200px; height: 200px;">
+                        <img alt="" class="position-absolute w-100 h-100 pt-5 pe-5" style="object-fit: cover;"
+                             th:src="@{/img/about-1.jpg}">
+                        <img alt="" class="position-absolute top-0 end-0 bg-white ps-2 pb-2"
+                             style="width: 200px; height: 200px;"
+                             th:src="@{/img/about-2.jpg}">
                     </div>
                 </div>
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="h-100">
-                        <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">Về chúng tôi</div>
+                        <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">Về chúng tôi
+                        </div>
                         <h1 class="display-6 mb-5">Cùng Chung Tay Giúp Đỡ </h1>
                         <div class="bg-light border-bottom border-5 border-primary rounded p-4 mb-4">
-                            <p class="text-dark mb-2">Chúng tôi kêu gọi sự hỗ trợ từ cộng đồng nhằm mang đến cơ hội tốt hơn cho sinh viên vượt qua khó khăn và đạt được ước mơ học tập</p>
+                            <p class="text-dark mb-2">Chúng tôi kêu gọi sự hỗ trợ từ cộng đồng nhằm mang đến cơ hội tốt
+                                hơn
+                                cho sinh viên vượt qua khó khăn và đạt được ước mơ học tập</p>
 
                         </div>
-                        <p class="mb-5">Tạo điều kiện cho sinh viên gặp khó khăn về tài chính có thể tiếp tục theo đuổi ước mơ học tập và phát triển bản thân</p>
+                        <p class="mb-5">Tạo điều kiện cho sinh viên gặp khó khăn về tài chính có thể tiếp tục theo đuổi
+                            ước
+                            mơ học tập và phát triển bản thân</p>
                         <a class="btn btn-primary py-2 px-3 me-3" href="">
                             Tìm hiểu thêm
                             <div class="d-inline-flex btn-sm-square bg-white text-primary rounded-circle ms-2">
@@ -148,14 +156,15 @@
                                     <p class="text-dark">$9,542 <small class="text-body">Raised</small></p>
                                 </div>
                                 <div class="progress">
-                                    <div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">
+                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="90" class="progress-bar"
+                                         role="progressbar">
                                         <span>90%</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="position-relative mt-auto">
-                            <img class="img-fluid" th:src="@{/img/courses-1.jpg}" alt="">
+                            <img alt="" class="img-fluid" th:src="@{/img/courses-1.jpg}">
                             <div class="causes-overlay">
                                 <a class="btn btn-outline-primary" href="">
                                     Read More
@@ -181,14 +190,15 @@
                                     <p class="text-dark">$9,542 <small class="text-body">Raised</small></p>
                                 </div>
                                 <div class="progress">
-                                    <div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">
+                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="90" class="progress-bar"
+                                         role="progressbar">
                                         <span>90%</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="position-relative mt-auto">
-                            <img class="img-fluid" th:src="@{/img/courses-2.jpg}" alt="">
+                            <img alt="" class="img-fluid" th:src="@{/img/courses-2.jpg}">
                             <div class="causes-overlay">
                                 <a class="btn btn-outline-primary" href="">
                                     Read More
@@ -214,14 +224,15 @@
                                     <p class="text-dark">$9,542 <small class="text-body">Raised</small></p>
                                 </div>
                                 <div class="progress">
-                                    <div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">
+                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="90" class="progress-bar"
+                                         role="progressbar">
                                         <span>90%</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="position-relative mt-auto">
-                            <img class="img-fluid" th:src="@{/img/courses-3.jpg}" alt="">
+                            <img alt="" class="img-fluid" th:src="@{/img/courses-3.jpg}">
                             <div class="causes-overlay">
                                 <a class="btn btn-outline-primary" href="">
                                     Read More
@@ -244,12 +255,14 @@
         <div class="container">
             <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
                 <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">Chúng tôi sẽ làm</div>
-                <h1 class="display-6 mb-5">Xây dựng một cộng đồng học tập bền vững, nơi tất cả sinh viên đều có cơ hội tiếp cận giáo dục</h1>
+                <h1 class="display-6 mb-5">Xây dựng một cộng đồng học tập bền vững, nơi tất cả sinh viên đều có cơ hội
+                    tiếp
+                    cận giáo dục</h1>
             </div>
             <div class="row g-4 justify-content-center">
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="service-item bg-white text-center h-100 p-4 p-xl-5">
-                        <img class="img-fluid mb-4" th:src="@{/img/icon-1.png}" alt="">
+                        <img alt="" class="img-fluid mb-4" th:src="@{/img/icon-1.png}">
                         <h4 class="mb-3">Trao học bổng</h4>
                         <p class="mb-4">Thông tin về các chương trình học bổng dành cho sinh viên nghèo khó.</p>
                         <a class="btn btn-outline-primary px-3" href="">
@@ -262,9 +275,11 @@
                 </div>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="service-item bg-white text-center h-100 p-4 p-xl-5">
-                        <img class="img-fluid mb-4" th:src="@{/img/icon-2.png}" alt="">
+                        <img alt="" class="img-fluid mb-4" th:src="@{/img/icon-2.png}">
                         <h4 class="mb-3">Cứu trợ khẩn cấp</h4>
-                        <p class="mb-4">Các chương trình cứu trợ tài chính khẩn cấp cho sinh viên gặp tình huống khó khăn đột xuất (thiên tai, dịch bệnh, v.v.).</p>
+                        <p class="mb-4">Các chương trình cứu trợ tài chính khẩn cấp cho sinh viên gặp tình huống khó
+                            khăn
+                            đột xuất (thiên tai, dịch bệnh, v.v.).</p>
                         <a class="btn btn-outline-primary px-3" href="">
                             Learn More
                             <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
@@ -275,9 +290,10 @@
                 </div>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="service-item bg-white text-center h-100 p-4 p-xl-5">
-                        <img class="img-fluid mb-4" th:src="@{/img/icon-3.png}" alt="">
+                        <img alt="" class="img-fluid mb-4" th:src="@{/img/icon-3.png}">
                         <h4 class="mb-3">Chương trình hỗ trợ học phí</h4>
-                        <p class="mb-4">Hỗ trợ một phần hoặc toàn bộ học phí cho những sinh viên không có khả năng chi trả.</p>
+                        <p class="mb-4">Hỗ trợ một phần hoặc toàn bộ học phí cho những sinh viên không có khả năng chi
+                            trả.</p>
                         <a class="btn btn-outline-primary px-3" href="">
                             Learn More
                             <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
@@ -297,8 +313,12 @@
             <div class="row g-5 align-items-center">
                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                     <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">Ủng hộ ngay</div>
-                    <h1 class="display-6 text-white mb-5">Quỹ chung hỗ trợ sinh viên khẩn cấp  </h1>
-                    <p class="text-white-50 mb-0">Tạo điều kiện cho sinh viên gặp khó khăn về tài chính có thể tiếp tục theo đuổi ước mơ học tập và phát triển bản thân.Hướng tới xây dựng một cộng đồng học tập bền vững, nơi tất cả sinh viên đều có cơ hội tiếp cận giáo dục.</p>
+                    <h1 class="display-6 text-white mb-5">Quỹ chung hỗ trợ sinh viên khẩn cấp </h1>
+                    <p class="text-white-50 mb-0">Tạo điều kiện cho sinh viên gặp khó khăn về tài chính có thể tiếp tục
+                        theo
+                        đuổi ước mơ học tập và phát triển bản thân.Hướng tới xây dựng một cộng đồng học tập bền vững,
+                        nơi
+                        tất cả sinh viên đều có cơ hội tiếp cận giáo dục.</p>
                 </div>
                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
                     <div class="h-100 bg-white p-5">
@@ -306,25 +326,28 @@
                             <div class="row g-3">
                                 <div class="col-12">
                                     <div class="form-floating">
-                                        <input type="text" class="form-control bg-light border-0" id="name" placeholder="Your Name">
+                                        <input class="form-control bg-light border-0" id="name" placeholder="Your Name"
+                                               type="text">
                                         <label for="name">Your Name</label>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-floating">
-                                        <input type="email" class="form-control bg-light border-0" id="email" placeholder="Your Email">
+                                        <input class="form-control bg-light border-0" id="email"
+                                               placeholder="Your Email"
+                                               type="email">
                                         <label for="email">Your Email</label>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="btn-group d-flex justify-content-around">
-                                        <input type="radio" class="btn-check" name="btnradio" id="btnradio1" checked>
+                                        <input checked class="btn-check" id="btnradio1" name="btnradio" type="radio">
                                         <label class="btn btn-light py-3" for="btnradio1">$10</label>
 
-                                        <input type="radio" class="btn-check" name="btnradio" id="btnradio2">
+                                        <input class="btn-check" id="btnradio2" name="btnradio" type="radio">
                                         <label class="btn btn-light py-3" for="btnradio2">$20</label>
 
-                                        <input type="radio" class="btn-check" name="btnradio" id="btnradio3">
+                                        <input class="btn-check" id="btnradio3" name="btnradio" type="radio">
                                         <label class="btn btn-light py-3" for="btnradio3">$30</label>
                                     </div>
                                 </div>
@@ -346,36 +369,51 @@
     <!-- Donate End -->
 
 
-
-
     <!-- Testimonial Start -->
     <div class="container-xxl py-5">
         <div class="container">
             <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">Lời cảm ơn </div>
+                <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">Lời cảm ơn</div>
                 <h1 class="display-6 mb-5">Chúng tôi đã giúp đỡ được nhiều sinh viên cần sự hỗ trợ</h1>
             </div>
             <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
                 <div class="testimonial-item text-center">
-                    <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4" th:src="@{/img/testimonial-1.jpg}" style="width: 100px; height: 100px;">
+                    <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4" style="width: 100px; height: 100px;"
+                         th:src="@{/img/testimonial-1.jpg}">
                     <div class="testimonial-text rounded text-center p-4">
-                        <p>Em xin chân thành cảm ơn các nhà hảo tâm và quý trường đã dành sự quan tâm đặc biệt tới sinh viên có hoàn cảnh khó khăn như em. Nhờ sự hỗ trợ này, em đã có thể tiếp tục việc học mà không phải lo lắng về gánh nặng tài chính. </p>
+                        <p>Em xin chân thành cảm ơn các nhà hảo tâm và quý trường đã dành sự quan tâm đặc biệt tới sinh
+                            viên
+                            có hoàn cảnh khó khăn như em. Nhờ sự hỗ trợ này, em đã có thể tiếp tục việc học mà không
+                            phải lo
+                            lắng về gánh nặng tài chính. </p>
                         <h5 class="mb-1">Doner Name</h5>
                         <span class="fst-italic">Profession</span>
                     </div>
                 </div>
                 <div class="testimonial-item text-center">
-                    <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4" th:src="@{/img/testimonial-2.jpg}" style="width: 100px; height: 100px;">
+                    <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4" style="width: 100px; height: 100px;"
+                         th:src="@{/img/testimonial-2.jpg}">
                     <div class="testimonial-text rounded text-center p-4">
-                        <p>Học bổng không chỉ giúp em trang trải học phí mà còn là động lực to lớn giúp em tự tin theo đuổi ước mơ của mình. Em mong rằng, trong tương lai, bản thân sẽ có thể quay lại đóng góp cho cộng đồng, tiếp tục truyền đi ngọn lửa yêu thương mà em đã nhận được.</p>
+                        <p>Học bổng không chỉ giúp em trang trải học phí mà còn là động lực to lớn giúp em tự tin theo
+                            đuổi
+                            ước mơ của mình. Em mong rằng, trong tương lai, bản thân sẽ có thể quay lại đóng góp cho
+                            cộng
+                            đồng, tiếp tục truyền đi ngọn lửa yêu thương mà em đã nhận được.</p>
                         <h5 class="mb-1">Doner Name</h5>
                         <span class="fst-italic">Profession</span>
                     </div>
                 </div>
                 <div class="testimonial-item text-center">
-                    <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4" th:src="@{/img/testimonial-3.jpg}" style="width: 100px; height: 100px;">
+                    <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4" style="width: 100px; height: 100px;"
+                         th:src="@{/img/testimonial-3.jpg}">
                     <div class="testimonial-text rounded text-center p-4">
-                        <p>Nhờ sự giúp đỡ quý báu từ các anh chị mạnh thường quân, em đã có thể vượt qua khoảng thời gian khó khăn nhất. Học bổng mà em nhận được không chỉ hỗ trợ về mặt tài chính mà còn là nguồn động viên tinh thần to lớn, giúp em tin rằng mọi khó khăn đều có thể vượt qua với sự sẻ chia của cộng đồng</p>
+                        <p>Nhờ sự giúp đỡ quý báu từ các anh chị mạnh thường quân, em đã có thể vượt qua khoảng thời
+                            gian
+                            khó khăn nhất. Học bổng mà em nhận được không chỉ hỗ trợ về mặt tài chính mà còn là nguồn
+                            động
+                            viên tinh thần to lớn, giúp em tin rằng mọi khó khăn đều có thể vượt qua với sự sẻ chia của
+                            cộng
+                            đồng</p>
                         <h5 class="mb-1">Doner Name</h5>
                         <span class="fst-italic">Profession</span>
                     </div>
@@ -384,22 +422,23 @@
             </div>
         </div>
     </div>
-    <!-- Testimonial End -->
+</main>
+<!-- Testimonial End -->
 
 
-    <!-- Footer Start -->
-    <div th:replace="~{fragments/_footer}">
+<!-- Footer Start -->
+<div th:replace="~{fragments/_footer}">
 
-    </div>
-    <!-- Footer End -->
-
-
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+</div>
+<!-- Footer End -->
 
 
-    <!-- JavaScript Libraries -->
-   <div th:replace="~{fragments/_lib}"></div>
+<!-- Back to Top -->
+<a class="btn btn-lg btn-primary btn-lg-square back-to-top" href="#"><i class="bi bi-arrow-up"></i></a>
+
+
+<!-- JavaScript Libraries -->
+<div th:replace="~{fragments/_lib}"></div>
 </body>
 
 </html>

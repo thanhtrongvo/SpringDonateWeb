@@ -1,0 +1,118 @@
+<!-- Update the payment modal form -->
+<div
+  th:fragment="payment-modal"
+  class="modal fade"
+  id="paymentModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="paymentModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="paymentModalLabel">Donation Payment</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <!-- Updated form with Thymeleaf -->
+      <form th:action="@{/payment/vnpay}" method="POST" id="paymentForm">
+        <div class="modal-body">
+          <!-- Amount Input -->
+          <div class="mb-4">
+            <label for="amount" class="form-label">Amount (VND)</label>
+            <div class="input-group">
+              <input
+                type="number"
+                class="form-control form-control-lg"
+                id="amount"
+                name="amount"
+                required
+                min="10000"
+                step="10000"
+                th:field="${paymentRequest.amount}"
+              />
+              <span class="input-group-text">VND</span>
+            </div>
+            <div class="form-text">Minimum amount: 10,000 VND</div>
+            <div
+              class="text-danger"
+              th:if="${#fields.hasErrors('paymentRequest.amount')}"
+              th:errors="${paymentRequest.amount}"
+            ></div>
+          </div>
+
+          <!-- Quick Amount Buttons -->
+          <div class="mb-4">
+            <div class="d-flex gap-2 flex-wrap">
+              <button
+                type="button"
+                class="btn btn-outline-primary amount-btn"
+                data-amount="50000"
+              >
+                50,000đ
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-primary amount-btn"
+                data-amount="100000"
+              >
+                100,000đ
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-primary amount-btn"
+                data-amount="200000"
+              >
+                200,000đ
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-primary amount-btn"
+                data-amount="500000"
+              >
+                500,000đ
+              </button>
+            </div>
+          </div>
+
+          <!-- Note Input -->
+          <div class="mb-3">
+            <label for="note" class="form-label">Note (Optional)</label>
+            <textarea
+              class="form-control"
+              id="note"
+              name="note"
+              rows="3"
+              placeholder="Leave a message..."
+              th:field="${paymentRequest.note}"
+            ></textarea>
+            <div
+              class="text-danger"
+              th:if="${#fields.hasErrors('paymentRequest.note')}"
+              th:errors="${paymentRequest.note}"
+            ></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-credit-card me-2"></i>
+            Pay with VNPay
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
