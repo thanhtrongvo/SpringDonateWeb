@@ -46,7 +46,7 @@ public class ProgramsService implements IProgramsService {
         ProgramsEntity programsEntity = programsMapper.toEntity(programCreateDto);
         programsEntity.setCurrentAmount(0); // Đặt current_amount là 0
         programsEntity.setDonationCount(0); // Đặt donation_count là 0
-
+        programsEntity.setStatus(true);
         Optional<CategoriesEntity> category = categoriesRepository.findById(programCreateDto.getCategoryId());
         category.ifPresent(programsEntity::setCategory);
 
