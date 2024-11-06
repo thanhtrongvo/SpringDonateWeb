@@ -3,15 +3,17 @@ package com.example.springdonateweb.Controllers;
 import com.example.springdonateweb.Models.Dtos.Programs.ProgramCreateDto;
 import com.example.springdonateweb.Models.Dtos.Programs.ProgramUpdateDto;
 import com.example.springdonateweb.Models.Dtos.Programs.ProgramsResponseDto;
+import com.example.springdonateweb.Services.interfaces.ICategoriesService;
 import com.example.springdonateweb.Services.interfaces.IProgramsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import com.example.springdonateweb.Repositories.CategoriesRepository;
 import java.util.List;
 
 @Controller
@@ -20,21 +22,27 @@ import java.util.List;
 public class ProgramsController {
 
     private final IProgramsService programsService;
-
-    // Trang hiển thị danh sách chương trình
+    private final ICategoriesService categoriesService;
     @GetMapping("")
-    public String listPrograms(Model model) {
-        List<ProgramsResponseDto> programs = programsService.findAll();
-        model.addAttribute("programs", programs);
-        return "admin/Programs/index";  // Đường dẫn tới index.html trong thư mục Programs
+    public String listPrograms(
+            Model model,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<ProgramsResponseDto> programPage = programsService.findProgramsByPage(page, size);
+        model.addAttribute("programs", programPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", programPage.getTotalPages());
+        return "admin/Programs/index";
     }
 
     // Trang thêm chương trình mới
     @GetMapping("/create")
     public String createProgramForm(Model model) {
         model.addAttribute("program", new ProgramCreateDto());
+        model.addAttribute("categories", categoriesService.findAll2()); // Sử dụng findAll2 thông qua dependency injection
         return "admin/Programs/create";  // Đường dẫn tới create.html trong thư mục Programs
     }
+
 
     @PostMapping("/create")
     public String createProgram(

@@ -84,13 +84,22 @@
   <div>
     <!-- Start: Gamanet_Pagination_bs5 -->
     <div class="d-flex justify-content-center" id="pagination">
-      <a class="pagination-item disabled" href="#"><img th:src="@{/img/icon_arrow-left.svg}"/><span>Previous</span></a>
-      <a class="pagination-item active" href="#">1</a>
-      <a class="pagination-item" href="#">2</a>
-      <a class="pagination-item" href="#">3</a>
-      <a class="pagination-item" href="#">...</a>
-      <a class="pagination-item" href="#"><span>Next</span><img th:src="@{/img/icon_arrow-right.svg}"/></a>
+      <a th:href="@{/admin/programs(page=${currentPage - 1}, size=${size})}"
+         class="pagination-item" th:classappend="${currentPage == 0} ? 'disabled' : ''">
+        <span>Previous</span>
+      </a>
+
+      <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+    <a th:href="@{/admin/programs(page=${i}, size=${size})}"
+       th:text="${i + 1}" th:classappend="${i == currentPage} ? 'active' : ''" class="pagination-item"></a>
+  </span>
+
+      <a th:href="@{/admin/programs(page=${currentPage + 1}, size=${size})}"
+         class="pagination-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled' : ''">
+        <span>Next</span>
+      </a>
     </div>
+
     <!-- End: Gamanet_Pagination_bs5 -->
   </div>
 </div>

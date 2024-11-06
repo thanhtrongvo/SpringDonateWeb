@@ -31,14 +31,14 @@ public class ProgramsEntity {
     private Integer goalAmount;
     @Basic
     @Column(name = "current_amount")
-    private Integer currentAmount;
+    private Integer currentAmount = 0;
 
     @Basic
     @Column(name = "image")
     private String image;
     @Basic
     @Column(name = "donation_count")
-    private Integer donationCount;
+    private Integer donationCount = 0;
     @Basic
     @Column(name = "start_date")
     private Date startDate;
@@ -47,7 +47,7 @@ public class ProgramsEntity {
     private Date endDate;
     @Basic
     @Column(name = "status")
-    private boolean status;
+    private boolean status = true;
 
 
     @ManyToOne

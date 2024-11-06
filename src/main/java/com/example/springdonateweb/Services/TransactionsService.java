@@ -8,6 +8,9 @@ import com.example.springdonateweb.Repositories.TransactionsRepository;
 import com.example.springdonateweb.Services.interfaces.ITransactionsService;
 import com.example.springdonateweb.Services.mappers.TransactionsMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +36,12 @@ public class TransactionsService implements ITransactionsService {
                 .map(transactionsMapper::toDto)
                 .orElse(null);
     }
-
+    @Override
+    public Page<TransactionResponseDto> findTransactionsByPage(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<TransactionsEntity> transactionsPage = transactionsRepository.findAll(pageable);
+        return transactionsPage.map(transactionsMapper::toDto);
+    }
     @Override
     public TransactionResponseDto create(TransactionCreateDto transactionCreateDto) {
         TransactionsEntity transactionsEntity = transactionsMapper.toEntity(transactionCreateDto);

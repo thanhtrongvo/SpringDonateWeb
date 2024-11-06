@@ -5,6 +5,7 @@ import com.example.springdonateweb.Models.Dtos.Categories.CategoryResponseDto;
 import com.example.springdonateweb.Models.Dtos.Categories.CategoryUpdateDto;
 import com.example.springdonateweb.Services.interfaces.ICategoriesService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +18,14 @@ public class CategoriesController {
     private final ICategoriesService categoriesService;
 
     @GetMapping("")
-    public String index(Model model) {
-        model.addAttribute("categories", categoriesService.findAll());
+    public String index(
+            Model model,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<CategoryResponseDto> categoryPage = categoriesService.findCategoriesByPage(page, size);
+        model.addAttribute("categories", categoryPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", categoryPage.getTotalPages());
         return "admin/Categories/index";
     }
 

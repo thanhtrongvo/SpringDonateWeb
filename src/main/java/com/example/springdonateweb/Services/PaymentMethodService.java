@@ -8,6 +8,9 @@ import com.example.springdonateweb.Repositories.PaymentMethodRepository;
 import com.example.springdonateweb.Services.interfaces.IPaymentMethodService;
 import com.example.springdonateweb.Services.mappers.PaymentMethodMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,7 +42,12 @@ public class PaymentMethodService implements IPaymentMethodService {
         PaymentmethodsEntity paymentMethodEntity = paymentMethodMapper.toEntity(paymentMethodCreateDto);
         return paymentMethodMapper.toDto(paymentMethodRepository.save(paymentMethodEntity));
     }
-
+    @Override
+    public Page<PaymentMethodResponseDto> findPaymentMethodsByPage(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<PaymentmethodsEntity> paymentMethodPage = paymentMethodRepository.findAll(pageable);
+        return paymentMethodPage.map(paymentMethodMapper::toDto);
+    }
     @Override
     public PaymentMethodResponseDto update(int id, PaymentMethodUpdateDto paymentMethodUpdateDto) {
         return paymentMethodRepository.findById(id)
