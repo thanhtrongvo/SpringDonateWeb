@@ -9,11 +9,112 @@
     <meta content="" name="description">
 
     <div th:replace="~{fragments/_link}"></div>
+
+    <style>
+        .program-card {
+            border: none;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        
+        .program-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .program-card .card-img-top {
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .program-card:hover .card-img-top {
+            transform: scale(1.05);
+        }
+        
+        .program-card .card-body {
+            padding: 1.5rem;
+        }
+        
+        .program-card .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+        
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+            margin: 1rem 0;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(to right, #2ecc71, #27ae60);
+            border-radius: 5px;
+            transition: width 0.6s ease;
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            margin: 1rem 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+        }
+        
+        .btn-donate {
+            background: linear-gradient(45deg, #e67e22, #f39c12);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            padding: 0.8rem 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-donate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3);
+        }
+        
+        .page-header {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/img/header-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 0;
+        }
+        
+        .remaining-days {
+            background: rgba(241, 196, 15, 0.1);
+            color: #f39c12 !important;
+            font-weight: 600;
+            border-radius: 20px;
+        }
+        </style>
 </head>
 
 <body>
 
-    <!-- Spinner End -->
 
 
     <!-- Navbar Start -->
@@ -43,104 +144,58 @@
                 <h1 class="display-6 mb-5">Tất cả học sinh đều có cơ hội được học</h1>
             </div>
             <div  class="row d-flex justify-content-center" style="width: 100%;">
-<!--                <div th:each="item : ${program}" class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">-->
-<!--                    <div class="causes-item d-flex flex-column bg-light border-top border-5 border-primary rounded-top overflow-hidden h-100">-->
-<!--                        <div class="text-center p-4 pt-0">-->
-<!--                            <div class="d-inline-block bg-primary text-white rounded-bottom fs-5 pb-1 px-3 mb-4">-->
-<!--                                <small th:text="${item.category}" ></small>-->
-<!--                            </div>-->
-<!--                            <h5 class="mb-3" th:text="${item.name}"></h5>-->
-<!--                            <p th:text="${item.description}"></p>-->
-<!--                            <div class="causes-progress bg-white p-3 pt-2">-->
-<!--                                <div class="d-flex justify-content-center">-->
-<!--                                    <p class="text-dark" th:text="${@amountFormatter.formatAmount(item.goalAmount)}">-->
-<!--                                    </p>-->
-<!--                                    <small class="text-body" >/</small>-->
-<!--                                    <p class="text-dark" th:text="${@amountFormatter.formatAmount(item.currentAmount)}" ></p>-->
-<!--                                </div>-->
-<!--                                <div class="progress">-->
-<!--                                    <div class="progress-bar" role="progressbar" aria-valuenow="30" aria-valuemin="10" aria-valuemax="100">-->
-<!--                                        <span>90%</span>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="position-relative mt-auto">-->
-<!--                            <img class="img-fluid" th:src="@{/img/courses-3.jpg}" alt="">-->
-<!--                            <div class="causes-overlay">-->
-<!--                                <a class="btn btn-outline-primary" href="">-->
-<!--                                    Read More-->
-<!--                                    <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">-->
-<!--                                        <i class="fa fa-arrow-right"></i>-->
-<!--                                    </div>-->
-<!--                                </a>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-                <div  th:each="item : ${program}"  class="col-4 "
-                    style="border: 1px solid #e0e0e0;
-                            border-radius:5px;
-                            padding: 0px !important;
-                            max-width: 350px;
-                            margin: 0 10px;
-                            margin-bottom: 10px;
-                 ">
-                    <!-- Image -->
-                    <img th:src="@{img/courses-3.jpg}" class="card-img-top" alt="Program image"
-                        style="object-fit: fill;"
-                     >
-
-                    <div class="card-body">
-                        <!-- Title and short description -->
-                        <h5 class="card-title" th:text="${item.name}">
-                            Chung tay gây quỹ hỗ trợ học bổng...
-                        </h5>
-
-                        <!-- Current amount and goal amount -->
-                        <h6>
-                            <span th:text="${@amountFormatter.formatAmount(item.currentAmount)}">6.699.367</span> /
-                            <span th:text="${@amountFormatter.formatAmount(item.goalAmount)}">200.000.000</span>
-                        </h6>
-
-                        <!-- Progress bar based on donation percentage -->
-                        <div class="progress mb-3">
-                            <div class="progress-bar" role="progressbar"
-                                 th:style="'width:' + ${item.percentageAchieved} + '%'"
-                                 th:aria-valuenow="${item.percentageAchieved}" aria-valuemin="0" aria-valuemax="100">
-                                <span th:text="${item.percentageAchieved} + '%'">3%</span>
-                            </div>
-                        </div>
-
-                        <div class="" style="font-size: 15px; display: flex; justify-content: space-between; margin-bottom: 10px">
-                            <!-- Donation count -->
-                            <div class="" >
-                                Lượt quyên góp
-                                <span th:text="${item.donationCount}">1.266</span>
-                            </div>
-
-                            <!-- Percentage achieved -->
-                            <div class="">
-                                Đạt được
-                                <span th:text="${item.percentageAchieved} + '%'">3%</span>
-                            </div>
-                        </div>
-
-                        <!-- Remaining days and donate button -->
-                        <div class="d-flex justify-content-between align-items-center">
-            <div class="badge bg-warning text-dark" style="height: 30px; width: 100px; display: flex; align-items: center;justify-content: center; color: #ccc;">
-                Còn <span th:text="${item.remainingDays}" class="mx-1">68</span> Ngày
+            <div th:each="item : ${program}" class="col-lg-4 col-md-6 mb-4">
+            <div class="program-card">
+                <img th:src="@{img/courses-3.jpg}" class="card-img-top" alt="Program image">
+        
+                <div class="card-body">
+                 <h5 class="card-title" th:text="${item.name}">Program Name</h5>
+            
+                <div class="amount-container">
+                <h6 class="text-primary">
+                    <span th:text="${@amountFormatter.formatAmount(item.currentAmount)}">6.699.367</span>
+                    <small class="text-muted">/ </small>
+                    <span th:text="${@amountFormatter.formatAmount(item.goalAmount)}">200.000.000</span>
+                </h6>
             </div>
-                            <a th:href="@{/program/{id}(id=${item.programId})}"
-                               class="badge bg-warning text-dark btn btn-pink p-0 " style="height: 30px; width: 100px; display: flex; align-items: center;justify-content: center"
-                            >Quyên góp</a>
 
-                        </div>
-                    </div>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar"
+                     th:style="'width:' + ${item.percentageAchieved} + '%'"
+                     th:aria-valuenow="${item.percentageAchieved}"
+                     aria-valuemin="0" aria-valuemax="100">
                 </div>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-item">
+                    <div class="stat-value" th:text="${item.donationCount}">1.266</div>
+                    <div class="stat-label">Lượt quyên góp</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" th:text="${item.percentageAchieved} + '%'">3%</div>
+                    <div class="stat-label">Đạt được</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" th:text="${item.remainingDays}">68</div>
+                    <div class="stat-label">Ngày còn lại</div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a th:href="@{/program/{id}(id=${item.programId})}"
+                   class="btn btn-donate">
+                    Quyên góp ngay
+                </a>
             </div>
         </div>
     </div>
+    </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
     <!-- Causes End -->
         
 

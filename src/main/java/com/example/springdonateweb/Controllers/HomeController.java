@@ -58,7 +58,7 @@ public class HomeController {
 
     @GetMapping("/program")
     public String program(Model model) {
-        List<ProgramsResponseDto> program = programsService.findAll();
+        List<ProgramsResponseDto> program = programsService.findByStatusTrue();
         model.addAttribute("program", program);
         model.addAttribute("amountFormatter", new AmountFormatter());
         return "client/program";

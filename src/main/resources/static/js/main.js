@@ -81,3 +81,28 @@
     
 })(jQuery);
 
+// Open modal when click button donate now in program detail card
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
+    
+    // Open modal when clicking Donate Now
+    document.querySelectorAll('.btn-pay').addEventListener('click', function() {
+        modal.show();
+    });
+
+    // Handle quick amount buttons
+    document.querySelectorAll('.amount-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            document.getElementById('amount').value = this.dataset.amount;
+        });
+    });
+
+    // Form validation
+    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+        const amount = document.getElementById('amount').value;
+        if (amount < 10000) {
+            e.preventDefault();
+            alert('Minimum amount is 10,000 VND');
+        }
+    });
+});

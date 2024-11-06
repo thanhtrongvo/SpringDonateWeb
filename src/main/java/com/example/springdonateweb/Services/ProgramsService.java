@@ -27,16 +27,17 @@ public class ProgramsService implements IProgramsService {
     @Override
     public List<ProgramsResponseDto> findAll() {
         return programsRepository.findAll().stream()
-                .map(programsMapper::toDto)
+                .map(programsMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public ProgramsResponseDto findById(int id) {
         return programsRepository.findById(id)
-                .map(programsMapper::toDto)
+                .map(programsMapper::toResponseDto)
                 .orElse(null);
     }
+
 
     @Override
     public ProgramsResponseDto create(ProgramCreateDto programCreateDto) {
@@ -44,7 +45,7 @@ public class ProgramsService implements IProgramsService {
         Optional<CategoriesEntity> category = categoriesRepository.findById(programCreateDto.getCategoryId());
         category.ifPresent(programsEntity::setCategory);
         ProgramsEntity savedProgram = programsRepository.save(programsEntity);
-        return programsMapper.toDto(savedProgram);
+        return programsMapper.toResponseDto(savedProgram);
     }
 
     @Override
@@ -54,20 +55,26 @@ public class ProgramsService implements IProgramsService {
             ProgramsEntity updatedProgram = programsMapper.partialUpdate(programUpdateDto, program.get());
             Optional<CategoriesEntity> category = categoriesRepository.findById(programUpdateDto.getCategoryId());
             category.ifPresent(updatedProgram::setCategory);
-            return programsMapper.toDto(programsRepository.save(updatedProgram));
+            return programsMapper.toResponseDto(programsRepository.save(updatedProgram));
         }
         return null;
     }
 
     @Override
     public void delete(int id) {
-        programsRepository.deleteById(id);
+        // set status = false
+        Optional<ProgramsEntity> program = programsRepository.findById(id);
+        program.ifPresent(programsEntity -> {
+            programsEntity.setStatus(false);
+            programsRepository.save(programsEntity);
+        });
+
     }
 
     @Override
     public List<ProgramsResponseDto> findByStatusTrue() {
         return programsRepository.findByStatusTrue().stream()
-                .map(programsMapper::toDto)
+                .map(programsMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
 }
