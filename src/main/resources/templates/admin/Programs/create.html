@@ -7,7 +7,19 @@
 <body>
 <div layout:fragment="content">
     <h3>Create New Program</h3>
-    <form th:action="@{/admin/programs/create}" th:object="${program}" method="POST">
+    <form th:action="@{/admin/programs/create}" th:object="${program}" method="POST" enctype="multipart/form-data">
+
+        <!-- Trường chọn danh mục -->
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" class="form-control" th:field="*{categoryId}" required>
+                <option value="" disabled selected>Select a category</option>
+                <option th:each="category : ${categories}"
+                        th:value="${category.categoryId}"
+                        th:text="${category.name}">Category Name</option>
+            </select>
+        </div>
+
         <div class="form-group">
             <label for="name">Name</label>
             <input type="text" id="name" class="form-control" th:field="*{name}" placeholder="Enter program name" required>
@@ -20,10 +32,7 @@
             <label for="goalAmount">Goal Amount</label>
             <input type="number" id="goalAmount" class="form-control" th:field="*{goalAmount}" placeholder="Enter goal amount" required>
         </div>
-<!--        <div class="form-group">-->
-<!--            <label for="currentAmount">Current Amount</label>-->
-<!--            <input type="number" id="currentAmount" class="form-control" th:field="*{currentAmount}" placeholder="Enter current amount">-->
-<!--        </div>-->
+
         <div class="form-group">
             <label for="startDate">Start Date</label>
             <input type="date" id="startDate" class="form-control" th:field="*{startDate}" required>
@@ -32,6 +41,8 @@
             <label for="endDate">End Date</label>
             <input type="date" id="endDate" class="form-control" th:field="*{endDate}" required>
         </div>
+
+
 
         <button type="submit" class="btn btn-primary mt-3">Create Program</button>
         <a th:href="@{/admin/programs}" class="btn btn-secondary mt-3">Cancel</a>

@@ -8,6 +8,9 @@ import com.example.springdonateweb.Repositories.CommentsRepository;
 import com.example.springdonateweb.Services.interfaces.ICommentsService;
 import com.example.springdonateweb.Services.mappers.CommentsMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +36,11 @@ public class CommentsService implements ICommentsService {
                 .map(commentsMapper::toDto)
                 .orElse(null);
     }
-
+    public Page<CommentResponseDto> findCommentsByPage(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CommentsEntity> commentPage = commentsRepository.findAll(pageable);
+        return commentPage.map(commentsMapper::toDto);
+    }
     @Override
     public CommentResponseDto create(CommentCreateDto commentCreateDto) {
         CommentsEntity commentsEntity = commentsMapper.toEntity(commentCreateDto);

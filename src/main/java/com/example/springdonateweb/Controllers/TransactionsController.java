@@ -5,6 +5,7 @@ import com.example.springdonateweb.Models.Dtos.Transactions.TransactionResponseD
 import com.example.springdonateweb.Models.Dtos.Transactions.TransactionUpdateDto;
 import com.example.springdonateweb.Services.interfaces.ITransactionsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +18,14 @@ public class TransactionsController {
     private final ITransactionsService transactionsService;
 
     @GetMapping("")
-    public String index(Model model) {
-        model.addAttribute("transactions", transactionsService.findAll());
+    public String index(
+            Model model,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<TransactionResponseDto> transactionsPage = transactionsService.findTransactionsByPage(page, size);
+        model.addAttribute("transactions", transactionsPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", transactionsPage.getTotalPages());
         return "admin/Transactions/index";
     }
 

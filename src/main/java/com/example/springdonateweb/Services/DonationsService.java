@@ -8,6 +8,9 @@ import com.example.springdonateweb.Repositories.DonationsRepository;
 import com.example.springdonateweb.Services.interfaces.IDonationsService;
 import com.example.springdonateweb.Services.mappers.DonationsMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,7 +29,12 @@ public class DonationsService implements IDonationsService {
                 .map(donationsMapper::toDto)
                 .collect(Collectors.toList());
     }
-
+    @Override
+    public Page<DonationResponseDto> findDonationsByPage(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<DonationsEntity> donationPage = donationsRepository.findAll(pageable);
+        return donationPage.map(donationsMapper::toDto);
+    }
     @Override
     public DonationResponseDto findById(int id) {
         return donationsRepository.findById(id)
