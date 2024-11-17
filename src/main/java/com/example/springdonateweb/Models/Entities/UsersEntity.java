@@ -56,6 +56,10 @@ public class UsersEntity implements UserDetails {
     @Column(name = "change_email", length = 100, nullable = true)
     private String changeEmail;
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public String toString() {
         return "UsersEntity{" +

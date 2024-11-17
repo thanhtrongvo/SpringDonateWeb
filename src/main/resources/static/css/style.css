@@ -446,3 +446,86 @@
 .footer .copyright a:hover {
     color: var(--primary);
 }
+
+/* Header auth config */
+.dropdown-menu {
+    min-width: 200px;
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+    border-radius: 0.5rem;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    color: #2c3e50;
+    transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #f39c12;
+}
+
+.dropdown-item i {
+    width: 1.25rem;
+}
+
+.dropdown-divider {
+    margin: 0.5rem 0;
+}
+
+.btn-link {
+    text-decoration: none;
+    width: 100%;
+    text-align: left;
+}
+
+/* Detail user */
+.user-detail-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
+    overflow: hidden;
+}
+.user-detail-card .card-body {
+    padding: 2rem;
+}
+.user-detail-card .card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #2c3e50;
+}
+.user-detail-card .card-text {
+    font-size: 1rem;
+    color: #7f8c8d;
+}
+.user-detail-card .card-text strong {
+    color: #2c3e50;
+}
+
+
+.amount-badge {
+    padding: 10px 20px;
+    border: 2px solid #0066cc;
+    border-radius: 8px;
+    margin: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.amount-badge.active {
+    background: #0066cc;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.amount-badge:hover {
+    background: #0066cc;
+    color: white;
+}

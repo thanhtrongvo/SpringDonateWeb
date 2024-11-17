@@ -1,8 +1,11 @@
 package com.example.springdonateweb.Controllers;
 
+import com.example.springdonateweb.Models.Dtos.Donations.DonationResponseDto;
 import com.example.springdonateweb.Models.Dtos.Programs.ProgramsResponseDto;
 import com.example.springdonateweb.Models.Dtos.Users.UsersResponseDto;
+import com.example.springdonateweb.Models.Entities.DonationsEntity;
 import com.example.springdonateweb.Services.CategoriesService;
+import com.example.springdonateweb.Services.DonationsService;
 import com.example.springdonateweb.Services.ProgramsService;
 import com.example.springdonateweb.Services.interfaces.IUsersService;
 import com.example.springdonateweb.util.AmountFormatter;
@@ -11,13 +14,20 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.lang.foreign.Linker.Option;
+import java.nio.file.OpenOption;
+import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,6 +37,7 @@ public class HomeController {
 
     private final ProgramsService programsService;
     private final CategoriesService categoriesService;
+    private final DonationsService donationService;
 
 
     IUsersService usersService;
@@ -73,19 +84,29 @@ public class HomeController {
         return "client/program-detail";
     }
 
-    @GetMapping("/test")
-    public String admin() {
-        return "admin/index";
+    
+    @GetMapping("/user-detail")
+    public String userDetail(Model model) {
+        String getUser = SecurityUtil.getSessionUser();
+        UsersResponseDto user = usersService.findByEmail(getUser);
+        model.addAttribute("user", user);
+        return "client/user-detail";
+    }
+    @GetMapping("/category/{id}")
+    public String showProgramByCategory(@PathVariable int id, Model model) {
+        List<ProgramsResponseDto> program = programsService.findByCategory_CategoryId(id);
+        model.addAttribute("program", program);
+        model.addAttribute("amountFormatter", new AmountFormatter());
+        return "client/program";
     }
 
-    @GetMapping("/test2")
-    public String test() {
-        return "admin/user/index";
-    }
-
-    @GetMapping("/test3")
-    public String testt() {
-        return "admin/user/add";
+   @GetMapping("/my-donations")
+    public String getMyDonations(Model model, Principal principal) {
+        String getUser = SecurityUtil.getSessionUser();
+        UsersResponseDto user = usersService.findByEmail(getUser);
+        List<DonationResponseDto> donations = donationService.findByUserId(user.getId());
+        model.addAttribute("donations", donations);
+        return "client/my-donation";
     }
 
 
