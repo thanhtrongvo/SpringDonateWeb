@@ -70,7 +70,7 @@ public class ProgramsService implements IProgramsService {
     public Page<ProgramsResponseDto> findProgramsByPage(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<ProgramsEntity> programPage = programsRepository.findAll(pageable);
-        return programPage.map(programsMapper::toResponseDto);
+        return programPage.map(programsMapper::toDto);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class ProgramsService implements IProgramsService {
     @Override
     public List<ProgramsResponseDto> findByCategory_CategoryId(int categoryId) {
         return programsRepository.findByCategory_CategoryId(categoryId).stream()
-                .map(programsMapper::toResponseDto)
+                .map(programsMapper::toDto)
                 .collect(Collectors.toList());
     }
 }

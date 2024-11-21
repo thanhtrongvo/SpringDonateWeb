@@ -202,7 +202,7 @@
                 <!-- Temporarily remove d-none class for debugging -->
                 <div th:each="item, iterStat : ${program}" class="col-lg-4 col-md-6 mb-4 program-item" th:classappend="${iterStat.index >= 6} ? 'd-none' : ''">
                     <div class="program-card show">
-                        <img th:src="@{img/courses-3.jpg}" class="card-img-top" alt="Program image">
+                        <img th:src="@{'/img/' + ${item.image}}" class="card-img-top" alt="Program image">
                         <div class="card-body">
                             <h5 class="card-title" th:text="${item.name}">Program Name</h5>
                             <div class="amount-container">

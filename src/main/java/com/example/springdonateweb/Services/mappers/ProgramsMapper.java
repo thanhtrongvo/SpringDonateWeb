@@ -18,6 +18,9 @@ import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface ProgramsMapper {
+    @Mappings({
+        @Mapping(source = "image", target = "image", qualifiedByName = "multipartFileToString")
+    })
     ProgramsEntity toEntity(ProgramCreateDto programsCreateDto);
     ProgramsEntity toEntity(ProgramUpdateDto programsUpdateDto);
 
@@ -51,6 +54,11 @@ public interface ProgramsMapper {
     }
     default String convertDateToString(Date sqlDate) {
         return sqlDate != null ? sqlDate.toLocalDate().toString() : null;
+    }
+
+    @Named("multipartFileToString")
+    default String multipartFileToString(org.springframework.web.multipart.MultipartFile file) {
+        return file != null ? file.getOriginalFilename() : null;
     }
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
