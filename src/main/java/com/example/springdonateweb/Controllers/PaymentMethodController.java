@@ -26,13 +26,13 @@ public class PaymentMethodController {
         model.addAttribute("paymentMethods", paymentMethodPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", paymentMethodPage.getTotalPages());
-        return "admin/PaymentMethods/index";
+        return "admin/paymentmethods/index";
     }
 
     @GetMapping("/create")
     public String createForm(Model model) {
         model.addAttribute("paymentMethod", new PaymentMethodCreateDto());
-        return "admin/PaymentMethods/create";
+        return "admin/paymentmethods/create";
     }
 
     @PostMapping("/create")
@@ -46,7 +46,7 @@ public class PaymentMethodController {
         PaymentMethodResponseDto paymentMethod = paymentMethodService.findById(id);
         if (paymentMethod == null) return "redirect:/admin/paymentmethods";
         model.addAttribute("paymentMethod", paymentMethod);
-        return "admin/PaymentMethods/edit";
+        return "admin/paymentmethods/edit";
     }
 
     @PostMapping("/edit/{id}")

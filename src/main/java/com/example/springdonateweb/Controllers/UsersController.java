@@ -6,6 +6,7 @@ import com.example.springdonateweb.Services.interfaces.IUsersService;
 import com.example.springdonateweb.util.SecurityUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,9 +19,15 @@ public class UsersController {
     private final IUsersService usersService;
 
     @GetMapping("")
-    public String index(Model model) {
-        model.addAttribute("list", usersService.findByStatusTrue());
-        return "user/index"; // Đảm bảo đường dẫn đến template view là đúng
+    public String index(
+            Model model,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<UsersResponseDto> userPage = usersService.findUsersByPage(page, size);
+        model.addAttribute("list", userPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", userPage.getTotalPages());
+        return "user/index"; // Đường dẫn tới view index.html
     }
 
     @GetMapping("/create")
@@ -45,142 +52,44 @@ public class UsersController {
         return "redirect:/admin/user";
     }
 
+    // Trang chỉnh sửa người dùng
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable int id, Model model) {
-                UsersResponseDto user = usersService.findById(id);
+        UsersResponseDto user = usersService.findById(id);
         if (user == null) {
-            return "redirect:/admin/user";
+            return "redirect:/admin/user"; // Quay lại danh sách nếu người dùng không tồn tại
         }
         model.addAttribute("user", user);
-        return "user/edit"; // View cho trang chỉnh sửa
+        return "user/edit"; // Trả về đường dẫn 'user/edit.html'
     }
 
     @PostMapping("/update/{id}")
-    public String updateUser(@PathVariable int id, @Valid @ModelAttribute("user") UserAddDto userAddDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String updateUser(
+            @PathVariable int id,
+            @Valid @ModelAttribute("user") UserAddDto userAddDto,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            return "user/edit";
+            return "user/edit"; // Hiển thị lại form chỉnh sửa nếu có lỗi
         }
 
         userAddDto.setId(id);
         usersService.update(userAddDto);
         redirectAttributes.addFlashAttribute("success", "User updated successfully");
-        return "redirect:/admin/user";
+        return "redirect:/admin/user"; // Quay lại danh sách người dùng
     }
+
 
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable int id, RedirectAttributes redirectAttributes) {
-        if (usersService.delete(id) == null) {
+        UsersResponseDto deletedUser = usersService.delete(id);
+        if (deletedUser == null) {
             redirectAttributes.addFlashAttribute("error", "User not found");
+
         } else {
             redirectAttributes.addFlashAttribute("success", "User deleted successfully");
         }
         return "redirect:/admin/user";
     }
-}
 
-//@Controller
-//@RequiredArgsConstructor
-//@RequestMapping("/admin/user")
-//public class UsersController {
-//    private final IUsersService usersService;
-//
-//    @GetMapping("")
-//    public String index(Model model){
-//        model.addAttribute("list", usersService.findByStatusTrue());
-//        String user = SecurityUtil.getSessionUser();
-//        if(user != null){
-//            return "user/index";
-//        }
-//        return "user/index";
-//
-//    }
-//    @PostMapping("/create")
-//    public String create(
-//            @Valid
-//            @ModelAttribute("user") UserAddDto userAddDto,
-//            BindingResult bindingResult,
-//            RedirectAttributes redirectAttributes
-//    ){
-//        if(bindingResult.hasErrors()){
-//            return "user/create";
-//        }
-//        // Kiểm tra xem người dùng đã tồn tại chưa
-//        if(usersService.existsById(userAddDto.getId())){
-//            redirectAttributes.addAttribute("error", "User already exists");
-//            redirectAttributes.addFlashAttribute("user", userAddDto);
-//            return "redirect:/admin/user/create";
-//        }
-//        // Thực hiện tạo người dùng chỉ một lần
-//        usersService.create(userAddDto);
-//        redirectAttributes.addAttribute("success", "User created successfully");
-//        return "redirect:/admin/user";
-//    }
-//
-//    @GetMapping("/create")
-//    public String create(Model model){
-//        model.addAttribute("user", new UserAddDto());
-//        return "user/create";
-//    }
-//    @GetMapping("/detail/{id}")
-//    public String detail(
-//            @PathVariable("id") int id,
-//            Model model
-//
-//    ){
-//        UsersResponseDto usersResponseDto = usersService.findById(id);
-//        if (usersResponseDto == null){
-//            return "redirect:/admin/user";
-//        }
-//        else {
-//            model.addAttribute("user", usersResponseDto);
-//        }
-//        return "user/detail";
-//    }
-//    @GetMapping("/delete/{id}")
-//    public String delete(
-//            @PathVariable("id") int id,
-//            Model model,
-//            RedirectAttributes redirectAttributes
-//    ){
-//        if (usersService.delete(id)==null){
-//            redirectAttributes.addAttribute("error", "User not found");
-//            return "redirect:/admin/user";
-//        }
-//        else {
-//            redirectAttributes.addAttribute("success", "User deleted successfully");
-//            return "redirect:/admin/user";
-//        }
-//    }
-//    @GetMapping("/edit/{id}")
-//    public String edit(@PathVariable("id") int id, Model model) {
-//        UsersResponseDto user = usersService.findById(id);
-//        if (user == null) {
-//            return "redirect:/admin/user";
-//        }
-//        model.addAttribute("user", user);
-//        return "user/edit"; // View cho trang chỉnh sửa
-//    }
-//
-//    @PostMapping("/update/{id}")
-//    public String update(
-//            @PathVariable("id") int id,
-//            @Valid @ModelAttribute("user") UserAddDto userAddDto,
-//            BindingResult bindingResult,
-//            RedirectAttributes redirectAttributes) {
-//
-//        if (bindingResult.hasErrors()) {
-//            return "user/edit";
-//        }
-//
-//        userAddDto.setId(id); // Đảm bảo id được cập nhật đúng
-//        usersService.update(userAddDto); // Truyền UserUpdateDto thay vì UserAddDto
-//
-//        redirectAttributes.addAttribute("success", "User updated successfully");
-//        return "redirect:/admin/user";
-//    }
-//
-//
-//
-//
-//
-//}
+}
