@@ -28,7 +28,7 @@ public interface ProgramsMapper {
             @Mapping(target = "endDate", expression = "java(convertDateToString(entity.getEndDate()))"),
             @Mapping(target = "remainingDays", expression = "java(calculateRemainingDays(convertDateToString(entity.getStartDate()), convertDateToString(entity.getEndDate())))")
     })
-    ProgramsResponseDto toResponseDto(ProgramsEntity entity);
+     ProgramsResponseDto toDto(ProgramsEntity entity);
 
     // Mapping method to extract the category name from CategoriesEntity
     @Named("categoryToString")

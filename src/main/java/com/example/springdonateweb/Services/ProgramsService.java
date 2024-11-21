@@ -30,14 +30,14 @@ public class ProgramsService implements IProgramsService {
     @Override
     public List<ProgramsResponseDto> findAll() {
         return programsRepository.findAll().stream()
-                .map(programsMapper::toResponseDto)
+                .map(programsMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public ProgramsResponseDto findById(int id) {
         return programsRepository.findById(id)
-                .map(programsMapper::toResponseDto)
+                .map(programsMapper::toDto)
                 .orElse(null);
     }
 
@@ -52,7 +52,7 @@ public class ProgramsService implements IProgramsService {
         category.ifPresent(programsEntity::setCategory);
 
         ProgramsEntity savedProgram = programsRepository.save(programsEntity);
-        return programsMapper.toResponseDto(savedProgram);
+        return programsMapper.toDto(savedProgram);
     }
 
 
@@ -63,7 +63,7 @@ public class ProgramsService implements IProgramsService {
             ProgramsEntity updatedProgram = programsMapper.partialUpdate(programUpdateDto, program.get());
             Optional<CategoriesEntity> category = categoriesRepository.findById(programUpdateDto.getCategoryId());
             category.ifPresent(updatedProgram::setCategory);
-            return programsMapper.toResponseDto(programsRepository.save(updatedProgram));
+            return programsMapper.toDto(programsRepository.save(updatedProgram));
         }
         return null;
     }
@@ -87,7 +87,7 @@ public class ProgramsService implements IProgramsService {
     @Override
     public List<ProgramsResponseDto> findByStatusTrue() {
         return programsRepository.findByStatusTrue().stream()
-                .map(programsMapper::toResponseDto)
+                .map(programsMapper::toDto)
                 .collect(Collectors.toList());
     }
     @Override
