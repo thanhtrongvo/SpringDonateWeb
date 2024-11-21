@@ -44,7 +44,7 @@
               <td th:text="${blog.content}" class="text-center" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;"></td>
               <td class="text-center">
                 <!-- Hiển thị hình ảnh blog nếu có -->
-                <img th:src="@{${blog.imageUrl}}" alt="Blog Image" style="max-height: 100px; max-width: 100px;">
+                <img th:src="@{ '/img/blog/' + ${blog.imageUrl}}" alt="Blog Image" style="max-height: 100px; max-width: 100px;">
               </td>
               <td class="text-center">
                 <a th:href="@{/admin/blogs/edit/{id}(id=${blog.id})}" class="btn btn-warning btn-sm">Edit</a>

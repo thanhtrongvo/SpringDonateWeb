@@ -17,12 +17,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/blogs")
 public class BlogController {
 
     private final IBlogService blogService;
+
+    private static final String UPLOAD_DIR = "src/main/resources/static/img/blog/";
 
 
     @GetMapping("")
@@ -49,11 +54,16 @@ public class BlogController {
             return "admin/Blogs/create";
         }
 
-        // Nếu có tệp hình ảnh, xử lý lưu trữ
-        if (!imageUrl.isEmpty()) {
-            // Lưu tệp hình ảnh vào thư mục hoặc lưu URL hình ảnh vào cơ sở dữ liệu
-            String imagePath = blogService.uploadImage(imageUrl);
-            blogCreateDto.setImageUrl(imagePath);  // Đặt URL hình ảnh vào BlogCreateDto
+        MultipartFile file = blogCreateDto.getImageUrl();
+        if (!file.isEmpty()) {
+            try {
+                byte[] bytes = file.getBytes();
+                Path path = Paths.get(UPLOAD_DIR + file.getOriginalFilename());
+                Files.write(path, bytes);
+                blogCreateDto.setImageUrl(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         blogService.create(blogCreateDto);
