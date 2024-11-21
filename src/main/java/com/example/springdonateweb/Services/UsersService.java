@@ -14,6 +14,9 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -60,21 +63,23 @@ public class UsersService implements IUsersService {
         return null;
     }
 
+    private Optional<UsersEntity> findUserByIdAndStatusTrue(int id) {
+        return usersRepository.findByIdAndStatusTrue(id);
+    }
 
 
     @Override
     public UsersResponseDto update(UserAddDto userAddDto) {
-        Optional<UsersEntity> usersEntity = usersRepository.findByIdAndStatusTrue(userAddDto.getId());
-        return usersEntity
-                .map(user -> {
-                    user.setName(userAddDto.getName());
-                    user.setEmail(userAddDto.getEmail());
-                    user.setRoleId(userAddDto.getRoleId());
-                    UsersEntity result = usersRepository.save(user);
-                    return usersMapper.toResponseDto(result);
-                })
-                .orElse(null);
+        Optional<UsersEntity> usersEntity = findUserByIdAndStatusTrue(userAddDto.getId());
+        return usersEntity.map(user -> {
+            user.setName(userAddDto.getName());
+            user.setEmail(userAddDto.getEmail());
+            user.setRoleId(userAddDto.getRoleId());
+            UsersEntity result = usersRepository.save(user);
+            return usersMapper.toResponseDto(result);
+        }).orElse(null);
     }
+
 
     @Override
     @Transactional
@@ -141,6 +146,12 @@ public class UsersService implements IUsersService {
         return usersRepository.findByStatusTrue().stream()
                 .map(usersMapper::toResponseDto)
                 .collect(Collectors.toList());
+    }
+    @Override
+    public Page<UsersResponseDto> findUsersByPage(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<UsersEntity> userPage = usersRepository.findAll(pageable);
+        return userPage.map(usersMapper::toResponseDto);
     }
 
     @Override

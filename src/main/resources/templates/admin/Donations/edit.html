@@ -6,7 +6,7 @@
 </head>
 <body>
 <div layout:fragment="content">
-  <h3>Edit Donation</h3>
+  <h3 class="mb-4">Edit Donation</h3>
   <form th:action="@{/admin/donations/edit/{id}(id=${donation.donationId})}" th:object="${donation}" method="POST">
     <div class="form-group">
       <label for="userId">User ID</label>
