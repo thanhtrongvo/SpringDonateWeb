@@ -199,7 +199,7 @@
                 <h1 class="display-6 mb-5">Tất cả học sinh đều có cơ hội được học</h1>
             </div>
             <div class="row d-flex justify-content-center" style="width: 100%;">
-                <!-- Temporarily remove d-none class for debugging -->
+             
                 <div th:each="item, iterStat : ${program}" class="col-lg-4 col-md-6 mb-4 program-item" th:classappend="${iterStat.index >= 6} ? 'd-none' : ''">
                     <div class="program-card show">
                         <img th:src="@{'/img/' + ${item.image}}" class="card-img-top" alt="Program image">

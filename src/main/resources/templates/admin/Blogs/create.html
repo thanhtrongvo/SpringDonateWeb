@@ -20,7 +20,7 @@
     </div>
     <div class="form-group mb-3">
       <label for="imageUrl">Image</label>
-      <input type="file" id="imageUrl" class="form-control" name="imageUrl" accept="image/*" required />
+      <input type="file" id="imageUrl" class="form-control" name="imageUrl" th:field="imageUrl" accept="image/*" required />
     </div>
     <button type="submit" class="btn btn-primary mt-3">Create Blog</button>
     <a th:href="@{/admin/blogs}" class="btn btn-secondary mt-3">Cancel</a>
