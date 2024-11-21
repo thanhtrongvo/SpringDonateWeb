@@ -12,8 +12,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.springdonateweb.Repositories.CategoriesRepository;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Controller
@@ -23,6 +29,8 @@ public class ProgramsController {
 
     private final IProgramsService programsService;
     private final ICategoriesService categoriesService;
+
+    private static final String UPLOAD_DIR = "src/main/resources/static/img/";
     @GetMapping("")
     public String listPrograms(
             Model model,
@@ -44,7 +52,7 @@ public class ProgramsController {
     }
 
 
-    @PostMapping("/create")
+       @PostMapping("/create")
     public String createProgram(
             @Valid @ModelAttribute("program") ProgramCreateDto programCreateDto,
             BindingResult result,
@@ -52,6 +60,20 @@ public class ProgramsController {
         if (result.hasErrors()) {
             return "admin/Programs/create";
         }
+
+        // Handle file upload
+        MultipartFile file = programCreateDto.getImage();
+        if (!file.isEmpty()) {
+            try {
+                byte[] bytes = file.getBytes();
+                Path path = Paths.get(UPLOAD_DIR + file.getOriginalFilename());
+                Files.write(path, bytes);
+                programCreateDto.setImage(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         programsService.create(programCreateDto);
         redirectAttributes.addFlashAttribute("success", "Program created successfully");
         return "redirect:/admin/programs";

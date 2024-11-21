@@ -1,12 +1,19 @@
 package com.example.springdonateweb.Models.Entities;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "donations", schema = "webmomo", catalog = "")
 public class DonationsEntity {
@@ -30,55 +37,6 @@ public class DonationsEntity {
     @Basic
     @Column(name = "donor_name")
     private String donorName;
-
-    public int getDonationId() {
-        return donationId;
-    }
-
-    public void setDonationId(int donationId) {
-        this.donationId = donationId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public Integer getProgramId() {
-        return programId;
-    }
-
-    public void setProgramId(Integer programId) {
-        this.programId = programId;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-
-    public LocalDateTime getDonationDate() {
-        return donationDate;
-    }
-
-    public void setDonationDate(LocalDateTime donationDate) {
-        this.donationDate = donationDate;
-    }
-
-    public String getDonorName() {
-        return donorName;
-    }
-
-    public void setDonorName(String donorName) {
-        this.donorName = donorName;
-    }
 
     @Override
     public boolean equals(Object o) {

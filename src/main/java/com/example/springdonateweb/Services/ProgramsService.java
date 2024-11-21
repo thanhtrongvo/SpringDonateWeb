@@ -90,4 +90,10 @@ public class ProgramsService implements IProgramsService {
                 .map(programsMapper::toDto)
                 .collect(Collectors.toList());
     }
+    @Override
+    public List<ProgramsResponseDto> findByCategory_CategoryId(int categoryId) {
+        return programsRepository.findByCategory_CategoryId(categoryId).stream()
+                .map(programsMapper::toDto)
+                .collect(Collectors.toList());
+    }
 }

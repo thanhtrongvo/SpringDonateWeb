@@ -63,4 +63,11 @@ public class DonationsService implements IDonationsService {
     public void delete(int id) {
         donationsRepository.deleteById(id);
     }
+
+    @Override
+    public List<DonationResponseDto> findByUserId(int userId) {
+        return donationsRepository.findByUserId(userId).stream()
+                .map(donationsMapper::toDto)
+                .collect(Collectors.toList());
+    }
 }

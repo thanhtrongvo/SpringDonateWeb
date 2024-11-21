@@ -20,6 +20,6 @@ public class ProgramCreateDto {
     private Date startDate;
     private Date endDate;
     private Integer categoryId;
-    private String image;// ID của danh mục để liên kết
+    private MultipartFile image;
 
 }

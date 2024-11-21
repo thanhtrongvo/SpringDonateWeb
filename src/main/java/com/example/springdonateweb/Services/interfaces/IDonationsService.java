@@ -14,5 +14,5 @@ public interface IDonationsService {
     DonationResponseDto update(int id, DonationUpdateDto donationUpdateDto);
     void delete(int id);
     Page<DonationResponseDto> findDonationsByPage(int page, int size);
-
+    List<DonationResponseDto> findByUserId(int userId);
 }
