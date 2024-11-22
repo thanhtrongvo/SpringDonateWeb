@@ -10,6 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.util.Map;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/donations")
@@ -29,6 +32,11 @@ public class DonationsController {
         return "admin/Donations/index";
     }
 
+    @GetMapping("/total-donations-by-program")
+    @ResponseBody
+    public Map<Integer, BigDecimal> getTotalDonationsByProgram() {
+        return donationsService.getTotalDonationsByProgram();
+    }
     @GetMapping("/create")
     public String createForm(Model model) {
         model.addAttribute("donation", new DonationCreateDto());

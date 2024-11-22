@@ -5,7 +5,9 @@ import com.example.springdonateweb.Models.Dtos.Donations.DonationResponseDto;
 import com.example.springdonateweb.Models.Dtos.Donations.DonationUpdateDto;
 import org.springframework.data.domain.Page;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public interface IDonationsService {
     List<DonationResponseDto> findAll();
@@ -15,4 +17,7 @@ public interface IDonationsService {
     void delete(int id);
     Page<DonationResponseDto> findDonationsByPage(int page, int size);
     List<DonationResponseDto> findByUserId(int userId);
+
+    // Thêm phương thức getTotalDonationsByProgram vào đây
+    Map<Integer, BigDecimal> getTotalDonationsByProgram();
 }
