@@ -5,6 +5,7 @@ import com.example.springdonateweb.Models.Dtos.Users.UserCreateDto;
 import com.example.springdonateweb.Models.Dtos.Users.UserUpdateDto;
 import com.example.springdonateweb.Models.Dtos.Users.UsersResponseDto;
 import com.example.springdonateweb.Models.Entities.UsersEntity;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public interface IUsersService {
     UsersResponseDto findByEmail(String email);
     UserDetails createUserDetailFromRegister(UsersEntity usersEntity);
 
+    Page<UsersResponseDto> findUsersByPage(int page, int size);
 
     List<UsersResponseDto> findByStatusTrue();
     UsersResponseDto findByIdAndStatusTrue(int id);

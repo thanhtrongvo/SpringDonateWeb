@@ -1,16 +1,20 @@
 package com.example.springdonateweb.Models.Entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Setter
+import lombok.Builder;
+
 @Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+
 @Entity
 @Table(name = "transactions", schema = "webmomo", catalog = "")
 public class TransactionsEntity {

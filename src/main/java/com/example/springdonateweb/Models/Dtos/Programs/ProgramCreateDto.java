@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Date;
 
@@ -15,8 +16,10 @@ public class ProgramCreateDto {
     private String name;
     private String description;
     private Integer goalAmount;
-    private String image;
+
     private Date startDate;
     private Date endDate;
-    private int categoryId; // ID của danh mục để liên kết
+    private Integer categoryId;
+    private MultipartFile image;
+
 }

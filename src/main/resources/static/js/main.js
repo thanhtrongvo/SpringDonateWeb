@@ -81,3 +81,67 @@
     
 })(jQuery);
 
+document.addEventListener('DOMContentLoaded', function() {
+    // Get DOM elements
+    const amountBadges = document.querySelectorAll('.amount-badge');
+    const amountInput = document.getElementById('amount');
+
+    // Format amount with commas
+    function formatAmount(amount) {
+        return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    // Handle badge clicks
+    amountBadges.forEach(badge => {
+        badge.addEventListener('click', function() {
+            // Remove active class from all badges
+            amountBadges.forEach(b => b.classList.remove('active'));
+            
+            // Add active class to clicked badge
+            this.classList.add('active');
+            
+            // Set amount input value
+            const amount = parseInt(this.dataset.amount);
+            amountInput.value = amount;
+            
+            // Update badge display
+            this.textContent = formatAmount(amount) + 'đ';
+            
+            // Validate input
+            validateAmount(amount);
+        });
+    });
+
+    // Validate amount
+    function validateAmount(amount) {
+        const isValid = amount >= 10000;
+        amountInput.setCustomValidity(isValid ? '' : 'Amount must be at least 10,000 VND');
+        
+        if (isValid) {
+            amountInput.classList.remove('is-invalid');
+            amountInput.classList.add('is-valid');
+        } else {
+            amountInput.classList.remove('is-valid');
+            amountInput.classList.add('is-invalid');
+        }
+    }
+
+    // Handle manual input
+    amountInput.addEventListener('input', function() {
+        // Remove active class from all badges when typing
+        amountBadges.forEach(badge => badge.classList.remove('active'));
+        
+        const amount = parseInt(this.value) || 0;
+        validateAmount(amount);
+    });
+
+    // Form validation
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+    });
+});

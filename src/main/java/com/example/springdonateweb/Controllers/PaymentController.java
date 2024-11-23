@@ -1,60 +1,77 @@
 package com.example.springdonateweb.Controllers;
 
-
 import com.example.springdonateweb.Services.VNPayService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import com.example.springdonateweb.Models.Dtos.Paymentmethods.PaymentDto;
-import com.example.springdonateweb.util.VnPayUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 @Controller
 @RequestMapping("/payment")
+@RequiredArgsConstructor
 public class PaymentController {
 
-    @Autowired
-    private VNPayService vnPayService;
 
+    private final VNPayService vnPayService;
 
-    @GetMapping("")
-    public String home(){
+    @GetMapping("/{programId}")
+    public String home(@PathVariable("programId") int programId, Model model) {
+        model.addAttribute("programId", programId);
         return "client/payment";
     }
 
     @PostMapping("/submitOrder")
     public String submitOrder(@RequestParam("amount") int orderTotal,
                               @RequestParam("orderInfo") String orderInfo,
-                              HttpServletRequest request){
-        String baseUrl = "localhost:8080";
-        String vnpayUrl = vnPayService.createOrder(orderTotal, orderInfo, baseUrl);
+                              @RequestParam("programId") int programId,
+                              HttpServletRequest request) {
+        String baseUrl = request.getRequestURL().toString().replace(request.getRequestURI(), "") + "/";
+        String vnpayUrl = vnPayService.createOrder(orderTotal, "programId:" + programId + ";userEmail:" + getCurrentUserEmail() + ";orderInfo:" + orderInfo, baseUrl);
         return "redirect:" + vnpayUrl;
     }
 
     @GetMapping("/vnpay-return")
-    public String GetMapping(HttpServletRequest request, Model model) throws Exception {
-        int paymentStatus =vnPayService.orderReturn(request);
+    public String vnpayReturn(HttpServletRequest request, Model model) throws Exception {
+        int paymentStatus = vnPayService.orderReturn(request);
 
         String orderInfo = request.getParameter("vnp_OrderInfo");
         String paymentTime = request.getParameter("vnp_PayDate");
         String transactionId = request.getParameter("vnp_TransactionNo");
         String totalPrice = request.getParameter("vnp_Amount");
 
-        model.addAttribute("orderId", orderInfo);
-        model.addAttribute("totalPrice", totalPrice);
-        model.addAttribute("paymentTime", paymentTime);
+        // Extract original orderInfo
+        String originalOrderInfo = vnPayService.extractOriginalOrderInfo(orderInfo);
+
+        // Format payment time and total price
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        LocalDateTime dateTime = LocalDateTime.parse(paymentTime, inputFormatter);
+        String formattedPaymentTime = dateTime.format(outputFormatter);
+
+        BigDecimal amount = new BigDecimal(totalPrice).divide(new BigDecimal(100));
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        String formattedTotalPrice = currencyFormatter.format(amount);
+
+        model.addAttribute("orderId", originalOrderInfo);
+        model.addAttribute("totalPrice", formattedTotalPrice);
+        model.addAttribute("paymentTime", formattedPaymentTime);
         model.addAttribute("transactionId", transactionId);
 
         return paymentStatus == 1 ? "client/order-success" : "client/order-fail";
     }
 
+    private String getCurrentUserEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
     }
-
-
+}

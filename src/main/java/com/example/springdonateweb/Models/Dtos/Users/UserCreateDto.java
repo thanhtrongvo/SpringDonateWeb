@@ -15,8 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserCreateDto {
 
-    @NotNull(message = "Id is required")
-    public int id;
+
 
     @NotBlank(message = "Name is required")
     public String name;

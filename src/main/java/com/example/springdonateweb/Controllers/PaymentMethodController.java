@@ -5,6 +5,7 @@ import com.example.springdonateweb.Models.Dtos.Paymentmethods.PaymentMethodRespo
 import com.example.springdonateweb.Models.Dtos.Paymentmethods.PaymentMethodUpdateDto;
 import com.example.springdonateweb.Services.interfaces.IPaymentMethodService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,15 +18,21 @@ public class PaymentMethodController {
     private final IPaymentMethodService paymentMethodService;
 
     @GetMapping("")
-    public String index(Model model) {
-        model.addAttribute("paymentMethods", paymentMethodService.findAll());
-        return "admin/PaymentMethods/index";
+    public String index(
+            Model model,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<PaymentMethodResponseDto> paymentMethodPage = paymentMethodService.findPaymentMethodsByPage(page, size);
+        model.addAttribute("paymentMethods", paymentMethodPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", paymentMethodPage.getTotalPages());
+        return "admin/paymentmethods/index";
     }
 
     @GetMapping("/create")
     public String createForm(Model model) {
         model.addAttribute("paymentMethod", new PaymentMethodCreateDto());
-        return "admin/PaymentMethods/create";
+        return "admin/paymentmethods/create";
     }
 
     @PostMapping("/create")
@@ -39,7 +46,7 @@ public class PaymentMethodController {
         PaymentMethodResponseDto paymentMethod = paymentMethodService.findById(id);
         if (paymentMethod == null) return "redirect:/admin/paymentmethods";
         model.addAttribute("paymentMethod", paymentMethod);
-        return "admin/PaymentMethods/edit";
+        return "admin/paymentmethods/edit";
     }
 
     @PostMapping("/edit/{id}")

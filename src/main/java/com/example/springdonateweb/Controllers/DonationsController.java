@@ -5,6 +5,7 @@ import com.example.springdonateweb.Models.Dtos.Donations.DonationResponseDto;
 import com.example.springdonateweb.Models.Dtos.Donations.DonationUpdateDto;
 import com.example.springdonateweb.Services.interfaces.IDonationsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +18,14 @@ public class DonationsController {
     private final IDonationsService donationsService;
 
     @GetMapping("")
-    public String index(Model model) {
-        model.addAttribute("donations", donationsService.findAll());
+    public String index(
+            Model model,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<DonationResponseDto> donationPage = donationsService.findDonationsByPage(page, size);
+        model.addAttribute("donations", donationPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", donationPage.getTotalPages());
         return "admin/Donations/index";
     }
 
