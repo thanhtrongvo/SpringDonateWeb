@@ -30,13 +30,13 @@ public class ProgramsController {
     private final IProgramsService programsService;
     private final ICategoriesService categoriesService;
 
-    private static final String UPLOAD_DIR = "src/main/resources/static/img/";
+    private static final String UPLOAD_DIR = "src/main/resources/static/img/program/";
     @GetMapping("")
     public String listPrograms(
             Model model,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        Page<ProgramsResponseDto> programPage = programsService.findProgramsByPage(page, size);
+        Page<ProgramsResponseDto> programPage = programsService.findProgramsByPageAndStatusTrue(page, size);
         model.addAttribute("programs", programPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", programPage.getTotalPages());

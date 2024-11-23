@@ -12,14 +12,17 @@ import java.util.Optional;
 
 @Repository
 public interface ProgramsRepository extends JpaRepository<ProgramsEntity, Integer> {
-    List<ProgramsEntity> findByStatusTrue(); // Lấy danh sách các chương trình đang hoạt động
+    Page<ProgramsEntity> findByStatusTrue(Pageable pageable);
 
     Page<ProgramsEntity> findAll(Pageable pageable);
 
     Optional<ProgramsEntity> findById(int id); //
 
     
-    List<ProgramsEntity> findByCategory_CategoryId(int categoryId); // Corrected method
+    List<ProgramsEntity> findByCategory_CategoryId(int categoryId); 
+
+    Optional<ProgramsEntity> findByProgramIdAndStatusTrue(int id); //
+
 
 
 }

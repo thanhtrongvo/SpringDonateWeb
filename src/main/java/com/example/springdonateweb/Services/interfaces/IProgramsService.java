@@ -17,4 +17,7 @@ public interface IProgramsService {
     // Phương thức mới cho phân trang
     Page<ProgramsResponseDto> findProgramsByPage(int page, int size);
     List<ProgramsResponseDto> findByCategory_CategoryId(int categoryId);
+
+    Page<ProgramsResponseDto> findProgramsByPageAndStatusTrue(int page, int size);
+    ProgramsResponseDto findByProgramIdAndStatusTrue(int id);
 }

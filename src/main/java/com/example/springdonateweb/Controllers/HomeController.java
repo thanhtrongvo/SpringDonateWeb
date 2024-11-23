@@ -78,8 +78,7 @@ public class HomeController {
 
     @GetMapping("/program/{id}")
     public String showProgramDetail(@PathVariable int id, Model model) {
-        // Assume programService.getProgramById(id) fetches the ProgramResponseDto
-        ProgramsResponseDto program = programsService.findById(id);
+        ProgramsResponseDto program = programsService.findByProgramIdAndStatusTrue(id);
         model.addAttribute("program", program);
         return "client/program-detail";
     }

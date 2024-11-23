@@ -86,7 +86,8 @@ public class ProgramsService implements IProgramsService {
 
     @Override
     public List<ProgramsResponseDto> findByStatusTrue() {
-        return programsRepository.findByStatusTrue().stream()
+        Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE); // Adjust the page size as needed
+        return programsRepository.findByStatusTrue(pageable).stream()
                 .map(programsMapper::toDto)
                 .collect(Collectors.toList());
     }
@@ -95,5 +96,16 @@ public class ProgramsService implements IProgramsService {
         return programsRepository.findByCategory_CategoryId(categoryId).stream()
                 .map(programsMapper::toDto)
                 .collect(Collectors.toList());
+    }
+    @Override
+    public Page<ProgramsResponseDto> findProgramsByPageAndStatusTrue(int page, int size) {
+        Page<ProgramsEntity> programsPage = programsRepository.findByStatusTrue(PageRequest.of(page, size));
+        return programsPage.map(programsMapper::toDto);
+    }
+    @Override
+    public ProgramsResponseDto findByProgramIdAndStatusTrue(int id) {
+        return programsRepository.findByProgramIdAndStatusTrue(id)
+                .map(programsMapper::toDto)
+                .orElse(null);
     }
 }
