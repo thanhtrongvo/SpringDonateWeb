@@ -14,6 +14,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -43,40 +46,45 @@ public class SecurityConfig {
         return authProvider;
     }
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-
+        http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/","/home","/index","/forgot-password").permitAll()
-                        .requestMatchers("/login","/auth/**", "/register","/404")
-                        .permitAll()
-                        .requestMatchers("/lib/**","/css/**", "/fonts/**", "/img/**", "/js/**", "/scss/**", "/vendor/**")
-                        .permitAll()
-                        .requestMatchers("/admin/**")
-                        .hasAnyAuthority("1")
+                        .requestMatchers("/", "/home", "/index", "/forgot-password").permitAll()
+                        .requestMatchers("/login", "/auth/**", "/register", "/404").permitAll()
+                        .requestMatchers("/lib/**", "/css/**", "/fonts/**", "/img/**", "/js/**", "/scss/**", "/vendor/**").permitAll()
+                        .requestMatchers("/admin/**").hasAnyAuthority("1")
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
                         .loginPage("/login")
                         .defaultSuccessUrl("/", true)
-//                        .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
                         .failureUrl("/login?error=true")
                         .permitAll()
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/", true)
+                        .failureUrl("/login?error=true")
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .oidcUserService(oidcUserService())
+                        )
                 )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true) // Hủy session
+                        .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll()
-                )
+                );
 
-                .build();
-
+        return http.build();
     }
 
+    @Bean
+    public OidcUserService oidcUserService() {
+        return new OidcUserService();
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
