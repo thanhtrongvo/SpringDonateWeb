@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -31,7 +32,17 @@ public class DonationsController {
         model.addAttribute("totalPages", donationPage.getTotalPages());
         return "admin/Donations/index";
     }
+    @GetMapping("/top-donors")
+    @ResponseBody
+    public List<Map<String, Object>> getTopDonors(@RequestParam(defaultValue = "5") int limit) {
+        return donationsService.getTopDonors(limit);
+    }
 
+    @GetMapping("/total-donations-by-day")
+    @ResponseBody
+    public Map<String, BigDecimal> getTotalDonationsByDay() {
+        return donationsService.getTotalDonationsByDay();
+    }
     @GetMapping("/total-donations-by-program")
     @ResponseBody
     public Map<Integer, BigDecimal> getTotalDonationsByProgram() {

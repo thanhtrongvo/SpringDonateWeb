@@ -17,6 +17,8 @@ public interface IDonationsService {
     void delete(int id);
     Page<DonationResponseDto> findDonationsByPage(int page, int size);
     List<DonationResponseDto> findByUserId(int userId);
+    Map<String, BigDecimal> getTotalDonationsByDay();
+    List<Map<String, Object>> getTopDonors(int limit);
 
     // Thêm phương thức getTotalDonationsByProgram vào đây
     Map<Integer, BigDecimal> getTotalDonationsByProgram();

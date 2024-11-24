@@ -45,8 +45,23 @@ public class DonationsService implements IDonationsService {
                 ));
 
         System.out.println("Total Donations by Program: " + programTotalDonations); // Log để kiểm tra dữ liệu
-
+        System.out.println("Donations Data: " + donations);
+        System.out.println("Total Donations by Program: " + programTotalDonations);
         return programTotalDonations;
+    }
+    @Override
+    public List<Map<String, Object>> getTopDonors(int limit) {
+        Pageable pageable = PageRequest.of(0, limit);
+        return donationsRepository.findTopDonors(pageable);
+    }
+
+    @Override
+    public Map<String, BigDecimal> getTotalDonationsByDay() {
+        return donationsRepository.findAll().stream()
+                .collect(Collectors.groupingBy(
+                        donation -> donation.getDonationDate().toLocalDate().toString(), // Group by date
+                        Collectors.reducing(BigDecimal.ZERO, DonationsEntity::getAmount, BigDecimal::add)
+                ));
     }
 
     @Override
