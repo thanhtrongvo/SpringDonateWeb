@@ -12,6 +12,32 @@
 
     <!-- Stylesheet -->
     <link th:href="@{css/styleLogin.css}" rel="stylesheet">
+    <!-- Add this in the head section -->
+<style>
+    .google-btn {
+        width: 100%;
+        padding: 10px;
+        background: #fff;
+        border: 1px solid #dadce0;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .google-btn:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .google-btn img {
+        width: 18px;
+        height: 18px;
+    }
+    </style>
 </head>
 <body >
     <div class="wrapper login-3">
@@ -43,6 +69,16 @@
                             <a th:href="@{/forgot-password}">Quên tài khoản</a>
                             <a th:href="@{/register}">Tạo tài khoản </a>
                         </p>
+                        <div class="text-center mt-3">
+                            <div style="text-align: center; margin: 15px 0;">
+                                <span style="color: #666;">hoặc</span>
+                            </div>
+                            
+                            <a href="/oauth2/authorization/google" class="google-btn">
+                                <img th:src="@{/img/google.png}" alt="Google logo"/>
+                                <span>Đăng nhập với Google</span>
+                            </a>
+                        </div>
                     </form>
                 </div>
             </div>
