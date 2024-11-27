@@ -5,6 +5,10 @@ import com.example.springdonateweb.Models.Dtos.Users.UsersResponseDto;
 import com.example.springdonateweb.Models.Entities.UsersEntity;
 import com.example.springdonateweb.Services.interfaces.IUsersService;
 import com.example.springdonateweb.util.SecurityUtil;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -13,11 +17,16 @@ import lombok.extern.log4j.Log4j2;
 
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.Map;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -87,20 +96,6 @@ public class AuthController {
         }
         return "auth/login"; // Show login page
     }
-    @GetMapping("/oauth2/redirect")
-    public String oauth2Redirect(@AuthenticationPrincipal OidcUser oidcUser, RedirectAttributes redirectAttributes) {
-        String email = oidcUser.getEmail();
-        if (!usersService.existsByEmail(email)) {
-            UserCreateDto newUser = new UserCreateDto();
-            newUser.setEmail(email);
-            newUser.setName(oidcUser.getGivenName());
-            String randomPassword = generateRandomPassword();
-            newUser.setPassword(passwordEncoder.encode(randomPassword)); // Set the encoded random password
-            usersService.register(newUser);
-        }
-        redirectAttributes.addFlashAttribute("success", "true");
-        return "redirect:/";
-    }
 
     @PostMapping("/forgot-password")
     public String fogotPassword(
@@ -130,12 +125,6 @@ public class AuthController {
             return "auth/forgetPassword"; // Show registration page
         }
         
-    }
-    private String generateRandomPassword() {
-        SecureRandom random = new SecureRandom();
-        byte[] bytes = new byte[24];
-        random.nextBytes(bytes);
-        return Base64.getEncoder().encodeToString(bytes);
     }
 
 }

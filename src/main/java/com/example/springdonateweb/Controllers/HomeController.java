@@ -44,18 +44,18 @@ public class HomeController {
 
     @GetMapping("/")
     public String index(Model model, @RequestParam(value = "filter", required = false) String filter) {
-        String userId = SecurityUtil.getSessionUser(); // Assuming this returns an email now
+        String userId = SecurityUtil.getSessionUser(); 
 
 
         if (userId != null) {
-            UsersResponseDto user = usersService.findByEmail(userId); // Change to find by email
+            UsersResponseDto user = usersService.findByEmail(userId); 
             if (user != null) {
-                // Check if the user has an admin role
-                if (user.getRoleId() == 1) {  // Assuming roleId 1 is for Admin
-                    return "redirect:/admin/user"; // Redirect to admin page if the user is an admin
+               
+                if (user.getRoleId() == 1) {  
+                    return "redirect:/admin/user"; 
                 }
 
-                // If not admin, proceed as a normal user
+                
                 model.addAttribute("userEmail", user.getEmail());
 
                 return "index"; // Return home.html (ensure this is the correct view name)
@@ -107,6 +107,11 @@ public class HomeController {
         model.addAttribute("donations", donations);
         return "client/my-donation";
     }
+    @GetMapping("/blog")
+    public String getAllBlog(Model model) {
+        return "client/blog"; 
+    }
+    
 
 
 }
