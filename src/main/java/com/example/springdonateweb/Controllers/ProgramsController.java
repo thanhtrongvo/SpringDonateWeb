@@ -52,16 +52,19 @@ public class ProgramsController {
     }
 
 
-       @PostMapping("/create")
+    @PostMapping("/create")
     public String createProgram(
             @Valid @ModelAttribute("program") ProgramCreateDto programCreateDto,
             BindingResult result,
             RedirectAttributes redirectAttributes) {
+
+        // Kiểm tra các lỗi validation
         if (result.hasErrors()) {
+            // Nếu có lỗi, trả về trang tạo chương trình với lỗi hiển thị
             return "admin/Programs/create";
         }
 
-        // Handle file upload
+        // Xử lý upload ảnh
         MultipartFile file = programCreateDto.getImage();
         if (!file.isEmpty()) {
             try {
@@ -74,6 +77,7 @@ public class ProgramsController {
             }
         }
 
+        // Lưu chương trình vào cơ sở dữ liệu
         programsService.create(programCreateDto);
         redirectAttributes.addFlashAttribute("success", "Program created successfully");
         return "redirect:/admin/programs";
