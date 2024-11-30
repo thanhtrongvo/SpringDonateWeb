@@ -21,4 +21,5 @@ public class ProgramUpdateDto {
     private Date endDate;
     private boolean status;
     private int categoryId;
+
 }
