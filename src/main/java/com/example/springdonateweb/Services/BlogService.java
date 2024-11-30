@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -57,9 +59,9 @@ public class BlogService implements IBlogService {
 
     @Override
     public BlogResponseDto findById(int id) {
-        return blogRepository.findById(id)
-                .map(blogMapper::toDto)
-                .orElse(null);
+        Optional<BlogEntity> blogEntity = blogRepository.findById(id);
+        return blogEntity.map(blogMapper::toDto)
+                .orElseThrow(() -> new RuntimeException("Blog not found"));
     }
 
     @Override
@@ -81,5 +83,11 @@ public class BlogService implements IBlogService {
     @Override
     public void delete(int id) {
         blogRepository.deleteById(id);
+    }
+    @Override
+    public List<BlogResponseDto> findAll() {
+        return blogRepository.findAll().stream()
+                .map(blogMapper::toDto)
+                .toList();
     }
 }

@@ -1,9 +1,11 @@
 package com.example.springdonateweb.Controllers;
 
+import com.example.springdonateweb.Models.Dtos.Blogs.BlogResponseDto;
 import com.example.springdonateweb.Models.Dtos.Donations.DonationResponseDto;
 import com.example.springdonateweb.Models.Dtos.Programs.ProgramsResponseDto;
 import com.example.springdonateweb.Models.Dtos.Users.UsersResponseDto;
 import com.example.springdonateweb.Models.Entities.DonationsEntity;
+import com.example.springdonateweb.Services.BlogService;
 import com.example.springdonateweb.Services.CategoriesService;
 import com.example.springdonateweb.Services.DonationsService;
 import com.example.springdonateweb.Services.ProgramsService;
@@ -38,6 +40,7 @@ public class HomeController {
     private final ProgramsService programsService;
     private final CategoriesService categoriesService;
     private final DonationsService donationService;
+    private final BlogService blogService;
 
 
     IUsersService usersService;
@@ -49,55 +52,25 @@ public class HomeController {
 
         if (userId != null) {
             UsersResponseDto user = usersService.findByEmail(userId); 
+            List<ProgramsResponseDto> program = programsService.findByStatusTrue();
             if (user != null) {
                
                 if (user.getRoleId() == 1) {  
                     return "redirect:/admin/user"; 
                 }
 
-                
+                model.addAttribute("program", program);
                 model.addAttribute("userEmail", user.getEmail());
 
-                return "index"; // Return home.html (ensure this is the correct view name)
+                return "index"; 
             } else {
                 return "redirect:/login"; // Redirect to login if user not found
             }
         } else {
-            return "index"; // Redirect to login if userId is null
+            return "index"; 
         }
     }
-
-    @GetMapping("/program")
-    public String program(Model model) {
-        List<ProgramsResponseDto> program = programsService.findByStatusTrue();
-        model.addAttribute("program", program);
-        model.addAttribute("amountFormatter", new AmountFormatter());
-        return "client/program";
-
-    }
-
-    @GetMapping("/program/{id}")
-    public String showProgramDetail(@PathVariable int id, Model model) {
-        ProgramsResponseDto program = programsService.findByProgramIdAndStatusTrue(id);
-        model.addAttribute("program", program);
-        return "client/program-detail";
-    }
-
     
-    @GetMapping("/user-detail")
-    public String userDetail(Model model) {
-        String getUser = SecurityUtil.getSessionUser();
-        UsersResponseDto user = usersService.findByEmail(getUser);
-        model.addAttribute("user", user);
-        return "client/user-detail";
-    }
-    @GetMapping("/category/{id}")
-    public String showProgramByCategory(@PathVariable int id, Model model) {
-        List<ProgramsResponseDto> program = programsService.findByCategory_CategoryId(id);
-        model.addAttribute("program", program);
-        model.addAttribute("amountFormatter", new AmountFormatter());
-        return "client/program";
-    }
 
    @GetMapping("/my-donations")
     public String getMyDonations(Model model, Principal principal) {
@@ -106,10 +79,6 @@ public class HomeController {
         List<DonationResponseDto> donations = donationService.findByUserId(user.getId());
         model.addAttribute("donations", donations);
         return "client/my-donation";
-    }
-    @GetMapping("/blog")
-    public String getAllBlog(Model model) {
-        return "client/blog"; 
     }
     
 

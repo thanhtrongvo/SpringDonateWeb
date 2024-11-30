@@ -13,33 +13,49 @@
     <!-- Stylesheet -->
     <link th:href="@{css/styleLogin.css}" rel="stylesheet">
     <!-- Add this in the head section -->
-<style>
-    .google-btn {
-        width: 100%;
-        padding: 10px;
-        background: #fff;
-        border: 1px solid #dadce0;
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        margin-top: 20px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-    
-    .google-btn:hover {
-        background-color: #f8f9fa;
-    }
-    
-    .google-btn img {
-        width: 18px;
-        height: 18px;
-    }
+    <style>
+        .social-btn {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: #000;
+        }
+
+        .social-btn:hover {
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-btn img {
+            width: 18px;
+            height: 18px;
+        }
+
+        .google-btn {
+            background: #fff;
+        }
+
+        .facebook-btn {
+            background: #3b5998;
+            color: #fff;
+            border: none;
+        }
+
+        .facebook-btn:hover {
+            background: #334d84;
+        }
     </style>
 </head>
-<body >
+<body>
     <div class="wrapper login-3">
         <div class="container">
             <div class="col-left">
@@ -48,7 +64,6 @@
                     <p>
                         Chào bạn! :>
                     </p>
-
                 </div>
             </div>
             <div class="col-right">
@@ -56,8 +71,8 @@
                     <h2>Đăng nhập</h2>
                     <form th:action="@{/login}" method="post">
                         <p>
-    <!--                        <label for="email" class="form-label">Email address</label>-->
                             <input type="email" name="username" class="form-control" id="email" placeholder="Enter email" required>
+                            <span  ></span>
                         </p>
                         <p>
                             <input type="password" name="password" class="form-control" id="password" placeholder="Password" required>
@@ -73,25 +88,29 @@
                             <div style="text-align: center; margin: 15px 0;">
                                 <span style="color: #666;">hoặc</span>
                             </div>
-                            
-                            <a href="/oauth2/authorization/google" class="google-btn">
+                            <a href="/oauth2/authorization/google" class="social-btn google-btn">
                                 <img th:src="@{/img/google.png}" alt="Google logo"/>
                                 <span>Đăng nhập với Google</span>
                             </a>
                         </div>
                         <div class="text-center mt-3">
-                            
-                            <a href="/oauth2/authorization/facebook" class="google-btn">
-                                <img th:src="@{/img/google.png}" alt="Google logo"/>
-                                <span>Đăng nhập với Github</span>
+                            <a href="/oauth2/authorization/facebook" class="social-btn facebook-btn">
+                                <img th:src="@{/img/facebook.png}" alt="Facebook logo"/>
+                                <span>Đăng nhập với Facebook</span>
                             </a>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-
+        
     </div>
+    <div th:if="${param.error == 'email'}" class="alert alert-danger" role="alert">
+        Email does not exist.
+    </div>
+    <div th:if="${param.error == 'password'}" class="alert alert-danger" role="alert">
+        Invalid password.
+    </div>
+      
 </body>
 </html>
-

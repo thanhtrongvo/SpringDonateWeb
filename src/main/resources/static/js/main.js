@@ -48,12 +48,12 @@
     });
 
 
-    // Causes progress
-    $('.causes-progress').waypoint(function () {
-        $('.progress .progress-bar').each(function () {
-            $(this).css("width", $(this).attr("aria-valuenow") + '%');
-        });
-    }, {offset: '80%'});
+    // // Causes progress
+    // $('.causes-progress').waypoint(function () {
+    //     $('.progress .progress-bar').each(function () {
+    //         $(this).css("width", $(this).attr("aria-valuenow") + '%');
+    //     });
+    // }, {offset: '80%'});
 
 
     // Testimonials carousel
@@ -125,16 +125,6 @@ document.addEventListener('DOMContentLoaded', function() {
             amountInput.classList.add('is-invalid');
         }
     }
-
-    // Handle manual input
-    amountInput.addEventListener('input', function() {
-        // Remove active class from all badges when typing
-        amountBadges.forEach(badge => badge.classList.remove('active'));
-        
-        const amount = parseInt(this.value) || 0;
-        validateAmount(amount);
-    });
-
     // Form validation
     const form = document.querySelector('form');
     form.addEventListener('submit', function(event) {
@@ -144,4 +134,42 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         form.classList.add('was-validated');
     });
+});
+document.getElementById('sendOtpBtn').addEventListener('click', function() {
+    const newEmail = document.getElementById('newEmail').value;
+    if (newEmail) {
+        fetch('/send-otp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({ newEmail: newEmail })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data); 
+            if (data.success) {
+                document.getElementById('otp').disabled = false;
+                document.getElementById('submitBtn').disabled = false;
+                alert('OTP sent to your new email address.');
+            } else {
+                alert('Failed to send OTP. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        });
+    } else {
+        alert('Please enter a new email address.');
+    }
+});
+
+// Show toast 
+document.addEventListener('DOMContentLoaded', function () {
+    var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+    var toastList = toastElList.map(function (toastEl) {
+        return new bootstrap.Toast(toastEl)
+    })
+    toastList.forEach(toast => toast.show())
 });

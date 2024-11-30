@@ -21,22 +21,21 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.transaction.annotation.Transactional;
-
 @Service
 @RequiredArgsConstructor
 public class UsersService implements IUsersService {
-
 
 
     private final PasswordEncoder passwordEncoder;
@@ -98,10 +97,6 @@ public class UsersService implements IUsersService {
         return usersRepository.existsById(id);
     }
 
-    @Override
-    public void changePassword(int id, String password) {
-
-    }
 
     public UsersResponseDto findByEmail(String email) {
         Optional<UsersEntity> usersEntity = usersRepository.findByEmail(email);
@@ -147,6 +142,7 @@ public class UsersService implements IUsersService {
                 .map(usersMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
+
     @Override
     public Page<UsersResponseDto> findUsersByPage(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -161,19 +157,30 @@ public class UsersService implements IUsersService {
 
     @Override
     public boolean checkPassword(int id, String password) {
-        return false;
+        Optional<UsersEntity> usersEntity = usersRepository.findByIdAndStatusTrue(id);
+        if (usersEntity.isPresent()) {
+            UsersEntity user = usersEntity.get();
+            return passwordEncoder.matches(password, user.getPassword());
+
+        } else {
+            return false;
+        }
     }
 
     @Override
     public boolean checkComfirmPassword(String password, String confirmPassword) {
-        return false;
+        return password.equals(confirmPassword);
     }
 
     @Override
-    public void changePassword(String email, String password) {
-
+    @Transactional
+    public void changePassword(int id, String password) {
+        Optional<UsersEntity> usersEntity = usersRepository.findByIdAndStatusTrue(id);
+        usersEntity.ifPresent(user -> {
+            user.setPassword(passwordEncoder.encode(password));
+            usersRepository.save(user);
+        });
     }
-
 
 
     @Override
@@ -181,6 +188,7 @@ public class UsersService implements IUsersService {
         Optional<UsersEntity> usersEntity = usersRepository.findByIdAndStatusTrue(id);
         return usersEntity.map(usersMapper::toResponseDto).orElse(null);
     }
+
     @Override
     public UsersResponseDto findByEmailAndStatusTrue(String email) {
         Optional<UsersEntity> usersEntity = usersRepository.findByEmailAndStatusTrue(email);
@@ -215,42 +223,50 @@ public class UsersService implements IUsersService {
         });
     }
 
+
     @Override
     public void sendOtp(int id, String email) {
         try {
-            String opt = appUtil.generateOtp(6);
+            String otp = appUtil.generateOtp(6);
             emailService.sendEmail(
                     email,
                     "OTP",
-                    "Mã OTP của bạn là: " + opt
+                    "Mã OTP của bạn là: " + otp
             );
             Optional<UsersEntity> usersEntity = usersRepository.findByIdAndStatusTrue(id);
             usersEntity.ifPresent(user -> {
-                user.setChangeEmail(email + ";" + opt + LocalDateTime.now().plusMinutes(5));
+                DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+                String formattedDate = LocalDateTime.now().plusMinutes(5).format(formatter);
+                user.setChangeEmail(email + ";" + otp + ";" + formattedDate);
+                usersRepository.save(user);
             });
-        }
-        catch (MessagingException | UnsupportedEncodingException e) {
+        } catch (MessagingException | UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void changeEmail(int id, String email) {
+    @Transactional
+    public void changeEmail(int id) {
         Optional<UsersEntity> usersOptional = usersRepository.findByIdAndStatusTrue(id);
-        if(usersOptional.isPresent()) {
-            UsersEntity usersEntity = usersOptional.get();
-            String[] data =  usersEntity.getChangeEmail().split(";");
-            usersEntity.setEmail(data[0]);
-        }
+        usersOptional.ifPresent(user -> {
+            String[] data = user.getChangeEmail().split(";");
+            user.setEmail(data[0]);
+            usersRepository.save(user);
+
+        });
     }
+
     @Override
     public boolean checkOtp(int id, String otp) {
-        Optional<UsersEntity> personOptional = usersRepository.findByIdAndStatusTrue(id);
-        if (personOptional.isPresent()) {
-            UsersEntity usersEntity = personOptional.get();
+        Optional<UsersEntity> getUser = usersRepository.findByIdAndStatusTrue(id);
+        if (getUser.isPresent()) {
+            UsersEntity usersEntity = getUser.get();
             String[] data = usersEntity.getChangeEmail().split(";");
             if (otp.equals(data[1])) {
-                return LocalDateTime.now().isBefore(appUtil.dateFromString(data[2]));
+                DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+                LocalDateTime expiryDate = LocalDateTime.parse(data[2], formatter);
+                return LocalDateTime.now().isBefore(expiryDate);
             } else {
                 return false;
             }
@@ -258,8 +274,6 @@ public class UsersService implements IUsersService {
             return false;
         }
     }
-
-
 
 
 }
