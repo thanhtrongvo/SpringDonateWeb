@@ -139,106 +139,48 @@
         <div class="container py-5">
             <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
                 <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">Feature Causes</div>
-                <h1 class="display-6 mb-5">Every Child Deserves The Opportunity To Learn</h1>
+                <h1 class="display-6 mb-5">Tất cả học sinh, sinh viên đều có cơ hội được học</h1>
             </div>
             <div class="row g-4 justify-content-center">
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="causes-item d-flex flex-column bg-white border-top border-5 border-primary rounded-top overflow-hidden h-100">
-                        <div class="text-center p-4 pt-0">
-                            <div class="d-inline-block bg-primary text-white rounded-bottom fs-5 pb-1 px-3 mb-4">
-                                <small>Education</small>
+                <div th:each="item, iterStat : ${program}" class="col-lg-4 col-md-6 mb-4 program-item" th:if="${iterStat.index < 3}">
+                    <div class="program-card show">
+                        <img th:src="@{'/img/program/' + ${item.image}}" class="card-img-top" alt="Program image">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${item.name}">Program Name</h5>
+                            <div class="amount-container">
+                                <h6 class="text-primary">
+                                    <span th:text="${@amountFormatter.formatAmount(item.currentAmount)}">6.699.367</span>
+                                    <small class="text-muted">/ </small>
+                                    <span th:text="${@amountFormatter.formatAmount(item.goalAmount)}">200.000.000</span>
+                                </h6>
                             </div>
-                            <h5 class="mb-3">Education For African Children</h5>
-                            <p>Tempor erat elitr rebum at clita dolor diam ipsum sit diam amet diam et eos</p>
-                            <div class="causes-progress bg-light p-3 pt-2">
-                                <div class="d-flex justify-content-between">
-                                    <p class="text-dark">$10,000 <small class="text-body">Goal</small></p>
-                                    <p class="text-dark">$9,542 <small class="text-body">Raised</small></p>
-                                </div>
-                                <div class="progress">
-                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="90" class="progress-bar"
-                                         role="progressbar">
-                                        <span>90%</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="position-relative mt-auto">
-                            <img alt="" class="img-fluid" th:src="@{/img/courses-1.jpg}">
-                            <div class="causes-overlay">
-                                <a class="btn btn-outline-primary" href="">
-                                    Read More
-                                    <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
-                                        <i class="fa fa-arrow-right"></i>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="causes-item d-flex flex-column bg-white border-top border-5 border-primary rounded-top overflow-hidden h-100">
-                        <div class="text-center p-4 pt-0">
-                            <div class="d-inline-block bg-primary text-white rounded-bottom fs-5 pb-1 px-3 mb-4">
-                                <small>Pure Water</small>
-                            </div>
-                            <h5 class="mb-3">Ensure Pure Drinking Water</h5>
-                            <p>Tempor erat elitr rebum at clita dolor diam ipsum sit diam amet diam et eos</p>
-                            <div class="causes-progress bg-light p-3 pt-2">
-                                <div class="d-flex justify-content-between">
-                                    <p class="text-dark">$10,000 <small class="text-body">Goal</small></p>
-                                    <p class="text-dark">$9,542 <small class="text-body">Raised</small></p>
-                                </div>
-                                <div class="progress">
-                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="90" class="progress-bar"
-                                         role="progressbar">
-                                        <span>90%</span>
-                                    </div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar"
+                                     th:style="'width:' + ${item.percentageAchieved} + '%'"
+                                     th:aria-valuenow="${item.percentageAchieved}"
+                                     aria-valuemin="0" aria-valuemax="100">
                                 </div>
                             </div>
-                        </div>
-                        <div class="position-relative mt-auto">
-                            <img alt="" class="img-fluid" th:src="@{/img/courses-2.jpg}">
-                            <div class="causes-overlay">
-                                <a class="btn btn-outline-primary" href="">
-                                    Read More
-                                    <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
-                                        <i class="fa fa-arrow-right"></i>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="causes-item d-flex flex-column bg-white border-top border-5 border-primary rounded-top overflow-hidden h-100">
-                        <div class="text-center p-4 pt-0">
-                            <div class="d-inline-block bg-primary text-white rounded-bottom fs-5 pb-1 px-3 mb-4">
-                                <small>Healthy Life</small>
-                            </div>
-                            <h5 class="mb-3">Ensure Medical Treatment</h5>
-                            <p>Tempor erat elitr rebum at clita dolor diam ipsum sit diam amet diam et eos</p>
-                            <div class="causes-progress bg-light p-3 pt-2">
-                                <div class="d-flex justify-content-between">
-                                    <p class="text-dark">$10,000 <small class="text-body">Goal</small></p>
-                                    <p class="text-dark">$9,542 <small class="text-body">Raised</small></p>
+                            <div class="stats-container">
+                                <div class="stat-item">
+                                    <div class="stat-value" th:text="${item.donationCount}">1.266</div>
+                                    <div class="stat-label">Lượt quyên góp</div>
                                 </div>
-                                <div class="progress">
-                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="90" class="progress-bar"
-                                         role="progressbar">
-                                        <span>90%</span>
-                                    </div>
+                                <div class="stat-item">
+                                    <div class="stat-value" th:text="${item.percentageAchieved} + '%'">3%</div>
+                                    <div class="stat-label">Đạt được</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value" th:text="${item.remainingDays}">68</div>
+                                    <div class="stat-label">Ngày còn lại</div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="position-relative mt-auto">
-                            <img alt="" class="img-fluid" th:src="@{/img/courses-3.jpg}">
-                            <div class="causes-overlay">
-                                <a class="btn btn-outline-primary" href="">
-                                    Read More
-                                    <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
-                                        <i class="fa fa-arrow-right"></i>
-                                    </div>
+                            <div class="text-center">
+                                <a th:href="@{/program/{id}(id=${item.programId})}"
+                                   class="btn btn-donate"
+                                   th:classappend="${item.currentAmount >= item.goalAmount} ? 'disabled' : ''"
+                                   th:attr="disabled=${item.currentAmount >= item.goalAmount}">
+                                    Quyên góp ngay
                                 </a>
                             </div>
                         </div>
@@ -265,7 +207,7 @@
                         <img alt="" class="img-fluid mb-4" th:src="@{/img/icon-1.png}">
                         <h4 class="mb-3">Trao học bổng</h4>
                         <p class="mb-4">Thông tin về các chương trình học bổng dành cho sinh viên nghèo khó.</p>
-                        <a class="btn btn-outline-primary px-3" href="">
+                        <a class="btn btn-outline-primary px-3" th:href="@{/category/1}">
                             Learn More
                             <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
                                 <i class="fa fa-arrow-right"></i>
@@ -276,11 +218,11 @@
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="service-item bg-white text-center h-100 p-4 p-xl-5">
                         <img alt="" class="img-fluid mb-4" th:src="@{/img/icon-2.png}">
-                        <h4 class="mb-3">Cứu trợ khẩn cấp</h4>
-                        <p class="mb-4">Các chương trình cứu trợ tài chính khẩn cấp cho sinh viên gặp tình huống khó
+                        <h4 class="mb-3">Hổ trợ gia đình</h4>
+                        <p class="mb-4">Các chương trình cứu trợ tài chính khẩn cấp cho gia đình sinh viên gặp tình huống khó
                             khăn
                             đột xuất (thiên tai, dịch bệnh, v.v.).</p>
-                        <a class="btn btn-outline-primary px-3" href="">
+                        <a class="btn btn-outline-primary px-3" th:href="@{/category/4}">
                             Learn More
                             <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
                                 <i class="fa fa-arrow-right"></i>
@@ -291,10 +233,9 @@
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="service-item bg-white text-center h-100 p-4 p-xl-5">
                         <img alt="" class="img-fluid mb-4" th:src="@{/img/icon-3.png}">
-                        <h4 class="mb-3">Chương trình hỗ trợ học phí</h4>
-                        <p class="mb-4">Hỗ trợ một phần hoặc toàn bộ học phí cho những sinh viên không có khả năng chi
-                            trả.</p>
-                        <a class="btn btn-outline-primary px-3" href="">
+                        <h4 class="mb-3">Bảo vệ môi trường</h4>
+                        <p class="mb-4">Hỗ trợ một phần chi phí cho các dịch vụ bảo vệ môi trường</p>
+                        <a class="btn btn-outline-primary px-3" th:href="@{/category/3}">
                             Learn More
                             <div class="d-inline-flex btn-sm-square bg-primary text-white rounded-circle ms-2">
                                 <i class="fa fa-arrow-right"></i>
@@ -369,59 +310,6 @@
     <!-- Donate End -->
 
 
-    <!-- Testimonial Start -->
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">Lời cảm ơn</div>
-                <h1 class="display-6 mb-5">Chúng tôi đã giúp đỡ được nhiều sinh viên cần sự hỗ trợ</h1>
-            </div>
-            <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
-                <div class="testimonial-item text-center">
-                    <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4" style="width: 100px; height: 100px;"
-                         th:src="@{/img/testimonial-1.jpg}">
-                    <div class="testimonial-text rounded text-center p-4">
-                        <p>Em xin chân thành cảm ơn các nhà hảo tâm và quý trường đã dành sự quan tâm đặc biệt tới sinh
-                            viên
-                            có hoàn cảnh khó khăn như em. Nhờ sự hỗ trợ này, em đã có thể tiếp tục việc học mà không
-                            phải lo
-                            lắng về gánh nặng tài chính. </p>
-                        <h5 class="mb-1">Doner Name</h5>
-                        <span class="fst-italic">Profession</span>
-                    </div>
-                </div>
-                <div class="testimonial-item text-center">
-                    <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4" style="width: 100px; height: 100px;"
-                         th:src="@{/img/testimonial-2.jpg}">
-                    <div class="testimonial-text rounded text-center p-4">
-                        <p>Học bổng không chỉ giúp em trang trải học phí mà còn là động lực to lớn giúp em tự tin theo
-                            đuổi
-                            ước mơ của mình. Em mong rằng, trong tương lai, bản thân sẽ có thể quay lại đóng góp cho
-                            cộng
-                            đồng, tiếp tục truyền đi ngọn lửa yêu thương mà em đã nhận được.</p>
-                        <h5 class="mb-1">Doner Name</h5>
-                        <span class="fst-italic">Profession</span>
-                    </div>
-                </div>
-                <div class="testimonial-item text-center">
-                    <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4" style="width: 100px; height: 100px;"
-                         th:src="@{/img/testimonial-3.jpg}">
-                    <div class="testimonial-text rounded text-center p-4">
-                        <p>Nhờ sự giúp đỡ quý báu từ các anh chị mạnh thường quân, em đã có thể vượt qua khoảng thời
-                            gian
-                            khó khăn nhất. Học bổng mà em nhận được không chỉ hỗ trợ về mặt tài chính mà còn là nguồn
-                            động
-                            viên tinh thần to lớn, giúp em tin rằng mọi khó khăn đều có thể vượt qua với sự sẻ chia của
-                            cộng
-                            đồng</p>
-                        <h5 class="mb-1">Doner Name</h5>
-                        <span class="fst-italic">Profession</span>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
 </main>
 <!-- Testimonial End -->
 

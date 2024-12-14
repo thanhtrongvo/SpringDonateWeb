@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface IBlogService {
     Page<BlogResponseDto> findBlogsByPage(int page, int size);  // Add this method signature
@@ -16,4 +17,5 @@ public interface IBlogService {
     BlogResponseDto update(BlogUpdateDto blogUpdateDto);
     String uploadImage(MultipartFile image) throws IOException;
     void delete(int id);
+    List<BlogResponseDto> findAll();
 }

@@ -38,19 +38,19 @@
             <tr>
               <th class="text-center">
                 <span>ID</span>
-                <input type="text" class="form-control form-control-sm" placeholder="Search ID" style="margin-top: 5px;">
+
               </th>
               <th class="text-center">
                 <span>Name</span>
-                <input type="text" class="form-control form-control-sm" placeholder="Search Name" style="margin-top: 5px;">
+
               </th>
               <th class="text-center">
                 <span>Email</span>
-                <input type="text" class="form-control form-control-sm" placeholder="Search Email" style="margin-top: 5px;">
+
               </th>
               <th class="text-center">
                 <span>Role</span>
-                <input type="text" class="form-control form-control-sm" placeholder="Search Role" style="margin-top: 5px;">
+
               </th>
               <th class="text-center">Actions</th>
             </tr>
@@ -62,7 +62,7 @@
               <td th:text="${user.email}" class="text-center">Email</td>
               <td th:text="${user.roleId == 1 ? 'Admin' : 'User'}" class="text-center">Role</td>
               <td class="text-center">
-                <a th:href="@{/admin/user/edit/{id}(id=${user.id})}" class="btn btn-warning btn-sm">Edit</a>
+<!--                <a th:href="@{/admin/user/edit/{id}(id=${user.id})}" class="btn btn-warning btn-sm">Edit</a>-->
                 <a th:href="@{/admin/user/delete/{id}(id=${user.id})}" class="btn btn-danger btn-sm"
                    onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
               </td>

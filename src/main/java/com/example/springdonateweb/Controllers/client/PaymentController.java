@@ -1,4 +1,4 @@
-package com.example.springdonateweb.Controllers;
+package com.example.springdonateweb.Controllers.client;
 
 import com.example.springdonateweb.Services.VNPayService;
 import jakarta.servlet.http.HttpServletRequest;

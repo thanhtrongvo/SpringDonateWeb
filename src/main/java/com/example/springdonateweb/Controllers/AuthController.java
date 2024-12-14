@@ -5,12 +5,28 @@ import com.example.springdonateweb.Models.Dtos.Users.UsersResponseDto;
 import com.example.springdonateweb.Models.Entities.UsersEntity;
 import com.example.springdonateweb.Services.interfaces.IUsersService;
 import com.example.springdonateweb.util.SecurityUtil;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
+
+import java.security.SecureRandom;
+import java.util.Base64;
+import java.util.Map;
+
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,14 +45,15 @@ public class AuthController {
 
 
     IUsersService usersService;
+    PasswordEncoder passwordEncoder;
 
     @GetMapping("/register")
     public String registerPage(@ModelAttribute("register") UserCreateDto register) {
         String user = SecurityUtil.getSessionUser();
         if (user != null) {
-            return "redirect:/login"; // Redirect logged-in users to home
+            return "redirect:/login"; 
         } else {
-            return "auth/register"; // Show registration page
+            return "auth/register"; 
         }
     }
 
@@ -48,7 +65,7 @@ public class AuthController {
     ) {
 
         if (result.hasErrors()) {
-            return "auth/register"; // Return to the registration page with errors
+            return "auth/register"; 
         }
         if(usersService.existsByEmail(register.getEmail())){
             redirectAttributes.addFlashAttribute("existEmail", "true");
@@ -56,12 +73,7 @@ public class AuthController {
             return "redirect:/register";
         }
 
-//        // Check if user already exists
-//        if (usersService.existsById(register.getId())) {
-//            redirectAttributes.addFlashAttribute("existUser", "true");
-//            redirectAttributes.addFlashAttribute("register", register);
-//            return "redirect:/register"; // Redirect with error message
-//        }
+
 
         usersService.register(register);
         redirectAttributes.addFlashAttribute("success", "true");
@@ -69,16 +81,14 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String login() {
-        String user = SecurityUtil.getSessionUser();
-
-
-
-        if (user != null) {
-            return "redirect:/"; // Redirect logged-in users to home
-        }
-        return "auth/login"; // Show login page
+    public String login(RedirectAttributes redirectAttributes) {
+    String user = SecurityUtil.getSessionUser();
+    if (user != null) {
+        redirectAttributes.addFlashAttribute("loginSuccess", "Login successful!");
+        return "redirect:/";
     }
+    return "auth/login"; 
+}
 
     @PostMapping("/forgot-password")
     public String fogotPassword(
@@ -102,11 +112,12 @@ public class AuthController {
     ){
         String user = SecurityUtil.getSessionUser();
         if (user != null) {
-            return "redirect:/"; // Redirect logged-in users to home
+            return "redirect:/"; 
         }
         else {
-            return "auth/forgetPassword"; // Show registration page
+            return "auth/forgetPassword"; 
         }
+        
     }
 
 }

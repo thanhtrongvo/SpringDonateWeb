@@ -11,12 +11,25 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
+
+import com.example.springdonateweb.Services.CustomOAuth2UserService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Configuration
 @EnableWebSecurity
@@ -24,6 +37,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
     @Autowired
     private CustomUserDetailService customUserDetailService;
+
+    @Autowired
+    private CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -43,38 +59,45 @@ public class SecurityConfig {
         return authProvider;
     }
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-
+        http
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/","/home","/index","/forgot-password").permitAll()
-                        .requestMatchers("/login","/auth/**", "/register","/404")
-                        .permitAll()
-                        .requestMatchers("/lib/**","/css/**", "/fonts/**", "/img/**", "/js/**", "/scss/**", "/vendor/**")
-                        .permitAll()
-                        .requestMatchers("/admin/**")
-                        .hasAnyAuthority("1")
-                        .anyRequest().authenticated()
-                )
+                .requestMatchers("/", "/home", "/index", "/forgot-password").permitAll()
+                .requestMatchers("/login/**", "/auth/**", "/register", "/404").permitAll()
+                .requestMatchers("/oauth2/authorization/**", "/login/oauth2/code/**").permitAll()
+                .requestMatchers("/lib/**", "/css/**", "/fonts/**", "/img/**", "/js/**", "/scss/**", "/vendor/**").permitAll()
+                .requestMatchers("/oauth2/**", "/login/oauth2/code/**").permitAll()
+                .requestMatchers("/admin/**").hasAnyAuthority("1")
+                .anyRequest().authenticated()
+               
+            )
                 .formLogin(login -> login
                         .loginPage("/login")
                         .defaultSuccessUrl("/", true)
-//                        .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
                         .failureUrl("/login?error=true")
                         .permitAll()
+                )
+                .oauth2Login(oauth2 -> oauth2
+                    .loginPage("/login")
+                    .defaultSuccessUrl("/", true)
+                    .failureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error=true"))
+                    .userInfoEndpoint(userInfo -> userInfo
+                        .userService(customOAuth2UserService)
+                    
+                )
+                    .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true) // Hủy session
+                        .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll()
-                )
-
-                .build();
-
+                );
+            
+        return http.build();
     }
 
 
@@ -82,4 +105,6 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
+    
+    
 }
