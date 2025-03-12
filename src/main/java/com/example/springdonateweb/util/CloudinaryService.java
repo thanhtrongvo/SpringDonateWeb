@@ -1,6 +1,5 @@
 package com.example.springdonateweb.util;
 
-
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,8 +25,12 @@ public class CloudinaryService {
         ));
     }
 
+    public Map upload(MultipartFile file) throws IOException {
+        return cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+    }
+
     public String uploadFile(MultipartFile file) throws IOException {
         Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
-        return uploadResult.get("secure_url").toString();  // Trả về URL ảnh
+        return uploadResult.get("secure_url").toString();  // Return the image URL
     }
 }

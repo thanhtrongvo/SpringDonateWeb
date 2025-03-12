@@ -1,7 +1,5 @@
 package com.example.springdonateweb.Controllers.HerokuController;
 
-
-
 import com.example.springdonateweb.Models.Dtos.Programs.ProgramCreateDto;
 import com.example.springdonateweb.Models.Dtos.Programs.ProgramUpdateDto;
 import com.example.springdonateweb.Models.Dtos.Programs.ProgramsResponseDto;
@@ -18,14 +16,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import com.example.springdonateweb.Repositories.CategoriesRepository;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-
+import java.util.Map;
 
 @Profile("heroku")
 @Controller
@@ -37,7 +30,6 @@ public class ProgramController {
     private final ICategoriesService categoriesService;
     private final CloudinaryService cloudinaryService;
 
-    private static final String UPLOAD_DIR = "src/main/resources/static/img/program/";
     @GetMapping("")
     public String listPrograms(
             Model model,
@@ -50,14 +42,12 @@ public class ProgramController {
         return "admin/Programs/index";
     }
 
-    // Trang thêm chương trình mới
     @GetMapping("/create")
     public String createProgramForm(Model model) {
         model.addAttribute("program", new ProgramCreateDto());
-        model.addAttribute("categories", categoriesService.findAll2()); // Sử dụng findAll2 thông qua dependency injection
-        return "admin/Programs/create";  // Đường dẫn tới create.html trong thư mục Programs
+        model.addAttribute("categories", categoriesService.findAll2());
+        return "admin/Programs/create";
     }
-
 
     @PostMapping("/create")
     public String createProgram(
@@ -69,14 +59,29 @@ public class ProgramController {
             return "admin/Programs/create";
         }
 
-        // Gửi programCreateDto trực tiếp đến service mà không cần xử lý file
-        programsService.create(programCreateDto);
+        // Handle Cloudinary upload for Heroku environment
+        MultipartFile file = programCreateDto.getImage();
+        if (file != null && !file.isEmpty()) {
+            try {
+                // Upload to Cloudinary and get the URL
+                Map uploadResult = cloudinaryService.upload(file);
+                String imageUrl = uploadResult.get("url").toString();
 
+                // Set the URL in the DTO
+                programCreateDto.setImageUrl(imageUrl);
+            } catch (IOException e) {
+                e.printStackTrace();
+                redirectAttributes.addFlashAttribute("error", "Failed to upload image to Cloudinary: " + e.getMessage());
+                return "redirect:/admin/programs/create";
+            }
+        }
+
+        // Create the program
+        programsService.create(programCreateDto);
         redirectAttributes.addFlashAttribute("success", "Program created successfully");
         return "redirect:/admin/programs";
     }
 
-    // Trang chỉnh sửa chương trình
     @GetMapping("/edit/{id}")
     public String editProgramForm(@PathVariable int id, Model model) {
         ProgramsResponseDto program = programsService.findById(id);
@@ -84,7 +89,8 @@ public class ProgramController {
             return "redirect:/admin/programs";
         }
         model.addAttribute("program", program);
-        return "admin/Programs/edit";  // Đường dẫn tới edit.html trong thư mục Programs
+        model.addAttribute("categories", categoriesService.findAll2());
+        return "admin/Programs/edit";
     }
 
     @PostMapping("/edit/{id}")
@@ -93,16 +99,35 @@ public class ProgramController {
             @Valid @ModelAttribute("program") ProgramUpdateDto programUpdateDto,
             BindingResult result,
             RedirectAttributes redirectAttributes) {
+
         if (result.hasErrors()) {
             return "admin/Programs/edit";
         }
-        programUpdateDto.setProgramId(id); // Đảm bảo ID được cập nhật đúng
+
+        programUpdateDto.setProgramId(id);
+
+        // Handle file upload if there's a new image
+        MultipartFile file = programUpdateDto.getImage();
+        if (file != null && !file.isEmpty()) {
+            try {
+                // Upload to Cloudinary and get the URL
+                Map uploadResult = cloudinaryService.upload(file);
+                String imageUrl = uploadResult.get("url").toString();
+
+                // Set the URL in the DTO
+                programUpdateDto.setImageUrl(imageUrl);
+            } catch (IOException e) {
+                e.printStackTrace();
+                redirectAttributes.addFlashAttribute("error", "Failed to upload image to Cloudinary: " + e.getMessage());
+                return "redirect:/admin/programs/edit/" + id;
+            }
+        }
+
         programsService.update(programUpdateDto);
         redirectAttributes.addFlashAttribute("success", "Program updated successfully");
         return "redirect:/admin/programs";
     }
 
-    // Xóa chương trình
     @GetMapping("/delete/{id}")
     public String deleteProgram(@PathVariable int id, RedirectAttributes redirectAttributes) {
         programsService.delete(id);
@@ -110,4 +135,3 @@ public class ProgramController {
         return "redirect:/admin/programs";
     }
 }
-
