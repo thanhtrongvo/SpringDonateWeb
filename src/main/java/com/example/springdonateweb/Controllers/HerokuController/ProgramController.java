@@ -70,10 +70,10 @@ public class ProgramController {
         }
 
         MultipartFile file = programCreateDto.getImage();
-        if (!file.isEmpty()) {
+        if (file != null && !file.isEmpty()) {
             try {
                 String imageUrl = cloudinaryService.uploadFile(file);
-                programCreateDto.setImageUrl(imageUrl);
+                programCreateDto.setImageUrl(imageUrl);  // Set URL ảnh từ Cloudinary
             } catch (IOException e) {
                 e.printStackTrace();
             }

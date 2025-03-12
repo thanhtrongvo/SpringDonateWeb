@@ -19,7 +19,7 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring")
 public interface ProgramsMapper {
     @Mappings({
-        @Mapping(source = "image", target = "image", qualifiedByName = "multipartFileToString")
+        @Mapping(source = "image", target = "image", qualifiedByName = "multipartFileToString",conditionExpression = "!isHeroku()")
     })
     ProgramsEntity toEntity(ProgramCreateDto programsCreateDto);
     ProgramsEntity toEntity(ProgramUpdateDto programsUpdateDto);
@@ -63,4 +63,8 @@ public interface ProgramsMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     ProgramsEntity partialUpdate(ProgramUpdateDto programsUpdateDto, @MappingTarget ProgramsEntity programsEntity);
+
+    static boolean isHeroku() {
+        return System.getenv("HEROKU_ENV") != null;
+    }
 }
