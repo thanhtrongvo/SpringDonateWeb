@@ -6,7 +6,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-@ComponentScan(basePackages = {"com.example.springdonateweb", "com.example.springdonateweb.Services.mappers"})
+
 @SpringBootApplication
 @EnableAsync
 @EnableScheduling
