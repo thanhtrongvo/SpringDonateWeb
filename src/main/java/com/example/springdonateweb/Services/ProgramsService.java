@@ -45,9 +45,13 @@ public class ProgramsService implements IProgramsService {
     @Override
     public ProgramsResponseDto create(ProgramCreateDto programCreateDto) {
         ProgramsEntity programsEntity = programsMapper.toEntity(programCreateDto);
-        programsEntity.setCurrentAmount(0); // Đặt current_amount là 0
-        programsEntity.setDonationCount(0); // Đặt donation_count là 0
+        programsEntity.setCurrentAmount(0);
+        programsEntity.setDonationCount(0);
         programsEntity.setStatus(true);
+
+        if (programCreateDto.getImageUrl() != null) {
+            programsEntity.setImage(programCreateDto.getImageUrl());  // Lưu URL ảnh vào entity
+        }
         Optional<CategoriesEntity> category = categoriesRepository.findById(programCreateDto.getCategoryId());
         category.ifPresent(programsEntity::setCategory);
 

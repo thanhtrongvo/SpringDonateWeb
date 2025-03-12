@@ -1,10 +1,13 @@
-package com.example.springdonateweb.Controllers;
+package com.example.springdonateweb.Controllers.HerokuController;
+
+
 
 import com.example.springdonateweb.Models.Dtos.Programs.ProgramCreateDto;
 import com.example.springdonateweb.Models.Dtos.Programs.ProgramUpdateDto;
 import com.example.springdonateweb.Models.Dtos.Programs.ProgramsResponseDto;
 import com.example.springdonateweb.Services.interfaces.ICategoriesService;
 import com.example.springdonateweb.Services.interfaces.IProgramsService;
+import com.example.springdonateweb.util.CloudinaryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
@@ -24,14 +27,15 @@ import java.nio.file.Paths;
 import java.util.List;
 
 
-@Profile("local")
+@Profile("heroku")
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/programs")
-public class ProgramsController {
+public class ProgramController {
 
     private final IProgramsService programsService;
     private final ICategoriesService categoriesService;
+    private final CloudinaryService cloudinaryService;
 
     private static final String UPLOAD_DIR = "src/main/resources/static/img/program/";
     @GetMapping("")
@@ -61,26 +65,20 @@ public class ProgramsController {
             BindingResult result,
             RedirectAttributes redirectAttributes) {
 
-        // Kiểm tra các lỗi validation
         if (result.hasErrors()) {
-            // Nếu có lỗi, trả về trang tạo chương trình với lỗi hiển thị
             return "admin/Programs/create";
         }
 
-        // Xử lý upload ảnh
         MultipartFile file = programCreateDto.getImage();
         if (!file.isEmpty()) {
             try {
-                byte[] bytes = file.getBytes();
-                Path path = Paths.get(UPLOAD_DIR + file.getOriginalFilename());
-                Files.write(path, bytes);
-                programCreateDto.setImage(file);
+                String imageUrl = cloudinaryService.uploadFile(file);
+                programCreateDto.setImageUrl(imageUrl);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        // Lưu chương trình vào cơ sở dữ liệu
         programsService.create(programCreateDto);
         redirectAttributes.addFlashAttribute("success", "Program created successfully");
         return "redirect:/admin/programs";
@@ -120,3 +118,4 @@ public class ProgramsController {
         return "redirect:/admin/programs";
     }
 }
+
