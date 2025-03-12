@@ -1,5 +1,7 @@
 package com.example.springdonateweb.Services.mappers;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.example.springdonateweb.Models.Dtos.Programs.ProgramCreateDto;
 import com.example.springdonateweb.Models.Dtos.Programs.ProgramsResponseDto;
 import com.example.springdonateweb.Models.Dtos.Programs.ProgramUpdateDto;
@@ -10,16 +12,19 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.Named;
+
+import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface ProgramsMapper {
     @Mappings({
-        @Mapping(source = "image", target = "image", qualifiedByName = "multipartFileToString",conditionExpression = "!isHeroku()")
+        @Mapping(source = "image", target = "image", qualifiedByName = "multipartFileToString")
     })
     ProgramsEntity toEntity(ProgramCreateDto programsCreateDto);
     ProgramsEntity toEntity(ProgramUpdateDto programsUpdateDto);
@@ -56,9 +61,34 @@ public interface ProgramsMapper {
         return sqlDate != null ? sqlDate.toLocalDate().toString() : null;
     }
 
+
     @Named("multipartFileToString")
     default String multipartFileToString(org.springframework.web.multipart.MultipartFile file) {
-        return file != null ? file.getOriginalFilename() : null;
+        if (file != null) {
+            if (System.getenv("HEROKU_ENV") != null && System.getenv("HEROKU_ENV").equals("true")) {
+                // Nếu đang chạy trên Heroku thì upload ảnh lên Cloudinary
+                return uploadToCloudinary(file);
+            } else {
+                // Nếu đang chạy trên Local thì chỉ lấy tên file
+                return file.getOriginalFilename();
+            }
+        }
+        return null;
+    }
+    private String uploadToCloudinary(org.springframework.web.multipart.MultipartFile file) {
+        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", System.getenv("CLOUDINARY_CLOUD_NAME"),
+                "api_key", System.getenv("CLOUDINARY_API_KEY"),
+                "api_secret", System.getenv("CLOUDINARY_API_SECRET")
+        ));
+
+        try {
+            Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+            return uploadResult.get("url").toString(); // Trả về URL của ảnh sau khi upload
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null; // Trả về null nếu có lỗi
+        }
     }
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

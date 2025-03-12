@@ -69,17 +69,9 @@ public class ProgramController {
             return "admin/Programs/create";
         }
 
-        MultipartFile file = programCreateDto.getImage();
-        if (file != null && !file.isEmpty()) {
-            try {
-                String imageUrl = cloudinaryService.uploadFile(file);
-                programCreateDto.setImageUrl(imageUrl);  // Set URL ảnh từ Cloudinary
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
+        // Gửi programCreateDto trực tiếp đến service mà không cần xử lý file
         programsService.create(programCreateDto);
+
         redirectAttributes.addFlashAttribute("success", "Program created successfully");
         return "redirect:/admin/programs";
     }
