@@ -6,27 +6,27 @@ import com.example.springdonateweb.Models.Dtos.Programs.ProgramUpdateDto;
 import com.example.springdonateweb.Models.Entities.CategoriesEntity;
 import com.example.springdonateweb.Models.Entities.ProgramsEntity;
 
-import org.mapstruct.*;
-import org.springframework.web.multipart.MultipartFile;
-
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
+import org.mapstruct.Named;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-@Mapper(componentModel = "spring", imports = {MultipartFile.class})
+import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Value;
+
+@Mapper(componentModel = "spring")
 public interface ProgramsMapper {
 
     @Mappings({
-            // Exclude the MultipartFile image field from automatic mapping
-            @Mapping(target = "image", ignore = true)
+            @Mapping(source = "image", target = "image", qualifiedByName = "multipartFileToString"),
+            @Mapping(source = "imageUrl", target = "image", conditionExpression = "java(dto.getImageUrl() != null)")
     })
     ProgramsEntity toEntity(ProgramCreateDto dto);
 
-    @Mappings({
-            // Exclude the MultipartFile image field from automatic mapping
-            @Mapping(target = "image", ignore = true)
-    })
-    ProgramsEntity toEntity(ProgramUpdateDto dto);
+    ProgramsEntity toEntity(ProgramUpdateDto programsUpdateDto);
 
     @Mappings({
             @Mapping(target = "percentageAchieved", expression = "java(calculatePercentage(entity.getCurrentAmount(), entity.getGoalAmount()))"),
@@ -61,6 +61,11 @@ public interface ProgramsMapper {
 
     default String convertDateToString(Date sqlDate) {
         return sqlDate != null ? sqlDate.toLocalDate().toString() : null;
+    }
+
+    @Named("multipartFileToString")
+    default String multipartFileToString(org.springframework.web.multipart.MultipartFile file) {
+        return file != null ? file.getOriginalFilename() : null;
     }
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
