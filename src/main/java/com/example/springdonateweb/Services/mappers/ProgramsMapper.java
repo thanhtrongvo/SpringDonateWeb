@@ -33,7 +33,7 @@ public interface ProgramsMapper {
             @Mapping(target = "startDate", expression = "java(convertDateToString(entity.getStartDate()))"),
             @Mapping(target = "endDate", expression = "java(convertDateToString(entity.getEndDate()))"),
             @Mapping(target = "remainingDays", expression = "java(calculateRemainingDays(convertDateToString(entity.getStartDate()), convertDateToString(entity.getEndDate())))"),
-            @Mapping(source = "image", target = "imageUrl")
+            @Mapping(source = "image", target = "image")
     })
     ProgramsResponseDto toDto(ProgramsEntity entity);
 

@@ -16,7 +16,7 @@ public class ProgramsResponseDto {
     private int programId;
     private String name;
     private String description;
-    private String imageUrl;
+    private String image;
     private Integer donationCount;
     private String startDate;
     private String endDate;
