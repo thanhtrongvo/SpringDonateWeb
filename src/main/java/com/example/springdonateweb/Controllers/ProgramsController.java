@@ -8,7 +8,6 @@ import com.example.springdonateweb.Services.interfaces.IProgramsService;
 import com.example.springdonateweb.util.CloudinaryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,14 +15,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import com.example.springdonateweb.Repositories.CategoriesRepository;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-
 
 @Controller
 @RequiredArgsConstructor
@@ -32,8 +25,8 @@ public class ProgramsController {
 
     private final IProgramsService programsService;
     private final ICategoriesService categoriesService;
+    private final CloudinaryService cloudinaryService;
 
-    private static final String UPLOAD_DIR = "src/main/resources/static/img/program/";
     @GetMapping("")
     public String listPrograms(
             Model model,
@@ -46,35 +39,33 @@ public class ProgramsController {
         return "admin/Programs/index";
     }
 
-    // Trang thêm chương trình mới
     @GetMapping("/create")
     public String createProgramForm(Model model) {
         model.addAttribute("program", new ProgramCreateDto());
-        model.addAttribute("categories", categoriesService.findAll2()); // Sử dụng findAll2 thông qua dependency injection
-        return "admin/Programs/create";  // Đường dẫn tới create.html trong thư mục Programs
+        model.addAttribute("categories", categoriesService.findAll2());
+        return "admin/Programs/create";
     }
-
 
     @PostMapping("/create")
     public String createProgram(
             @Valid @ModelAttribute("program") ProgramCreateDto programCreateDto,
             BindingResult result,
-            RedirectAttributes redirectAttributes,
-            CloudinaryService cloudinaryService) {
+            RedirectAttributes redirectAttributes) {
 
         if (result.hasErrors()) {
             return "admin/Programs/create";
         }
 
         MultipartFile file = programCreateDto.getImage();
+
         if (file != null && !file.isEmpty()) {
             try {
-                // Upload ảnh lên Cloudinary, lấy URL trả về
+                // Upload ảnh lên Cloudinary
                 String imageUrl = cloudinaryService.uploadFile(file);
-                programCreateDto.setImageUrl(imageUrl); // Lưu URL vào DTO
+                programCreateDto.setImageUrl(imageUrl);  // Lưu URL ảnh vào DTO
             } catch (IOException e) {
                 e.printStackTrace();
-                redirectAttributes.addFlashAttribute("error", "Error uploading image to Cloudinary.");
+                redirectAttributes.addFlashAttribute("error", "Error uploading image.");
                 return "redirect:/admin/programs/create";
             }
         }
@@ -84,8 +75,6 @@ public class ProgramsController {
         return "redirect:/admin/programs";
     }
 
-
-    // Trang chỉnh sửa chương trình
     @GetMapping("/edit/{id}")
     public String editProgramForm(@PathVariable int id, Model model) {
         ProgramsResponseDto program = programsService.findById(id);
@@ -93,7 +82,7 @@ public class ProgramsController {
             return "redirect:/admin/programs";
         }
         model.addAttribute("program", program);
-        return "admin/Programs/edit";  // Đường dẫn tới edit.html trong thư mục Programs
+        return "admin/Programs/edit";
     }
 
     @PostMapping("/edit/{id}")
@@ -105,13 +94,12 @@ public class ProgramsController {
         if (result.hasErrors()) {
             return "admin/Programs/edit";
         }
-        programUpdateDto.setProgramId(id); // Đảm bảo ID được cập nhật đúng
+        programUpdateDto.setProgramId(id);
         programsService.update(programUpdateDto);
         redirectAttributes.addFlashAttribute("success", "Program updated successfully");
         return "redirect:/admin/programs";
     }
 
-    // Xóa chương trình
     @GetMapping("/delete/{id}")
     public String deleteProgram(@PathVariable int id, RedirectAttributes redirectAttributes) {
         programsService.delete(id);
