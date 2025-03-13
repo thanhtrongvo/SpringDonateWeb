@@ -15,18 +15,20 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import org.mapstruct.*;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.multipart.MultipartFile;
 
 @Mapper(componentModel = "spring")
 public interface ProgramsMapper {
 
     @Mappings({
-            @Mapping(source = "image", target = "image", qualifiedByName = "multipartFileToString"),
-            @Mapping(source = "imageUrl", target = "image", conditionExpression = "java(dto.getImageUrl() != null)")
+            @Mapping(target = "image", expression = "java(handleImage(dto))")
     })
     ProgramsEntity toEntity(ProgramCreateDto dto);
 
-    ProgramsEntity toEntity(ProgramUpdateDto programsUpdateDto);
+    @Mappings({
+            @Mapping(target = "image", expression = "java(handleUpdateImage(dto))")
+    })
+    ProgramsEntity toEntity(ProgramUpdateDto dto);
 
     @Mappings({
             @Mapping(target = "percentageAchieved", expression = "java(calculatePercentage(entity.getCurrentAmount(), entity.getGoalAmount()))"),
@@ -36,6 +38,26 @@ public interface ProgramsMapper {
             @Mapping(target = "remainingDays", expression = "java(calculateRemainingDays(convertDateToString(entity.getStartDate()), convertDateToString(entity.getEndDate())))")
     })
     ProgramsResponseDto toDto(ProgramsEntity entity);
+
+    // Custom method to handle image from either imageUrl or MultipartFile
+    default String handleImage(ProgramCreateDto dto) {
+        if (dto.getImageUrl() != null && !dto.getImageUrl().isEmpty()) {
+            return dto.getImageUrl();
+        } else if (dto.getImage() != null && !dto.getImage().isEmpty()) {
+            return dto.getImage().getOriginalFilename();
+        }
+        return null;
+    }
+
+    // Custom method to handle image updates
+    default String handleUpdateImage(ProgramUpdateDto dto) {
+        if (dto.getImageUrl() != null && !dto.getImageUrl().isEmpty()) {
+            return dto.getImageUrl();
+        } else if (dto.getImage() != null && !dto.getImage().isEmpty()) {
+            return dto.getImage().getOriginalFilename();
+        }
+        return null;
+    }
 
     // Mapping method to extract the category name from CategoriesEntity
     @Named("categoryToString")
@@ -61,11 +83,6 @@ public interface ProgramsMapper {
 
     default String convertDateToString(Date sqlDate) {
         return sqlDate != null ? sqlDate.toLocalDate().toString() : null;
-    }
-
-    @Named("multipartFileToString")
-    default String multipartFileToString(org.springframework.web.multipart.MultipartFile file) {
-        return file != null ? file.getOriginalFilename() : null;
     }
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
