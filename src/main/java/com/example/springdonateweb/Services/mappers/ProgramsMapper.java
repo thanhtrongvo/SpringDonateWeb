@@ -6,27 +6,25 @@ import com.example.springdonateweb.Models.Dtos.Programs.ProgramUpdateDto;
 import com.example.springdonateweb.Models.Entities.CategoriesEntity;
 import com.example.springdonateweb.Models.Entities.ProgramsEntity;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
-import org.mapstruct.Named;
+import org.mapstruct.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import org.mapstruct.*;
-import org.springframework.web.multipart.MultipartFile;
-
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", imports = {MultipartFile.class})
 public interface ProgramsMapper {
 
     @Mappings({
-            @Mapping(target = "image", expression = "java(handleImage(dto))")
+            // Exclude the MultipartFile image field from automatic mapping
+            @Mapping(target = "image", ignore = true)
     })
     ProgramsEntity toEntity(ProgramCreateDto dto);
 
     @Mappings({
-            @Mapping(target = "image", expression = "java(handleUpdateImage(dto))")
+            // Exclude the MultipartFile image field from automatic mapping
+            @Mapping(target = "image", ignore = true)
     })
     ProgramsEntity toEntity(ProgramUpdateDto dto);
 
@@ -38,26 +36,6 @@ public interface ProgramsMapper {
             @Mapping(target = "remainingDays", expression = "java(calculateRemainingDays(convertDateToString(entity.getStartDate()), convertDateToString(entity.getEndDate())))")
     })
     ProgramsResponseDto toDto(ProgramsEntity entity);
-
-    // Custom method to handle image from either imageUrl or MultipartFile
-    default String handleImage(ProgramCreateDto dto) {
-        if (dto.getImageUrl() != null && !dto.getImageUrl().isEmpty()) {
-            return dto.getImageUrl();
-        } else if (dto.getImage() != null && !dto.getImage().isEmpty()) {
-            return dto.getImage().getOriginalFilename();
-        }
-        return null;
-    }
-
-    // Custom method to handle image updates
-    default String handleUpdateImage(ProgramUpdateDto dto) {
-        if (dto.getImageUrl() != null && !dto.getImageUrl().isEmpty()) {
-            return dto.getImageUrl();
-        } else if (dto.getImage() != null && !dto.getImage().isEmpty()) {
-            return dto.getImage().getOriginalFilename();
-        }
-        return null;
-    }
 
     // Mapping method to extract the category name from CategoriesEntity
     @Named("categoryToString")

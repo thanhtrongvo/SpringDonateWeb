@@ -41,7 +41,6 @@ public class ProgramsService implements IProgramsService {
                 .orElse(null);
     }
 
-
     @Override
     public ProgramsResponseDto create(ProgramCreateDto programCreateDto) {
         ProgramsEntity programsEntity = programsMapper.toEntity(programCreateDto);
@@ -49,9 +48,13 @@ public class ProgramsService implements IProgramsService {
         programsEntity.setDonationCount(0);
         programsEntity.setStatus(true);
 
-        if (programCreateDto.getImageUrl() != null) {
-            programsEntity.setImage(programCreateDto.getImageUrl());  // Lưu URL ảnh vào entity
+        // Handle image from either imageUrl or MultipartFile
+        if (programCreateDto.getImageUrl() != null && !programCreateDto.getImageUrl().isEmpty()) {
+            programsEntity.setImage(programCreateDto.getImageUrl());
+        } else if (programCreateDto.getImage() != null && !programCreateDto.getImage().isEmpty()) {
+            programsEntity.setImage(programCreateDto.getImage().getOriginalFilename());
         }
+
         Optional<CategoriesEntity> category = categoriesRepository.findById(programCreateDto.getCategoryId());
         category.ifPresent(programsEntity::setCategory);
 
@@ -59,18 +62,26 @@ public class ProgramsService implements IProgramsService {
         return programsMapper.toDto(savedProgram);
     }
 
-
     @Override
     public ProgramsResponseDto update(ProgramUpdateDto programUpdateDto) {
         Optional<ProgramsEntity> program = programsRepository.findById(programUpdateDto.getProgramId());
         if (program.isPresent()) {
             ProgramsEntity updatedProgram = programsMapper.partialUpdate(programUpdateDto, program.get());
+
+            // Handle image from either imageUrl or MultipartFile
+            if (programUpdateDto.getImageUrl() != null && !programUpdateDto.getImageUrl().isEmpty()) {
+                updatedProgram.setImage(programUpdateDto.getImageUrl());
+            } else if (programUpdateDto.getImage() != null && !programUpdateDto.getImage().isEmpty()) {
+                updatedProgram.setImage(programUpdateDto.getImage().getOriginalFilename());
+            }
+
             Optional<CategoriesEntity> category = categoriesRepository.findById(programUpdateDto.getCategoryId());
             category.ifPresent(updatedProgram::setCategory);
             return programsMapper.toDto(programsRepository.save(updatedProgram));
         }
         return null;
     }
+
     public Page<ProgramsResponseDto> findProgramsByPage(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<ProgramsEntity> programPage = programsRepository.findAll(pageable);
@@ -85,7 +96,6 @@ public class ProgramsService implements IProgramsService {
             programsEntity.setStatus(false);
             programsRepository.save(programsEntity);
         });
-
     }
 
     @Override
@@ -95,17 +105,20 @@ public class ProgramsService implements IProgramsService {
                 .map(programsMapper::toDto)
                 .collect(Collectors.toList());
     }
+
     @Override
     public List<ProgramsResponseDto> findByCategory_CategoryId(int categoryId) {
         return programsRepository.findByCategory_CategoryId(categoryId).stream()
                 .map(programsMapper::toDto)
                 .collect(Collectors.toList());
     }
+
     @Override
     public Page<ProgramsResponseDto> findProgramsByPageAndStatusTrue(int page, int size) {
         Page<ProgramsEntity> programsPage = programsRepository.findByStatusTrue(PageRequest.of(page, size));
         return programsPage.map(programsMapper::toDto);
     }
+
     @Override
     public ProgramsResponseDto findByProgramIdAndStatusTrue(int id) {
         return programsRepository.findByProgramIdAndStatusTrue(id)
