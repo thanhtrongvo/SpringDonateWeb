@@ -69,7 +69,7 @@ public class ProgramsService implements IProgramsService {
                 programUpdateDto.setImageUrl(existingProgram.getImage());
             }
 
-            ProgramsEntity updatedProgram = programsMapper.partialUpdate(programUpdateDto, existingProgram);
+            ProgramsEntity updatedProgram = programsMapper.toEntity(programUpdateDto);
             Optional<CategoriesEntity> category = categoriesRepository.findById(programUpdateDto.getCategoryId());
             category.ifPresent(updatedProgram::setCategory);
 

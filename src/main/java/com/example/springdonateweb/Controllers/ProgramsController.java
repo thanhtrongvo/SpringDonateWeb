@@ -33,7 +33,6 @@ public class ProgramsController {
 
     private final IProgramsService programsService;
     private final ICategoriesService categoriesService;
-    private final CloudinaryService cloudinaryService;
 
     private static final String UPLOAD_DIR = "src/main/resources/static/img/program/";
     @GetMapping("")

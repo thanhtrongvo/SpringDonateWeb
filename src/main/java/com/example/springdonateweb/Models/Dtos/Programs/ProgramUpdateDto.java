@@ -22,5 +22,6 @@ public class ProgramUpdateDto {
     private boolean status;
     private int categoryId;
     private String imageUrl;
+    private MultipartFile image;
 
 }

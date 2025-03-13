@@ -63,6 +63,5 @@ public interface ProgramsMapper {
         return sqlDate != null ? sqlDate.toLocalDate().toString() : null;
     }
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    ProgramsEntity partialUpdate(ProgramUpdateDto programsUpdateDto, @MappingTarget ProgramsEntity programsEntity);
+
 }
