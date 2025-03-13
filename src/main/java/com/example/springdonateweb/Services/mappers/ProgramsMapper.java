@@ -15,17 +15,18 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import org.mapstruct.*;
-import org.springframework.beans.factory.annotation.Value;
 
 @Mapper(componentModel = "spring")
 public interface ProgramsMapper {
 
     @Mappings({
-            @Mapping(source = "image", target = "image", qualifiedByName = "multipartFileToString"),
-            @Mapping(source = "imageUrl", target = "image", conditionExpression = "java(dto.getImageUrl() != null)")
+            @Mapping(source = "imageUrl", target = "image")
     })
     ProgramsEntity toEntity(ProgramCreateDto dto);
 
+    @Mappings({
+            @Mapping(source = "imageUrl", target = "image")
+    })
     ProgramsEntity toEntity(ProgramUpdateDto programsUpdateDto);
 
     @Mappings({
@@ -33,7 +34,8 @@ public interface ProgramsMapper {
             @Mapping(source = "category", target = "category", qualifiedByName = "categoryToString"),
             @Mapping(target = "startDate", expression = "java(convertDateToString(entity.getStartDate()))"),
             @Mapping(target = "endDate", expression = "java(convertDateToString(entity.getEndDate()))"),
-            @Mapping(target = "remainingDays", expression = "java(calculateRemainingDays(convertDateToString(entity.getStartDate()), convertDateToString(entity.getEndDate())))")
+            @Mapping(target = "remainingDays", expression = "java(calculateRemainingDays(convertDateToString(entity.getStartDate()), convertDateToString(entity.getEndDate())))"),
+            @Mapping(source = "image", target = "imageUrl")
     })
     ProgramsResponseDto toDto(ProgramsEntity entity);
 
@@ -61,11 +63,6 @@ public interface ProgramsMapper {
 
     default String convertDateToString(Date sqlDate) {
         return sqlDate != null ? sqlDate.toLocalDate().toString() : null;
-    }
-
-    @Named("multipartFileToString")
-    default String multipartFileToString(org.springframework.web.multipart.MultipartFile file) {
-        return file != null ? file.getOriginalFilename() : null;
     }
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

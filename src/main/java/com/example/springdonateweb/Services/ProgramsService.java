@@ -48,13 +48,6 @@ public class ProgramsService implements IProgramsService {
         programsEntity.setDonationCount(0);
         programsEntity.setStatus(true);
 
-        // Handle image from either imageUrl or MultipartFile
-        if (programCreateDto.getImageUrl() != null && !programCreateDto.getImageUrl().isEmpty()) {
-            programsEntity.setImage(programCreateDto.getImageUrl());
-        } else if (programCreateDto.getImage() != null && !programCreateDto.getImage().isEmpty()) {
-            programsEntity.setImage(programCreateDto.getImage().getOriginalFilename());
-        }
-
         Optional<CategoriesEntity> category = categoriesRepository.findById(programCreateDto.getCategoryId());
         category.ifPresent(programsEntity::setCategory);
 
@@ -66,17 +59,17 @@ public class ProgramsService implements IProgramsService {
     public ProgramsResponseDto update(ProgramUpdateDto programUpdateDto) {
         Optional<ProgramsEntity> program = programsRepository.findById(programUpdateDto.getProgramId());
         if (program.isPresent()) {
-            ProgramsEntity updatedProgram = programsMapper.partialUpdate(programUpdateDto, program.get());
+            ProgramsEntity existingProgram = program.get();
 
-            // Handle image from either imageUrl or MultipartFile
-            if (programUpdateDto.getImageUrl() != null && !programUpdateDto.getImageUrl().isEmpty()) {
-                updatedProgram.setImage(programUpdateDto.getImageUrl());
-            } else if (programUpdateDto.getImage() != null && !programUpdateDto.getImage().isEmpty()) {
-                updatedProgram.setImage(programUpdateDto.getImage().getOriginalFilename());
+            // If there's no new image, keep the old one
+            if (programUpdateDto.getImageUrl() == null || programUpdateDto.getImageUrl().isEmpty()) {
+                programUpdateDto.setImageUrl(existingProgram.getImage());
             }
 
+            ProgramsEntity updatedProgram = programsMapper.partialUpdate(programUpdateDto, existingProgram);
             Optional<CategoriesEntity> category = categoriesRepository.findById(programUpdateDto.getCategoryId());
             category.ifPresent(updatedProgram::setCategory);
+
             return programsMapper.toDto(programsRepository.save(updatedProgram));
         }
         return null;
@@ -100,7 +93,7 @@ public class ProgramsService implements IProgramsService {
 
     @Override
     public List<ProgramsResponseDto> findByStatusTrue() {
-        Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE); // Adjust the page size as needed
+        Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE);
         return programsRepository.findByStatusTrue(pageable).stream()
                 .map(programsMapper::toDto)
                 .collect(Collectors.toList());
