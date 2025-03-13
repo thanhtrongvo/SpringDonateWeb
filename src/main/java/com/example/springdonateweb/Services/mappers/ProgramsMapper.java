@@ -19,10 +19,8 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring")
 public interface ProgramsMapper {
 
-    @Mappings({
-            @Mapping(source = "imageUrl", target = "image")
-    })
-    ProgramsEntity toEntity(ProgramCreateDto dto);
+    @Mapping(source = "imageUrl", target = "image")
+    ProgramsEntity toEntity(ProgramCreateDto programCreateDto);
 
     @Mappings({
             @Mapping(source = "imageUrl", target = "image")

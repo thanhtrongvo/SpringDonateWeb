@@ -21,7 +21,7 @@ public class ProgramCreateDto {
     private Date startDate;
     private Date endDate;
     private Integer categoryId;
-    private MultipartFile image;
     private String imageUrl;
+    private MultipartFile image;
 
 }

@@ -48,6 +48,9 @@ public class ProgramsService implements IProgramsService {
         programsEntity.setDonationCount(0);
         programsEntity.setStatus(true);
 
+        // Lưu URL ảnh vào trường image trong ProgramsEntity
+        programsEntity.setImage(programCreateDto.getImageUrl());
+
         Optional<CategoriesEntity> category = categoriesRepository.findById(programCreateDto.getCategoryId());
         category.ifPresent(programsEntity::setCategory);
 

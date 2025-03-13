@@ -5,6 +5,7 @@ import com.example.springdonateweb.Models.Dtos.Programs.ProgramUpdateDto;
 import com.example.springdonateweb.Models.Dtos.Programs.ProgramsResponseDto;
 import com.example.springdonateweb.Services.interfaces.ICategoriesService;
 import com.example.springdonateweb.Services.interfaces.IProgramsService;
+import com.example.springdonateweb.util.CloudinaryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
@@ -32,6 +33,7 @@ public class ProgramsController {
 
     private final IProgramsService programsService;
     private final ICategoriesService categoriesService;
+    private final CloudinaryService cloudinaryService;
 
     private static final String UPLOAD_DIR = "src/main/resources/static/img/program/";
     @GetMapping("")
@@ -59,32 +61,31 @@ public class ProgramsController {
     public String createProgram(
             @Valid @ModelAttribute("program") ProgramCreateDto programCreateDto,
             BindingResult result,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes,
+            CloudinaryService cloudinaryService) {
 
-        // Kiểm tra các lỗi validation
         if (result.hasErrors()) {
-            // Nếu có lỗi, trả về trang tạo chương trình với lỗi hiển thị
             return "admin/Programs/create";
         }
 
-        // Xử lý upload ảnh
         MultipartFile file = programCreateDto.getImage();
-        if (!file.isEmpty()) {
+        if (file != null && !file.isEmpty()) {
             try {
-                byte[] bytes = file.getBytes();
-                Path path = Paths.get(UPLOAD_DIR + file.getOriginalFilename());
-                Files.write(path, bytes);
-                programCreateDto.setImage(file);
+                // Upload ảnh lên Cloudinary, lấy URL trả về
+                String imageUrl = cloudinaryService.uploadFile(file);
+                programCreateDto.setImageUrl(imageUrl); // Lưu URL vào DTO
             } catch (IOException e) {
                 e.printStackTrace();
+                redirectAttributes.addFlashAttribute("error", "Error uploading image to Cloudinary.");
+                return "redirect:/admin/programs/create";
             }
         }
 
-        // Lưu chương trình vào cơ sở dữ liệu
         programsService.create(programCreateDto);
         redirectAttributes.addFlashAttribute("success", "Program created successfully");
         return "redirect:/admin/programs";
     }
+
 
     // Trang chỉnh sửa chương trình
     @GetMapping("/edit/{id}")
