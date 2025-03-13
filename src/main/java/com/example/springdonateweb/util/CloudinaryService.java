@@ -18,13 +18,6 @@ public class CloudinaryService {
             @Value("${cloudinary.cloud_name}") String cloudName,
             @Value("${cloudinary.api_key}") String apiKey,
             @Value("${cloudinary.api_secret}") String apiSecret) {
-        if (cloudName.isEmpty()) cloudName = System.getenv("CLOUDINARY_CLOUD_NAME");
-        if (apiKey.isEmpty()) apiKey = System.getenv("CLOUDINARY_API_KEY");
-        if (apiSecret.isEmpty()) apiSecret = System.getenv("CLOUDINARY_API_SECRET");
-
-        if (cloudName == null || apiKey == null || apiSecret == null) {
-            throw new IllegalArgumentException("Cloudinary configuration is missing!");
-        }
         this.cloudinary = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", cloudName,
                 "api_key", apiKey,
