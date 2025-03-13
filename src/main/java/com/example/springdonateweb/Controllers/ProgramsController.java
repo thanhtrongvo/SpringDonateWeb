@@ -25,7 +25,6 @@ import java.nio.file.Paths;
 import java.util.List;
 
 
-@Profile("local")
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/programs")
