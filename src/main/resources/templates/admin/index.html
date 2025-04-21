@@ -1,419 +1,330 @@
 <!DOCTYPE html>
 <html layout:decorate="~{admin/fragments/_layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <title>Trang Chủ</title>
+    <title>Admin Dashboard</title>
 </head>
 <body>
 <div layout:fragment="content">
-    <div
-            class="d-sm-flex justify-content-between align-items-center mb-4"
-    >
-        <h3 class="text-dark mb-0">Dashboard</h3>
-        <a
-                class="btn btn-primary btn-sm d-none d-sm-inline-block"
-                href="#"
-                role="button"
-        ><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Excel
-            Report</a
-        >
+    <!-- Page Heading -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-gray-800">Dashboard</h2>
+        <div>
+            <a href="#" class="btn btn-sm btn-primary shadow-sm">
+                <i class="bi bi-download me-1"></i> Generate Report
+            </a>
+        </div>
     </div>
-    <div class="row">
-        <div class="col-md-6 col-xl-3 mb-4">
-            <div class="card shadow border-start-primary py-2">
+
+    <!-- Stats Cards Row -->
+    <div class="row g-4 mb-4">
+        <!-- Total Donations Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-start-primary shadow h-100 py-2">
                 <div class="card-body">
-                    <div class="row g-0 align-items-center">
-                        <div class="col me-2">
-                            <div
-                                    class="text-uppercase text-primary fw-bold text-xs mb-1"
-                            >
-                                <span>Earnings (monthly)</span>
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <div class="text-xs fw-bold text-primary text-uppercase mb-1">
+                                Total Donations
                             </div>
-                            <div class="text-dark fw-bold h5 mb-0">
-                                <span>$40,000</span>
-                            </div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">$215,000</div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                            <i class="bi bi-currency-dollar fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-6 col-xl-3 mb-4">
-            <div class="card shadow border-start-success py-2">
+
+        <!-- Monthly Donations Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-start-success shadow h-100 py-2">
                 <div class="card-body">
-                    <div class="row g-0 align-items-center">
-                        <div class="col me-2">
-                            <div
-                                    class="text-uppercase text-success fw-bold text-xs mb-1"
-                            >
-                                <span>Earnings (annual)</span>
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <div class="text-xs fw-bold text-success text-uppercase mb-1">
+                                Monthly Donations
                             </div>
-                            <div class="text-dark fw-bold h5 mb-0">
-                                <span>$215,000</span>
-                            </div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">$40,000</div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                            <i class="bi bi-calendar-check fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-6 col-xl-3 mb-4">
-            <div class="card shadow border-start-info py-2">
+
+        <!-- Active Programs Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-start-info shadow h-100 py-2">
                 <div class="card-body">
-                    <div class="row g-0 align-items-center">
-                        <div class="col me-2">
-                            <div
-                                    class="text-uppercase text-info fw-bold text-xs mb-1"
-                            >
-                                <span>Tasks</span>
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <div class="text-xs fw-bold text-info text-uppercase mb-1">
+                                Active Programs
                             </div>
-                            <div class="row g-0 align-items-center">
+                            <div class="row align-items-center">
                                 <div class="col-auto">
-                                    <div class="text-dark fw-bold h5 mb-0 me-3">
-                                        <span>50%</span>
-                                    </div>
+                                    <div class="h5 mb-0 fw-bold text-gray-800">12</div>
                                 </div>
                                 <div class="col">
                                     <div class="progress progress-sm">
-                                        <div
-                                                aria-valuemax="100"
-                                                aria-valuemin="0"
-                                                aria-valuenow="50"
-                                                class="progress-bar bg-info"
-                                                style="width: 50%"
-                                        >
-                                            <span class="visually-hidden">50%</span>
+                                        <div class="progress-bar bg-info" role="progressbar" style="width: 75%" 
+                                            aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i
-                                    class="fas fa-clipboard-list fa-2x text-gray-300"
-                            ></i>
+                            <i class="bi bi-list-check fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-6 col-xl-3 mb-4">
-            <div class="card shadow border-start-warning py-2">
+
+        <!-- Users Card -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-start-warning shadow h-100 py-2">
                 <div class="card-body">
-                    <div class="row g-0 align-items-center">
-                        <div class="col me-2">
-                            <div
-                                    class="text-uppercase text-warning fw-bold text-xs mb-1"
-                            >
-                                <span>Pending Requests</span>
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <div class="text-xs fw-bold text-warning text-uppercase mb-1">
+                                Registered Users
                             </div>
-                            <div class="text-dark fw-bold h5 mb-0">
-                                <span>18</span>
-                            </div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">845</div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-comments fa-2x text-gray-300"></i>
+                            <i class="bi bi-people fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Start: Chart -->
-    <div class="row">
-        <div class="col-lg-7 col-xl-8">
+
+    <!-- Charts Row -->
+    <div class="row mb-4">
+        <!-- Area Chart -->
+        <div class="col-lg-8">
             <div class="card shadow mb-4">
-                <div
-                        class="card-header d-flex justify-content-between align-items-center"
-                >
-                    <h6 class="text-primary fw-bold m-0">Earnings Overview</h6>
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 fw-bold text-primary">Donations Overview</h6>
                     <div class="dropdown no-arrow">
-                        <button
-                                aria-expanded="false"
-                                class="btn btn-link btn-sm dropdown-toggle"
-                                data-bs-toggle="dropdown"
-                                type="button"
-                        >
-                            <i class="fas fa-ellipsis-v text-gray-400"></i>
-                        </button>
-                        <div
-                                class="dropdown-menu shadow dropdown-menu-end animated--fade-in"
-                        >
-                            <p class="text-center dropdown-header">
-                                dropdown header:
-                            </p>
-                            <a class="dropdown-item" href="#">&nbsp;Action</a
-                            ><a class="dropdown-item" href="#"
-                        >&nbsp;Another action</a
-                        >
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" 
+                           data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="bi bi-three-dots-vertical text-gray-400"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownMenuLink">
+                            <div class="dropdown-header">Actions:</div>
+                            <a class="dropdown-item" href="#">Export Data</a>
+                            <a class="dropdown-item" href="#">Print Report</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#"
-                            >&nbsp;Something else here</a
-                            >
+                            <a class="dropdown-item" href="#">View Details</a>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="chart-area">
-                        <canvas
-                                data-bss-chart='{"type":"line","data":{"labels":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug"],"datasets":[{"label":"Earnings","fill":true,"data":["0","10000","5000","15000","10000","20000","15000","25000"],"backgroundColor":"rgba(78, 115, 223, 0.05)","borderColor":"rgba(78, 115, 223, 1)"}]},"options":{"maintainAspectRatio":false,"legend":{"display":false,"labels":{"fontStyle":"normal"}},"title":{"fontStyle":"normal"},"scales":{"xAxes":[{"gridLines":{"color":"rgb(234, 236, 244)","zeroLineColor":"rgb(234, 236, 244)","drawBorder":false,"drawTicks":false,"borderDash":["2"],"zeroLineBorderDash":["2"],"drawOnChartArea":false},"ticks":{"fontColor":"#858796","fontStyle":"normal","padding":20}}],"yAxes":[{"gridLines":{"color":"rgb(234, 236, 244)","zeroLineColor":"rgb(234, 236, 244)","drawBorder":false,"drawTicks":false,"borderDash":["2"],"zeroLineBorderDash":["2"]},"ticks":{"fontColor":"#858796","fontStyle":"normal","padding":20}}]}}}'
-                        ></canvas>
+                        <canvas id="myAreaChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-5 col-xl-4">
+
+        <!-- Pie Chart -->
+        <div class="col-lg-4">
             <div class="card shadow mb-4">
-                <div
-                        class="card-header d-flex justify-content-between align-items-center"
-                >
-                    <h6 class="text-primary fw-bold m-0">Revenue Sources</h6>
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 fw-bold text-primary">Donation Sources</h6>
                     <div class="dropdown no-arrow">
-                        <button
-                                aria-expanded="false"
-                                class="btn btn-link btn-sm dropdown-toggle"
-                                data-bs-toggle="dropdown"
-                                type="button"
-                        >
-                            <i class="fas fa-ellipsis-v text-gray-400"></i>
-                        </button>
-                        <div
-                                class="dropdown-menu shadow dropdown-menu-end animated--fade-in"
-                        >
-                            <p class="text-center dropdown-header">
-                                dropdown header:
-                            </p>
-                            <a class="dropdown-item" href="#">&nbsp;Action</a
-                            ><a class="dropdown-item" href="#"
-                        >&nbsp;Another action</a
-                        >
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink2" 
+                           data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="bi bi-three-dots-vertical text-gray-400"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownMenuLink2">
+                            <div class="dropdown-header">Actions:</div>
+                            <a class="dropdown-item" href="#">Export Data</a>
+                            <a class="dropdown-item" href="#">Print Report</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#"
-                            >&nbsp;Something else here</a
-                            >
+                            <a class="dropdown-item" href="#">View Details</a>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="chart-area">
-                        <canvas
-                                data-bss-chart='{"type":"doughnut","data":{"labels":["Direct","Social","Referral"],"datasets":[{"label":"","backgroundColor":["#4e73df","#1cc88a","#36b9cc"],"borderColor":["#ffffff","#ffffff","#ffffff"],"data":["50","30","15"]}]},"options":{"maintainAspectRatio":false,"legend":{"display":false,"labels":{"fontStyle":"normal"}},"title":{"fontStyle":"normal"}}}'
-                        ></canvas>
+                    <div class="chart-pie pt-4">
+                        <canvas id="myPieChart"></canvas>
                     </div>
-                    <div class="text-center small mt-4">
-                      <span class="me-2"
-                      ><i class="fas fa-circle text-primary"></i
-                      >&nbsp;Direct</span
-                      ><span class="me-2"
-                    ><i class="fas fa-circle text-success"></i
-                    >&nbsp;Social</span
-                    ><span class="me-2"
-                    ><i class="fas fa-circle text-info"></i
-                    >&nbsp;Refferal</span
-                    >
+                    <div class="mt-4 text-center small">
+                        <span class="me-2">
+                            <i class="bi bi-circle-fill text-primary"></i> Direct
+                        </span>
+                        <span class="me-2">
+                            <i class="bi bi-circle-fill text-success"></i> Social
+                        </span>
+                        <span>
+                            <i class="bi bi-circle-fill text-info"></i> Referral
+                        </span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- End: Chart -->
+
+    <!-- Content Row -->
     <div class="row">
+        <!-- Projects Card -->
         <div class="col-lg-6 mb-4">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="text-primary fw-bold m-0">Projects</h6>
+                    <h6 class="m-0 fw-bold text-primary">Programs</h6>
                 </div>
                 <div class="card-body">
-                    <h4 class="small fw-bold">
-                        Server migration<span class="float-end">20%</span>
-                    </h4>
+                    <!-- Program Progress Item -->
+                    <h4 class="small fw-bold">Children's Education Fund <span class="float-end">20%</span></h4>
                     <div class="progress mb-4">
-                        <div
-                                aria-valuemax="100"
-                                aria-valuemin="0"
-                                aria-valuenow="20"
-                                class="progress-bar bg-danger"
-                                style="width: 20%"
-                        >
-                            <span class="visually-hidden">20%</span>
-                        </div>
+                        <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" 
+                             aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
-                    <h4 class="small fw-bold">
-                        Sales tracking<span class="float-end">40%</span>
-                    </h4>
+
+                    <!-- Program Progress Item -->
+                    <h4 class="small fw-bold">Clean Water Initiative <span class="float-end">40%</span></h4>
                     <div class="progress mb-4">
-                        <div
-                                aria-valuemax="100"
-                                aria-valuemin="0"
-                                aria-valuenow="40"
-                                class="progress-bar bg-warning"
-                                style="width: 40%"
-                        >
-                            <span class="visually-hidden">40%</span>
-                        </div>
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: 40%" 
+                             aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
-                    <h4 class="small fw-bold">
-                        Customer Database<span class="float-end">60%</span>
-                    </h4>
+
+                    <!-- Program Progress Item -->
+                    <h4 class="small fw-bold">Food Distribution <span class="float-end">60%</span></h4>
                     <div class="progress mb-4">
-                        <div
-                                aria-valuemax="100"
-                                aria-valuemin="0"
-                                aria-valuenow="60"
-                                class="progress-bar bg-primary"
-                                style="width: 60%"
-                        >
-                            <span class="visually-hidden">60%</span>
-                        </div>
+                        <div class="progress-bar" role="progressbar" style="width: 60%" 
+                             aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
-                    <h4 class="small fw-bold">
-                        Payout Details<span class="float-end">80%</span>
-                    </h4>
+
+                    <!-- Program Progress Item -->
+                    <h4 class="small fw-bold">Medical Supplies <span class="float-end">80%</span></h4>
                     <div class="progress mb-4">
-                        <div
-                                aria-valuemax="100"
-                                aria-valuemin="0"
-                                aria-valuenow="80"
-                                class="progress-bar bg-info"
-                                style="width: 80%"
-                        >
-                            <span class="visually-hidden">80%</span>
-                        </div>
+                        <div class="progress-bar bg-info" role="progressbar" style="width: 80%" 
+                             aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
-                    <h4 class="small fw-bold">
-                        Account setup<span class="float-end">Complete!</span>
-                    </h4>
+
+                    <!-- Program Progress Item -->
+                    <h4 class="small fw-bold">Community Support <span class="float-end">Complete!</span></h4>
                     <div class="progress mb-4">
-                        <div
-                                aria-valuemax="100"
-                                aria-valuemin="0"
-                                aria-valuenow="100"
-                                class="progress-bar bg-success"
-                                style="width: 100%"
-                        >
-                            <span class="visually-hidden">100%</span>
-                        </div>
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%" 
+                             aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                 </div>
-            </div>
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="text-primary fw-bold m-0">Todo List</h6>
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <div class="row g-0 align-items-center">
-                            <div class="col me-2">
-                                <h6 class="mb-0"><strong>Lunch meeting</strong></h6>
-                                <span class="text-xs">10:30 AM</span>
-                            </div>
-                            <div class="col-auto">
-                                <div class="form-check">
-                                    <input
-                                            class="form-check-input"
-                                            id="formCheck-1"
-                                            type="checkbox"
-                                    /><label
-                                        class="form-check-label"
-                                        for="formCheck-1"
-                                ></label>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="row g-0 align-items-center">
-                            <div class="col me-2">
-                                <h6 class="mb-0"><strong>Lunch meeting</strong></h6>
-                                <span class="text-xs">11:30 AM</span>
-                            </div>
-                            <div class="col-auto">
-                                <div class="form-check">
-                                    <input
-                                            class="form-check-input"
-                                            id="formCheck-2"
-                                            type="checkbox"
-                                    /><label
-                                        class="form-check-label"
-                                        for="formCheck-2"
-                                ></label>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="row g-0 align-items-center">
-                            <div class="col me-2">
-                                <h6 class="mb-0"><strong>Lunch meeting</strong></h6>
-                                <span class="text-xs">12:30 AM</span>
-                            </div>
-                            <div class="col-auto">
-                                <div class="form-check">
-                                    <input
-                                            class="form-check-input"
-                                            id="formCheck-3"
-                                            type="checkbox"
-                                    /><label
-                                        class="form-check-label"
-                                        for="formCheck-3"
-                                ></label>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
             </div>
         </div>
-        <div class="col">
+
+        <!-- Right Column -->
+        <div class="col-lg-6 mb-4">
+            <!-- Tasks Card -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 fw-bold text-primary">Tasks</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item px-0">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="task1">
+                                <label class="form-check-label" for="task1">
+                                    <span class="fw-bold">Follow up on donations</span>
+                                    <span class="small text-gray-500 d-block">10:30 AM</span>
+                                </label>
+                            </div>
+                        </li>
+                        <li class="list-group-item px-0">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="task2">
+                                <label class="form-check-label" for="task2">
+                                    <span class="fw-bold">Update program status</span>
+                                    <span class="small text-gray-500 d-block">12:30 PM</span>
+                                </label>
+                            </div>
+                        </li>
+                        <li class="list-group-item px-0">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="task3">
+                                <label class="form-check-label" for="task3">
+                                    <span class="fw-bold">Prepare monthly report</span>
+                                    <span class="small text-gray-500 d-block">2:00 PM</span>
+                                </label>
+                            </div>
+                        </li>
+                        <li class="list-group-item px-0">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="task4">
+                                <label class="form-check-label" for="task4">
+                                    <span class="fw-bold">Contact new donors</span>
+                                    <span class="small text-gray-500 d-block">3:30 PM</span>
+                                </label>
+                            </div>
+                        </li>
+                        <li class="list-group-item px-0">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="task5">
+                                <label class="form-check-label" for="task5">
+                                    <span class="fw-bold">Plan fundraising event</span>
+                                    <span class="small text-gray-500 d-block">4:30 PM</span>
+                                </label>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Color System -->
             <div class="row">
                 <div class="col-lg-6 mb-4">
-                    <div class="card text-white bg-primary shadow">
+                    <div class="card bg-primary text-white shadow">
                         <div class="card-body">
-                            <p class="m-0">Primary</p>
-                            <p class="text-white-50 small m-0">#4e73df</p>
+                            Primary
+                            <div class="text-white-50 small">#0d6efd</div>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 mb-4">
-                    <div class="card text-white bg-success shadow">
+                    <div class="card bg-success text-white shadow">
                         <div class="card-body">
-                            <p class="m-0">Success</p>
-                            <p class="text-white-50 small m-0">#1cc88a</p>
+                            Success
+                            <div class="text-white-50 small">#198754</div>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 mb-4">
-                    <div class="card text-white bg-info shadow">
+                    <div class="card bg-info text-white shadow">
                         <div class="card-body">
-                            <p class="m-0">Info</p>
-                            <p class="text-white-50 small m-0">#36b9cc</p>
+                            Info
+                            <div class="text-white-50 small">#0dcaf0</div>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 mb-4">
-                    <div class="card text-white bg-warning shadow">
+                    <div class="card bg-warning text-white shadow">
                         <div class="card-body">
-                            <p class="m-0">Warning</p>
-                            <p class="text-white-50 small m-0">#f6c23e</p>
+                            Warning
+                            <div class="text-white-50 small">#ffc107</div>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 mb-4">
-                    <div class="card text-white bg-danger shadow">
+                    <div class="card bg-danger text-white shadow">
                         <div class="card-body">
-                            <p class="m-0">Danger</p>
-                            <p class="text-white-50 small m-0">#e74a3b</p>
+                            Danger
+                            <div class="text-white-50 small">#dc3545</div>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 mb-4">
-                    <div class="card text-white bg-secondary shadow">
+                    <div class="card bg-secondary text-white shadow">
                         <div class="card-body">
-                            <p class="m-0">Secondary</p>
-                            <p class="text-white-50 small m-0">#858796</p>
+                            Secondary
+                            <div class="text-white-50 small">#6c757d</div>
                         </div>
                     </div>
                 </div>
@@ -421,5 +332,147 @@
         </div>
     </div>
 </div>
+
+<!-- Page specific scripts -->
+<th:block layout:fragment="scripts">
+    <script>
+        // Area Chart
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set new default font family and font color to mimic Bootstrap's default styling
+            Chart.defaults.font.family = 'Nunito, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+            Chart.defaults.font.color = '#858796';
+
+            const ctx = document.getElementById('myAreaChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                    datasets: [{
+                        label: "Donations",
+                        lineTension: 0.3,
+                        backgroundColor: "rgba(78, 115, 223, 0.05)",
+                        borderColor: "rgba(78, 115, 223, 1)",
+                        pointRadius: 3,
+                        pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                        pointBorderColor: "rgba(78, 115, 223, 1)",
+                        pointHoverRadius: 3,
+                        pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                        pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                        pointHitRadius: 10,
+                        pointBorderWidth: 2,
+                        data: [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 40000],
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            left: 10,
+                            right: 25,
+                            top: 25,
+                            bottom: 0
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                maxTicksLimit: 7
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                maxTicksLimit: 5,
+                                padding: 10,
+                                // Include a dollar sign in the ticks
+                                callback: function(value, index, values) {
+                                    return '$' + value;
+                                }
+                            },
+                            grid: {
+                                color: "rgb(234, 236, 244)",
+                                zeroLineColor: "rgb(234, 236, 244)",
+                                drawBorder: false,
+                                borderDash: [2],
+                                zeroLineBorderDash: [2]
+                            }
+                        },
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: "rgb(255,255,255)",
+                            bodyColor: "#858796",
+                            titleMarginBottom: 10,
+                            titleColor: '#6e707e',
+                            titleFont: {
+                                size: 14
+                            },
+                            borderColor: '#dddfeb',
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            intersect: false,
+                            mode: 'index',
+                            caretPadding: 10,
+                            callbacks: {
+                                label: function(context) {
+                                    var label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += '$' + context.parsed.y;
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Pie Chart
+            const ctx2 = document.getElementById('myPieChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ["Direct", "Social", "Referral"],
+                    datasets: [{
+                        data: [55, 30, 15],
+                        backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+                        hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
+                        hoverBorderColor: "rgba(234, 236, 244, 1)",
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: "rgb(255,255,255)",
+                            bodyColor: "#858796",
+                            borderColor: '#dddfeb',
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            caretPadding: 10,
+                        }
+                    },
+                    cutout: '70%',
+                },
+            });
+        });
+    </script>
+</th:block>
 </body>
 </html>

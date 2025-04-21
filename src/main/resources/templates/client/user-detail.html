@@ -1,44 +1,574 @@
 <!DOCTYPE html>
 <html lang="en" layout:decorate="~{fragments/_layout}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <title>User Detail</title>
+    <title>My Profile</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-
+    
+    <th:block layout:fragment="styles">
+        <style>
+            :root {
+                --primary: #4169E1;      /* Royal Blue */
+                --primary-dark: #2A4CB9; /* Darker Blue */
+                --secondary: #F0F8FF;    /* Alice Blue */
+                --accent: #7B68EE;       /* Medium Slate Blue */
+                --text-color: #333333;
+                --light-bg: #F8F9FA;
+            }
+            
+            .profile-header {
+                background: linear-gradient(rgba(0, 29, 35, 0.8), rgba(0, 29, 35, 0.8)), url([[@{/img/carousel-2.jpg}]]) center center no-repeat;
+                background-size: cover;
+                padding: 100px 0 40px;
+                color: white;
+                margin-bottom: 40px;
+            }
+            
+            .profile-card {
+                background-color: white;
+                border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+                margin-bottom: 30px;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            
+            .profile-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            }
+            
+            .profile-card .card-header {
+                background-color: var(--primary);
+                color: white;
+                padding: 20px;
+                border-bottom: none;
+                position: relative;
+            }
+            
+            .profile-img-container {
+                position: relative;
+                width: 150px;
+                height: 150px;
+                margin: -75px auto 20px;
+            }
+            
+            .profile-img {
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 5px solid white;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                background-color: #e9ecef;
+            }
+            
+            .profile-img-placeholder {
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #e9ecef;
+                color: #6c757d;
+                font-size: 3rem;
+                border: 5px solid white;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            }
+            
+            .edit-profile-img {
+                position: absolute;
+                bottom: 5px;
+                right: 5px;
+                width: 35px;
+                height: 35px;
+                background-color: var(--primary);
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                border: 2px solid white;
+            }
+            
+            .edit-profile-img:hover {
+                background-color: var(--primary-dark);
+                transform: scale(1.1);
+            }
+            
+            .profile-stats {
+                display: flex;
+                justify-content: space-between;
+                margin: 25px 0;
+                padding: 0 20px;
+            }
+            
+            .stat-item {
+                flex: 1;
+                padding: 15px 10px;
+                border-right: 1px solid #eeeeee;
+                text-align: center;
+            }
+            
+            .stat-item:last-child {
+                border-right: none;
+            }
+            
+            .stat-value {
+                font-size: 1.8rem;
+                font-weight: 700;
+                color: var(--primary);
+                display: block;
+            }
+            
+            .stat-label {
+                font-size: 0.85rem;
+                color: #6c757d;
+                margin-top: 5px;
+            }
+            
+            .profile-actions {
+                padding: 20px;
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            
+            .profile-section {
+                padding: 25px;
+                border-bottom: 1px solid #eee;
+            }
+            
+            .profile-section:last-child {
+                border-bottom: none;
+            }
+            
+            .section-title {
+                font-size: 1.2rem;
+                font-weight: 700;
+                margin-bottom: 15px;
+                color: var(--text-color);
+                display: flex;
+                align-items: center;
+            }
+            
+            .section-title i {
+                color: var(--primary);
+                margin-right: 10px;
+                font-size: 1.2rem;
+            }
+            
+            .info-item {
+                margin-bottom: 15px;
+                display: flex;
+                align-items: flex-start;
+            }
+            
+            .info-item i {
+                color: var(--primary);
+                margin-right: 15px;
+                margin-top: 3px;
+                width: 16px;
+            }
+            
+            .info-item-content {
+                flex: 1;
+            }
+            
+            .info-item-label {
+                font-weight: 600;
+                font-size: 0.85rem;
+                color: #6c757d;
+                margin-bottom: 3px;
+            }
+            
+            .info-item-value {
+                color: var(--text-color);
+            }
+            
+            .btn-profile {
+                border-radius: 50px;
+                padding: 8px 25px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+            }
+            
+            .btn-primary {
+                background-color: var(--primary);
+                border-color: var(--primary);
+            }
+            
+            .btn-primary:hover {
+                background-color: var(--primary-dark);
+                border-color: var(--primary-dark);
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(65, 105, 225, 0.3);
+            }
+            
+            .btn-outline-primary {
+                color: var(--primary);
+                border-color: var(--primary);
+            }
+            
+            .btn-outline-primary:hover {
+                background-color: var(--primary);
+                color: white;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(65, 105, 225, 0.2);
+            }
+            
+            .recent-donations {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .donation-card {
+                background-color: var(--light-bg);
+                border-radius: 10px;
+                padding: 15px;
+                display: flex;
+                align-items: center;
+                transition: transform 0.3s ease;
+            }
+            
+            .donation-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            }
+            
+            .donation-info {
+                flex: 1;
+            }
+            
+            .donation-program {
+                font-weight: 600;
+                color: var(--text-color);
+                margin-bottom: 5px;
+            }
+            
+            .donation-date {
+                font-size: 0.85rem;
+                color: #6c757d;
+            }
+            
+            .donation-amount {
+                font-weight: 700;
+                color: var(--primary);
+                font-size: 1.2rem;
+            }
+            
+            .badge-donation {
+                border-radius: 20px;
+                padding: 5px 12px;
+                font-weight: 500;
+                font-size: 0.75rem;
+                margin-left: 10px;
+            }
+            
+            .badge-completed {
+                background-color: #28a745;
+                color: white;
+            }
+            
+            .badge-pending {
+                background-color: #ffc107;
+                color: #212529;
+            }
+            
+            /* Animation */
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .animate-fade-in {
+                animation: fadeInUp 0.5s ease forwards;
+                opacity: 0;
+            }
+            
+            /* Responsive adjustments */
+            @media (max-width: 768px) {
+                .profile-stats {
+                    flex-direction: column;
+                }
+                
+                .stat-item {
+                    border-right: none;
+                    border-bottom: 1px solid #eeeeee;
+                    padding: 10px 0;
+                }
+                
+                .stat-item:last-child {
+                    border-bottom: none;
+                }
+            }
+            
+            @media (max-width: 576px) {
+                .profile-actions {
+                    flex-direction: column;
+                }
+                
+                .btn-profile {
+                    width: 100%;
+                }
+            }
+        </style>
+    </th:block>
 </head>
 <body>
     <main layout:fragment="content" class="main-content">
-        <div class="container-fluid page-header mb-5 wow fadeIn" data-wow-delay="0.1s">
+        <!-- Profile Header -->
+        <div class="profile-header">
             <div class="container text-center">
-                <h1 class="display-4 text-white animated slideInDown mb-4">User Detail</h1>
+                <h1 class="display-5 text-white animated slideInDown mb-3">My Profile</h1>
                 <nav aria-label="breadcrumb animated slideInDown">
                     <ol class="breadcrumb justify-content-center mb-0">
-                        <li class="breadcrumb-item">
-                            <a class="text-white" href="#">Home</a>
-                        </li>
-                        <li class="breadcrumb-item">
-                            <a class="text-white" href="#">User Detail</a>
-                        </li>
+                        <li class="breadcrumb-item"><a class="text-white" th:href="@{/}">Home</a></li>
+                        <li class="breadcrumb-item text-primary active" aria-current="page">Profile</li>
                     </ol>
                 </nav>
             </div>
         </div>
-
-        <div class="container">
-            <h1 class="mb-4">User Detail</h1>
-            <div class="card user-detail-card">
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${user.name != null ? user.name : 'No Name'}">User Name</h5>
-                    <p class="card-text"><strong>Email:</strong> <span th:text="${user.email}">user@example.com</span></p>
-                    <p class="card-text"><strong>Address:</strong> <span th:text="${user.address}">123 Main St</span></p>
-                    <p class="card-text"><strong>Phone Number:</strong> <span th:text="${user.phoneNumber}">123-456-7890</span></p>
-
-                   <a th:href="@{change-email}" class="btn btn-primary mt-3">Change Email</a>
-                   <a th:href="@{change-password}" class="btn btn-primary mt-3">Change Email</a>
+        
+        <!-- Profile Content -->
+        <div class="container py-5">
+            <div class="row">
+                <!-- Main Profile Card -->
+                <div class="col-lg-8 mb-4">
+                    <div class="profile-card animate-fade-in">
+                        <div class="card-header">
+                            <!-- Profile Header Background -->
+                        </div>
+                        
+                        <div class="profile-img-container">
+                            <!-- Updated condition to use safe navigation and check if property exists -->
+                            <div th:if="${user['avatar'] != null and #strings.length(user['avatar']) > 0}" class="profile-img">
+                                <img th:src="${user['avatar']}" alt="Profile Picture" class="profile-img">
+                            </div>
+                            <div th:unless="${user['avatar'] != null and #strings.length(user['avatar']) > 0}" class="profile-img-placeholder">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="edit-profile-img" title="Change profile picture">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mb-4">
+                            <h3 class="mb-1 fw-bold" th:text="${user.name != null ? user.name : 'No Name'}">User Name</h3>
+                            <p class="text-muted mb-0" th:text="${user.email}">user@example.com</p>
+                        </div>
+                        
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <span class="stat-value">12</span>
+                                <span class="stat-label">Donations</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">5</span>
+                                <span class="stat-label">Programs</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">3</span>
+                                <span class="stat-label">Months</span>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-section">
+                            <h4 class="section-title">
+                                <i class="fas fa-user-circle"></i>
+                                Personal Information
+                            </h4>
+                            
+                            <div class="info-item">
+                                <i class="fas fa-envelope"></i>
+                                <div class="info-item-content">
+                                    <div class="info-item-label">Email Address</div>
+                                    <div class="info-item-value" th:text="${user.email}">user@example.com</div>
+                                </div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <i class="fas fa-phone"></i>
+                                <div class="info-item-content">
+                                    <div class="info-item-label">Phone Number</div>
+                                    <div class="info-item-value" th:text="${user.phoneNumber}">123-456-7890</div>
+                                </div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <div class="info-item-content">
+                                    <div class="info-item-label">Address</div>
+                                    <div class="info-item-value" th:text="${user.address}">123 Main St</div>
+                                </div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <div class="info-item-content">
+                                    <div class="info-item-label">Member Since</div>
+                                    <div class="info-item-value" th:text="${#temporals.format(user.createdAt, 'dd MMM yyyy')}">15 Jan 2025</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-section">
+                            <h4 class="section-title">
+                                <i class="fas fa-heart"></i>
+                                Recent Donations
+                            </h4>
+                            
+                            <div class="recent-donations">
+                                <!-- If there are donations, display them -->
+                                <div th:if="${not #lists.isEmpty(donations)}" th:each="donation : ${donations}" class="donation-card">
+                                    <div class="donation-info">
+                                        <div class="donation-program" th:text="${donation.program.name}">Educational Support</div>
+                                        <div class="donation-date" th:text="${#temporals.format(donation.createdAt, 'dd MMM yyyy')}">15 Mar 2025</div>
+                                    </div>
+                                    <div class="donation-amount" th:text="${donation.amount} + ' ₫'">1,000,000 ₫</div>
+                                </div>
+                                
+                                <!-- If no donations, show a message -->
+                                <div th:if="${#lists.isEmpty(donations)}" class="text-center py-3">
+                                    <div class="mb-3">
+                                        <i class="far fa-heart text-muted" style="font-size: 2.5rem;"></i>
+                                    </div>
+                                    <p class="text-muted mb-0">You haven't made any donations yet.</p>
+                                    <a th:href="@{/program}" class="btn btn-sm btn-outline-primary mt-2">Explore Programs</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-actions">
+                            <a th:href="@{/change-email}" class="btn btn-outline-primary btn-profile">
+                                <i class="fas fa-envelope me-2"></i>Change Email
+                            </a>
+                            <a th:href="@{/change-password}" class="btn btn-outline-primary btn-profile">
+                                <i class="fas fa-lock me-2"></i>Change Password
+                            </a>
+                            <a th:href="@{/edit-profile}" class="btn btn-primary btn-profile">
+                                <i class="fas fa-edit me-2"></i>Edit Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <!-- Donation Summary Card -->
+                    <div class="profile-card animate-fade-in" style="animation-delay: 0.2s;">
+                        <div class="profile-section">
+                            <h4 class="section-title">
+                                <i class="fas fa-chart-bar"></i>
+                                Donation Summary
+                            </h4>
+                            
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="fw-bold">Total Donated</div>
+                                    <div class="text-primary fw-bold">5,000,000 ₫</div>
+                                </div>
+                                <div class="progress" style="height: 10px;">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 65%"></div>
+                                </div>
+                                <div class="d-flex justify-content-between mt-2">
+                                    <small>Yearly Goal: 8,000,000 ₫</small>
+                                    <small>65% Complete</small>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center">
+                                <a th:href="@{/my-donations}" class="btn btn-sm btn-outline-primary rounded-pill">
+                                    View All Donations
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Help Card -->
+                    <div class="profile-card animate-fade-in" style="animation-delay: 0.3s;">
+                        <div class="profile-section">
+                            <h4 class="section-title">
+                                <i class="fas fa-question-circle"></i>
+                                Need Help?
+                            </h4>
+                            
+                            <p class="mb-4">Have questions about your account or donations? Our support team is here to help.</p>
+                            
+                            <div class="d-grid">
+                                <a href="#" class="btn btn-outline-primary btn-profile">
+                                    <i class="fas fa-headset me-2"></i>Contact Support
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Social Share Card -->
+                    <div class="profile-card animate-fade-in" style="animation-delay: 0.4s;">
+                        <div class="profile-section">
+                            <h4 class="section-title">
+                                <i class="fas fa-share-alt"></i>
+                                Spread the Word
+                            </h4>
+                            
+                            <p class="mb-3">Share our mission with your friends and family.</p>
+                            
+                            <div class="d-flex justify-content-center gap-3">
+                                <a href="#" class="btn btn-sm btn-outline-primary rounded-circle" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="btn btn-sm btn-outline-info rounded-circle" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="btn btn-sm btn-outline-danger rounded-circle" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="btn btn-sm btn-outline-success rounded-circle" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
     
+    <th:block layout:fragment="scripts">
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Handle profile picture upload click
+                document.querySelector('.edit-profile-img').addEventListener('click', function() {
+                    // This would normally trigger a file upload dialog
+                    alert('Profile picture upload functionality will be implemented soon!');
+                });
+                
+                // Animate elements on scroll
+                const animateElements = document.querySelectorAll('.animate-fade-in');
+                
+                // Simple animation on page load
+                setTimeout(() => {
+                    animateElements.forEach((element, index) => {
+                        setTimeout(() => {
+                            element.style.opacity = '1';
+                            element.style.transform = 'translateY(0)';
+                        }, 150 * index);
+                    });
+                }, 300);
+            });
+        </script>
+    </th:block>
+</body>
 </html>

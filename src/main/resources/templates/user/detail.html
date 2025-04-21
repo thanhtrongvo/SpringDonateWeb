@@ -1,10 +1,733 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" layout:decorate="~{fragments/_layout}" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>User Profile</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    
+    <th:block layout:fragment="styles">
+        <style>
+            :root {
+                --primary: #4169E1;      /* Royal Blue */
+                --primary-dark: #2A4CB9; /* Darker Blue */
+                --secondary: #F0F8FF;    /* Alice Blue */
+                --accent: #7B68EE;       /* Medium Slate Blue */
+                --text-color: #333333;
+                --light-bg: #F8F9FA;
+            }
+            
+            .profile-header {
+                background: linear-gradient(rgba(0, 29, 35, 0.8), rgba(0, 29, 35, 0.8)), url([[@{/img/carousel-2.jpg}]]) center center no-repeat;
+                background-size: cover;
+                padding: 100px 0 40px;
+                color: white;
+                margin-bottom: 40px;
+            }
+            
+            .profile-card {
+                background-color: white;
+                border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+                margin-bottom: 30px;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            
+            .profile-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            }
+            
+            .profile-card .card-header {
+                background-color: var(--primary);
+                color: white;
+                padding: 20px;
+                border-bottom: none;
+                position: relative;
+            }
+            
+            .profile-card .card-header::after {
+                content: '';
+                position: absolute;
+                bottom: -15px;
+                left: 0;
+                right: 0;
+                height: 15px;
+                background: linear-gradient(45deg, var(--primary) 33.33%, transparent 33.33%, transparent 66.66%, var(--primary) 66.66%);
+                background-size: 30px 15px;
+            }
+            
+            .profile-card .card-body {
+                padding: 30px;
+            }
+            
+            .profile-img {
+                width: 120px;
+                height: 120px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 5px solid white;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                margin-bottom: 20px;
+                margin-top: -60px;
+                position: relative;
+                z-index: 1;
+                background-color: white;
+            }
+            
+            .profile-stats {
+                display: flex;
+                justify-content: space-between;
+                margin: 20px 0;
+                text-align: center;
+            }
+            
+            .stat-item {
+                flex: 1;
+                padding: 15px 10px;
+                border-right: 1px solid #eeeeee;
+            }
+            
+            .stat-item:last-child {
+                border-right: none;
+            }
+            
+            .stat-value {
+                font-size: 1.8rem;
+                font-weight: 700;
+                color: var(--primary);
+            }
+            
+            .stat-label {
+                font-size: 0.85rem;
+                color: #6c757d;
+            }
+            
+            .progress {
+                height: 10px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+                background-color: #e9ecef;
+            }
+            
+            .progress-bar {
+                background: linear-gradient(to right, var(--primary), var(--accent));
+                border-radius: 5px;
+            }
+            
+            .donation-item {
+                border-left: 3px solid var(--primary);
+                padding-left: 15px;
+                margin-bottom: 20px;
+                position: relative;
+                transition: transform 0.3s ease;
+            }
+            
+            .donation-item:hover {
+                transform: translateX(5px);
+            }
+            
+            .donation-item::before {
+                content: '';
+                position: absolute;
+                left: -9px;
+                top: 0;
+                width: 15px;
+                height: 15px;
+                border-radius: 50%;
+                background-color: var(--primary);
+                border: 3px solid white;
+                box-shadow: 0 0 0 1px var(--primary);
+            }
+            
+            .donation-amount {
+                font-weight: 700;
+                color: var(--primary);
+                font-size: 1.2rem;
+            }
+            
+            .timeline-date {
+                color: #6c757d;
+                font-size: 0.85rem;
+            }
+            
+            .badge-donation {
+                background-color: var(--primary);
+                color: white;
+                padding: 5px 10px;
+                border-radius: 30px;
+                font-size: 0.75rem;
+            }
+            
+            .badge-pending {
+                background-color: #ffc107;
+                color: #212529;
+            }
+            
+            .badge-completed {
+                background-color: #28a745;
+            }
+            
+            .badge-cancelled {
+                background-color: #dc3545;
+            }
+            
+            .nav-pills .nav-link {
+                color: #495057;
+                background-color: transparent;
+                border-radius: 30px;
+                padding: 10px 20px;
+                transition: all 0.3s ease;
+            }
+            
+            .nav-pills .nav-link.active, 
+            .nav-pills .nav-link:hover {
+                color: white;
+                background-color: var(--primary);
+                box-shadow: 0 5px 15px rgba(65, 105, 225, 0.3);
+            }
+            
+            .form-control {
+                border-radius: 10px;
+                padding: 12px 20px;
+                border: 1px solid #ced4da;
+                transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            }
+            
+            .form-control:focus {
+                border-color: var(--primary);
+                box-shadow: 0 0 0 0.25rem rgba(65, 105, 225, 0.25);
+            }
+            
+            .form-label {
+                font-weight: 600;
+                color: #495057;
+                margin-bottom: 8px;
+            }
+            
+            .btn-update {
+                background: linear-gradient(to right, var(--primary), var(--primary-dark));
+                border: none;
+                border-radius: 10px;
+                color: white;
+                padding: 12px 25px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+            }
+            
+            .btn-update:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 20px rgba(65, 105, 225, 0.3);
+            }
+            
+            .info-box {
+                background-color: var(--secondary);
+                border-radius: 10px;
+                padding: 20px;
+                margin-bottom: 20px;
+                border-left: 5px solid var(--primary);
+            }
+            
+            .edit-profile-img {
+                position: absolute;
+                bottom: 5px;
+                right: 5px;
+                width: 30px;
+                height: 30px;
+                background-color: var(--primary);
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+            
+            .edit-profile-img:hover {
+                background-color: var(--primary-dark);
+                transform: scale(1.1);
+            }
+            
+            .nav-tabs .nav-link {
+                border: none;
+                font-weight: 600;
+                color: #495057;
+                padding: 15px 20px;
+                position: relative;
+            }
+            
+            .nav-tabs .nav-link.active {
+                color: var(--primary);
+                background-color: transparent;
+                border: none;
+            }
+            
+            .nav-tabs .nav-link.active::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background-color: var(--primary);
+            }
+            
+            .donation-card {
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+                margin-bottom: 20px;
+                transition: transform 0.3s ease;
+            }
+            
+            .donation-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            }
+            
+            .donation-card .card-body {
+                padding: 20px;
+            }
+            
+            .donation-card .donation-amount {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--primary);
+            }
+            
+            /* Animation */
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .animate-fade-in {
+                animation: fadeInUp 0.5s ease forwards;
+            }
+            
+            /* Responsive adjustments */
+            @media (max-width: 768px) {
+                .profile-stats {
+                    flex-direction: column;
+                }
+                
+                .stat-item {
+                    border-right: none;
+                    border-bottom: 1px solid #eeeeee;
+                    padding: 10px 0;
+                }
+                
+                .stat-item:last-child {
+                    border-bottom: none;
+                }
+                
+                .profile-img {
+                    width: 100px;
+                    height: 100px;
+                    margin-top: -50px;
+                }
+            }
+        </style>
+    </th:block>
 </head>
-<body>
 
+<body>
+    <main layout:fragment="content">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="container text-center">
+                <h1 class="display-5 text-white animated slideInDown mb-3">My Profile</h1>
+                <nav aria-label="breadcrumb animated slideInDown">
+                    <ol class="breadcrumb justify-content-center mb-0">
+                        <li class="breadcrumb-item"><a class="text-white" th:href="@{/}">Home</a></li>
+                        <li class="breadcrumb-item text-primary active" aria-current="page">Profile</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        
+        <!-- Main Profile Container -->
+        <div class="container py-5">
+            <div class="row g-4">
+                <!-- Profile Sidebar -->
+                <div class="col-lg-4">
+                    <!-- User Profile Card -->
+                    <div class="profile-card text-center animate-fade-in">
+                        <div class="card-header">
+                            <!-- User Cover Image BG-->
+                        </div>
+                        <div class="card-body d-flex flex-column align-items-center">
+                            <div class="position-relative">
+                                <img th:src="${user?.avatar != null ? user.avatar : '/img/user-placeholder.jpg'}" alt="Profile Picture" class="profile-img">
+                                <div class="edit-profile-img" title="Change profile picture">
+                                    <i class="fas fa-camera"></i>
+                                </div>
+                            </div>
+                            <h3 class="fw-bold mb-1" th:text="${user?.fullName}">John Doe</h3>
+                            <p class="text-muted mb-3" th:text="${user?.email}">johndoe@example.com</p>
+                            <p class="text-muted mb-3" th:if="${user?.phone != null}" th:text="${user.phone}">+84 123 456 789</p>
+                            <div class="d-flex justify-content-center gap-2 mb-4">
+                                <a href="#" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                    <i class="fas fa-edit me-1"></i> Edit Profile
+                                </a>
+                            </div>
+                            
+                            <!-- User Stats -->
+                            <div class="profile-stats w-100">
+                                <div class="stat-item">
+                                    <div class="stat-value">12</div>
+                                    <div class="stat-label">Donations</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">5</div>
+                                    <div class="stat-label">Programs</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">3</div>
+                                    <div class="stat-label">Months</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Account Details -->
+                            <div class="info-box w-100 text-start mt-3">
+                                <h5 class="mb-3"><i class="fas fa-info-circle text-primary me-2"></i>Account Info</h5>
+                                <p class="mb-2">
+                                    <i class="fas fa-calendar-alt me-2 text-muted"></i>
+                                    Joined: <span th:text="${#temporals.format(user?.createdAt, 'dd MMM yyyy')}">15 Jan 2025</span>
+                                </p>
+                                <p class="mb-2">
+                                    <i class="fas fa-user-shield me-2 text-muted"></i>
+                                    Role: <span class="badge bg-primary">Donor</span>
+                                </p>
+                                <p class="mb-0">
+                                    <i class="fas fa-map-marker-alt me-2 text-muted"></i>
+                                    Location: <span th:text="${user?.address ?: 'Not specified'}">Ho Chi Minh City</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Profile Content -->
+                <div class="col-lg-8">
+                    <div class="profile-card animate-fade-in" style="animation-delay: 0.2s;">
+                        <div class="card-body p-0">
+                            <!-- Tabs Navigation -->
+                            <ul class="nav nav-tabs" id="profileTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" 
+                                            type="button" role="tab" aria-controls="overview" aria-selected="true">
+                                        <i class="fas fa-home me-2"></i>Overview
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="donations-tab" data-bs-toggle="tab" data-bs-target="#donations" 
+                                            type="button" role="tab" aria-controls="donations" aria-selected="false">
+                                        <i class="fas fa-heart me-2"></i>My Donations
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" 
+                                            type="button" role="tab" aria-controls="settings" aria-selected="false">
+                                        <i class="fas fa-cog me-2"></i>Settings
+                                    </button>
+                                </li>
+                            </ul>
+                            
+                            <!-- Tabs Content -->
+                            <div class="tab-content p-4" id="profileTabsContent">
+                                <!-- Overview Tab -->
+                                <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+                                    <h4 class="mb-4">Donation Overview</h4>
+                                    
+                                    <!-- Total Donation Progress -->
+                                    <div class="card mb-4 p-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <h5 class="mb-0">Total Contributions</h5>
+                                            <span class="fw-bold text-primary">5,000,000 ₫</span>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" 
+                                                 style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <div class="d-flex justify-content-between mt-2">
+                                            <small>Yearly Goal: 8,000,000 ₫</small>
+                                            <small>65% Complete</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <h5 class="mb-3">Recent Activity</h5>
+                                    
+                                    <!-- Recent Donations Timeline -->
+                                    <div class="donation-item">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <h6 class="mb-0">Educational Support Fund</h6>
+                                            <span class="badge badge-donation badge-completed">Completed</span>
+                                        </div>
+                                        <div class="donation-amount">1,000,000 ₫</div>
+                                        <p class="timeline-date mb-0"><i class="far fa-calendar-alt me-1"></i> 15 Mar 2025</p>
+                                    </div>
+                                    
+                                    <div class="donation-item">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <h6 class="mb-0">School Supplies Drive</h6>
+                                            <span class="badge badge-donation badge-completed">Completed</span>
+                                        </div>
+                                        <div class="donation-amount">500,000 ₫</div>
+                                        <p class="timeline-date mb-0"><i class="far fa-calendar-alt me-1"></i> 28 Feb 2025</p>
+                                    </div>
+                                    
+                                    <div class="donation-item">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <h6 class="mb-0">Scholarship Program</h6>
+                                            <span class="badge badge-donation badge-pending">Processing</span>
+                                        </div>
+                                        <div class="donation-amount">2,000,000 ₫</div>
+                                        <p class="timeline-date mb-0"><i class="far fa-calendar-alt me-1"></i> 10 Apr 2025</p>
+                                    </div>
+                                    
+                                    <!-- View All Button -->
+                                    <div class="text-center mt-4">
+                                        <button class="btn btn-outline-primary rounded-pill px-4" type="button" 
+                                                onclick="document.getElementById('donations-tab').click()">
+                                            View All Donations <i class="fas fa-arrow-right ms-2"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Donations Tab -->
+                                <div class="tab-pane fade" id="donations" role="tabpanel" aria-labelledby="donations-tab">
+                                    <h4 class="mb-4">My Donation History</h4>
+                                    
+                                    <!-- Filter Options -->
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <div>
+                                            <select class="form-select form-select-sm">
+                                                <option selected>All Programs</option>
+                                                <option>Educational Support</option>
+                                                <option>Scholarship Program</option>
+                                                <option>School Supplies Drive</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div>
+                                            <select class="form-select form-select-sm">
+                                                <option selected>All Time</option>
+                                                <option>Last 30 Days</option>
+                                                <option>This Year</option>
+                                                <option>Last Year</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Donations List -->
+                                    <div class="row">
+                                        <!-- Donation Card 1 -->
+                                        <div class="col-md-6 mb-3">
+                                            <div class="donation-card">
+                                                <div class="card-body">
+                                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                                        <h5 class="mb-0">Educational Support Fund</h5>
+                                                        <span class="badge badge-donation badge-completed">Completed</span>
+                                                    </div>
+                                                    <div class="donation-amount mb-2">1,000,000 ₫</div>
+                                                    <p class="timeline-date mb-3">15 Mar 2025</p>
+                                                    <a href="#" class="btn btn-sm btn-outline-primary">View Details</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Donation Card 2 -->
+                                        <div class="col-md-6 mb-3">
+                                            <div class="donation-card">
+                                                <div class="card-body">
+                                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                                        <h5 class="mb-0">School Supplies Drive</h5>
+                                                        <span class="badge badge-donation badge-completed">Completed</span>
+                                                    </div>
+                                                    <div class="donation-amount mb-2">500,000 ₫</div>
+                                                    <p class="timeline-date mb-3">28 Feb 2025</p>
+                                                    <a href="#" class="btn btn-sm btn-outline-primary">View Details</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Donation Card 3 -->
+                                        <div class="col-md-6 mb-3">
+                                            <div class="donation-card">
+                                                <div class="card-body">
+                                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                                        <h5 class="mb-0">Scholarship Program</h5>
+                                                        <span class="badge badge-donation badge-pending">Processing</span>
+                                                    </div>
+                                                    <div class="donation-amount mb-2">2,000,000 ₫</div>
+                                                    <p class="timeline-date mb-3">10 Apr 2025</p>
+                                                    <a href="#" class="btn btn-sm btn-outline-primary">View Details</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Donation Card 4 -->
+                                        <div class="col-md-6 mb-3">
+                                            <div class="donation-card">
+                                                <div class="card-body">
+                                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                                        <h5 class="mb-0">Community Development</h5>
+                                                        <span class="badge badge-donation badge-cancelled">Cancelled</span>
+                                                    </div>
+                                                    <div class="donation-amount mb-2">800,000 ₫</div>
+                                                    <p class="timeline-date mb-3">5 Jan 2025</p>
+                                                    <a href="#" class="btn btn-sm btn-outline-primary">View Details</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Pagination -->
+                                    <nav class="mt-4">
+                                        <ul class="pagination justify-content-center">
+                                            <li class="page-item disabled">
+                                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                                            </li>
+                                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#">Next</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                                
+                                <!-- Settings Tab -->
+                                <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+                                    <h4 class="mb-4">Account Settings</h4>
+                                    
+                                    <form>
+                                        <div class="row mb-3">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="fullName" class="form-label">Full Name</label>
+                                                <input type="text" class="form-control" id="fullName" th:value="${user?.fullName}" placeholder="Enter your full name">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="email" class="form-label">Email Address</label>
+                                                <input type="email" class="form-control" id="email" th:value="${user?.email}" placeholder="Enter your email" readonly>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row mb-3">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="phone" class="form-label">Phone Number</label>
+                                                <input type="tel" class="form-control" id="phone" th:value="${user?.phone}" placeholder="Enter your phone number">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="birthDate" class="form-label">Date of Birth</label>
+                                                <input type="date" class="form-control" id="birthDate" th:value="${user?.birthDate}">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="address" class="form-label">Address</label>
+                                            <textarea class="form-control" id="address" rows="3" th:text="${user?.address}" placeholder="Enter your address"></textarea>
+                                        </div>
+                                        
+                                        <h5 class="mt-5 mb-3">Change Password</h5>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="currentPassword" class="form-label">Current Password</label>
+                                                <input type="password" class="form-control" id="currentPassword" placeholder="Enter current password">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="newPassword" class="form-label">New Password</label>
+                                                <input type="password" class="form-control" id="newPassword" placeholder="Enter new password">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                                                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm new password">
+                                            </div>
+                                        </div>
+                                        
+                                        <h5 class="mt-5 mb-3">Email Notifications</h5>
+                                        <div class="mb-3">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="newsUpdates" checked>
+                                                <label class="form-check-label" for="newsUpdates">News and Updates</label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="donationConfirmation" checked>
+                                                <label class="form-check-label" for="donationConfirmation">Donation Confirmations</label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="programUpdates" checked>
+                                                <label class="form-check-label" for="programUpdates">Program Updates</label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="text-end mt-4">
+                                            <button type="button" class="btn btn-outline-secondary me-2">Cancel</button>
+                                            <button type="submit" class="btn btn-update">Save Changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <th:block layout:fragment="scripts">
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Initialize tooltips
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl)
+                });
+                
+                // Handle profile picture upload click
+                document.querySelector('.edit-profile-img').addEventListener('click', function() {
+                    // This would normally trigger a file upload dialog
+                    alert('Profile picture upload functionality will be implemented soon!');
+                });
+                
+                // Animate elements on scroll
+                const animateElements = document.querySelectorAll('.animate-fade-in');
+                animateElements.forEach(element => {
+                    element.style.opacity = '0';
+                });
+                
+                // Simple animation on page load
+                setTimeout(() => {
+                    animateElements.forEach((element, index) => {
+                        setTimeout(() => {
+                            element.style.opacity = '1';
+                            element.style.transform = 'translateY(0)';
+                        }, 100 * index);
+                    });
+                }, 300);
+            });
+        </script>
+    </th:block>
 </body>
 </html>

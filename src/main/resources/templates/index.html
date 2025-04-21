@@ -9,6 +9,198 @@
     <meta content="" name="description">
 
     <div th:replace="~{fragments/_link}"></div>
+    <style>
+        
+        
+        /* Primary Color Styling */
+        .text-primary {
+            color: var(--primary) !important;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary) !important;
+            border-color: var(--primary) !important;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark) !important;
+            border-color: var(--primary-dark) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .bg-primary {
+            background-color: var(--primary) !important;
+        }
+        
+        .bg-secondary {
+            background-color: var(--secondary) !important;
+        }
+        
+        .border-primary {
+            border-color: var(--primary) !important;
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary) !important;
+            border-color: var(--primary) !important;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary) !important;
+            color: white !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Enhanced UI Elements */
+        .carousel-caption {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .service-item {
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .service-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .progress-bar {
+            background-color: var(--primary);
+        }
+        
+        .rounded-pill {
+            background-color: var(--secondary) !important;
+            color: var(--primary) !important;
+            font-weight: 600;
+        }
+        
+        .donate .rounded-pill {
+            background-color: rgba(240, 248, 255, 0.2) !important;
+            color: white !important;
+        }
+        
+        .donate .text-primary {
+            color: white !important;
+        }
+        
+        .btn-donate {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-donate:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Animation */
+        .wow {
+            visibility: hidden;
+        }
+        
+        /* Program Card Styling */
+        .program-card {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .program-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .program-card .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        
+        /* Back to top button */
+        .back-to-top {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            bottom: 30px;
+            right: 30px;
+            opacity: 0.8;
+        }
+        
+        .back-to-top:hover {
+            background-color: var(--primary-dark);
+            opacity: 1;
+        }
+        
+        /* Fix cho các lớp đặc biệt */
+        .btn-sm-square {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-sm-square.bg-white {
+            color: var(--primary) !important;
+        }
+        
+        .btn-sm-square.bg-primary {
+            color: white !important;
+        }
+        
+        /* Đảm bảo độ tương phản trên các nền khác nhau */
+        .bg-light .text-primary {
+            color: var(--primary) !important;
+        }
+        
+        .donate .bg-white .text-primary {
+            color: var(--primary) !important;
+        }
+    </style>
 
 </head>
 
@@ -138,7 +330,7 @@
     <div class="container-xxl bg-light my-5 py-5">
         <div class="container py-5">
             <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">Feature Causes</div>
+               
                 <h1 class="display-6 mb-5">Tất cả học sinh, sinh viên đều có cơ hội được học</h1>
             </div>
             <div class="row g-4 justify-content-center">
@@ -196,7 +388,7 @@
     <div class="container-xxl py-5">
         <div class="container">
             <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                <div class="d-inline-block rounded-pill bg-secondary text-primary py-1 px-3 mb-3">Chúng tôi sẽ làm</div>
+                
                 <h1 class="display-6 mb-5">Xây dựng một cộng đồng học tập bền vững, nơi tất cả sinh viên đều có cơ hội
                     tiếp
                     cận giáo dục</h1>
