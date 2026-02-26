@@ -1,20 +1,47 @@
 package com.example.springdonateweb.Controllers;
 
+import com.example.springdonateweb.Services.interfaces.ICategoriesService;
+import com.example.springdonateweb.Services.interfaces.IDonationsService;
+import com.example.springdonateweb.Services.interfaces.IProgramsService;
+import com.example.springdonateweb.Services.interfaces.IUsersService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.math.BigDecimal;
+
 @Controller
 @RequestMapping("/admin")
+@RequiredArgsConstructor
 public class ChartController {
 
-    @GetMapping("/chart")
-    public String showChartPage(Model model) {
-        // Nếu bạn có bất kỳ dữ liệu nào cần truyền vào trang, có thể thêm vào model
-        // Ví dụ: model.addAttribute("chartData", data);
+    private final IUsersService usersService;
+    private final IProgramsService programsService;
+    private final IDonationsService donationsService;
 
-        // Trả về đường dẫn tới trang Thymeleaf 'admin/Chart/index.html'
-        return "admin/Chart/index";  // Đảm bảo rằng tệp 'index.html' nằm trong thư mục src/main/resources/templates/admin/Chart/
+    @GetMapping({ "", "/", "/index", "/chart" })
+    public String showChartPage(Model model) {
+
+        // Add basic counts
+        long totalUsers = usersService.findAll().size();
+        long totalPrograms = programsService.findAll().size();
+
+        // Compute total donation amount
+        BigDecimal totalDonationsAmount = donationsService.findAll().stream()
+                .map(d -> d.getAmount())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // Count total donations
+        long totalDonationsCount = donationsService.findAll().size();
+
+        model.addAttribute("totalUsers", totalUsers);
+        model.addAttribute("totalPrograms", totalPrograms);
+        model.addAttribute("totalDonationsAmount",
+                totalDonationsAmount != null ? totalDonationsAmount : BigDecimal.ZERO);
+        model.addAttribute("totalDonationsCount", totalDonationsCount);
+
+        return "admin/Chart/index";
     }
 }

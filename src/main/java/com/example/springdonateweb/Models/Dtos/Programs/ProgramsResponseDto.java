@@ -24,6 +24,7 @@ public class ProgramsResponseDto {
     private Integer goalAmount;
     private Integer currentAmount;
     private String category;
+    private Integer categoryId;
 
     private int percentageAchieved;
     private long remainingDays;

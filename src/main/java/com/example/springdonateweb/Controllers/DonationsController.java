@@ -30,8 +30,15 @@ public class DonationsController {
         model.addAttribute("donations", donationPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", donationPage.getTotalPages());
+
+        model.addAttribute("totalAmount", donationsService.getTotalDonations());
+        model.addAttribute("donorCount", donationsService.countDistinctDonors());
+        model.addAttribute("averageDonation", donationsService.getAverageDonation());
+        model.addAttribute("monthlyAmount", donationsService.getMonthlyDonations());
+
         return "admin/Donations/index";
     }
+
     @GetMapping("/top-donors")
     @ResponseBody
     public List<Map<String, Object>> getTopDonors(@RequestParam(defaultValue = "5") int limit) {
@@ -43,11 +50,13 @@ public class DonationsController {
     public Map<String, BigDecimal> getTotalDonationsByDay() {
         return donationsService.getTotalDonationsByDay();
     }
+
     @GetMapping("/total-donations-by-program")
     @ResponseBody
     public Map<Integer, BigDecimal> getTotalDonationsByProgram() {
         return donationsService.getTotalDonationsByProgram();
     }
+
     @GetMapping("/create")
     public String createForm(Model model) {
         model.addAttribute("donation", new DonationCreateDto());
@@ -63,7 +72,8 @@ public class DonationsController {
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable int id, Model model) {
         DonationResponseDto donation = donationsService.findById(id);
-        if (donation == null) return "redirect:/admin/donations";
+        if (donation == null)
+            return "redirect:/admin/donations";
         model.addAttribute("donation", donation);
         return "admin/Donations/edit";
     }

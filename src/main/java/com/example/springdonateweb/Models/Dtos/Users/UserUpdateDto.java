@@ -14,8 +14,6 @@ import lombok.NoArgsConstructor;
 @Builder
 
 public class UserUpdateDto {
-    @NotBlank(message = "Id is required")
-
     public int id;
 
     @NotBlank(message = "Name is required")
@@ -29,12 +27,7 @@ public class UserUpdateDto {
     public String address;
 
     @NotBlank(message = "Phone number is required")
-    @Pattern(regexp = "^(\\+62|0)[0-9]{10,13}$", message = "Phone number is invalid")
+    @Pattern(regexp = "^(\\+62|0)[0-9]{9,12}$", message = "Phone number is invalid")
     public String phoneNumber;
-
-
-
-
-
 
 }

@@ -1,95 +1,126 @@
-<nav
-        class="navbar bg-body align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0 navbar-dark"
->
-    <div class="container-fluid d-flex flex-column p-0">
-        <div class="sidebar-header d-flex align-items-center p-3">
-            <div class="logo-icon me-2">
-                <i class="fas fa-heart text-danger fa-2x"></i>
+<nav id="sidebar-nav">
+    <div class="container-fluid d-flex flex-column p-0 h-100">
+        <!-- Logo -->
+        <div class="sidebar-header">
+            <div class="logo-icon">
+                <i class="fas fa-heart"></i>
             </div>
             <div class="logo-text">
-                <h4 class="m-0">SGU Heart</h4>
+                <h4>SGU Heart</h4>
                 <small>Admin Panel</small>
             </div>
-            <button id="sidebarCollapseBtn" class="btn btn-sm btn-link text-white d-md-none ms-auto">
-                <i class="bi bi-x-lg"></i>
-            </button>
         </div>
 
-        <div class="sidebar-menu pt-3">
+        <!-- Menu -->
+        <div class="sidebar-menu">
+            <div class="sidebar-section-label">Main</div>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link text-white" th:href="@{/admin/index}">
-                        <i class="bi bi-speedometer2 me-2"></i>
-                        Dashboard
+                    <a class="nav-link" th:href="@{/admin/index}">
+                        <i class="bi bi-speedometer2"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-label">Management</div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/user}">
+                        <i class="bi bi-people-fill"></i>
+                        <span>Users</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" th:href="@{/admin/user}">
-                        <i class="bi bi-people me-2"></i>
-                        Users Management
+                    <a class="nav-link" th:href="@{/admin/programs}">
+                        <i class="bi bi-journal-richtext"></i>
+                        <span>Programs</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" th:href="@{/admin/donations}">
-                        <i class="bi bi-cash-coin me-2"></i>
-                        Donations
+                    <a class="nav-link" th:href="@{/admin/donations}">
+                        <i class="bi bi-cash-coin"></i>
+                        <span>Donations</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" th:href="@{/admin/programs}">
-                        <i class="bi bi-list-check me-2"></i>
-                        Programs
+                    <a class="nav-link" th:href="@{/admin/donors}">
+                        <i class="bi bi-heart-fill"></i>
+                        <span>Donors</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" th:href="@{/admin/donors}">
-                        <i class="bi bi-heart me-2"></i>
-                        Donors
+                    <a class="nav-link" th:href="@{/admin/transactions}">
+                        <i class="bi bi-arrow-left-right"></i>
+                        <span>Transactions</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-section-label">Content</div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/blogs}">
+                        <i class="bi bi-file-text-fill"></i>
+                        <span>Blogs</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" th:href="@{/admin/transactions}">
-                        <i class="bi bi-arrow-left-right me-2"></i>
-                        Transactions
+                    <a class="nav-link" th:href="@{/admin/categories}">
+                        <i class="bi bi-tags-fill"></i>
+                        <span>Categories</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" th:href="@{/admin/paymentmethods}">
-                        <i class="bi bi-credit-card me-2"></i>
-                        Payment Methods
+                    <a class="nav-link" th:href="@{/admin/comments}">
+                        <i class="bi bi-chat-left-dots-fill"></i>
+                        <span>Comments</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" th:href="@{/admin/categories}">
-                        <i class="bi bi-tags me-2"></i>
-                        Categories
+                    <a class="nav-link" th:href="@{/admin/paymentmethods}">
+                        <i class="bi bi-credit-card-fill"></i>
+                        <span>Payment Methods</span>
                     </a>
                 </li>
+            </ul>
+
+            <div class="sidebar-section-label">System</div>
+            <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link text-white" th:href="@{/admin/comments}">
-                        <i class="bi bi-chat-left-text me-2"></i>
-                        Comments
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" th:href="@{/admin/blogs}">
-                        <i class="bi bi-file-text me-2"></i>
-                        Blogs
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" th:href="@{/admin/chart}">
-                        <i class="bi bi-graph-up me-2"></i>
-                        Analytics
-                    </a>
-                </li>
-                <li class="nav-item mt-4">
-                    <a class="nav-link text-white" th:href="@{/logout}">
-                        <i class="bi bi-box-arrow-right me-2"></i>
-                        Logout
+                    <a class="nav-link logout-link" th:href="@{/logout}">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Logout</span>
                     </a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
+
+<script>
+    // Tự động highlight active link trong sidebar dùng JS thay vì Thymeleaf
+    document.addEventListener('DOMContentLoaded', function () {
+        const currentPath = window.location.pathname;
+        const navLinks = document.querySelectorAll('.sidebar-menu .nav-link:not(.logout-link)');
+
+        let foundActive = false;
+        navLinks.forEach(link => {
+            const linkPath = new URL(link.href).pathname;
+
+            // Nếu current path match link path, hoặc (đang ở chart/index mà link là admin/index)
+            if (currentPath.includes(linkPath) || (currentPath.includes('/admin/chart') && linkPath.includes('/admin/index'))) {
+                link.classList.add('active');
+                foundActive = true;
+            } else {
+                link.classList.remove('active');
+            }
+        });
+
+        // Default highlight dashboard nếu không tìm thấy sub-route nào
+        if (!foundActive && currentPath.startsWith('/admin')) {
+            const dashboardLink = document.querySelector('.sidebar-menu .nav-link[href*="/admin/index"]');
+            if (dashboardLink) dashboardLink.classList.add('active');
+        }
+    });
+</script>

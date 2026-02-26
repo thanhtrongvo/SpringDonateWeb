@@ -3,21 +3,21 @@
  * Tất cả các chức năng JavaScript cho phần Admin sẽ được đặt trong đây
  */
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Sidebar toggle function - thêm .admin-panel vào selector
-    const sidebarToggle = document.querySelector('.admin-panel #sidebarToggle');
-    const sidebar = document.querySelector('.admin-panel #sidebar');
-    const content = document.querySelector('.admin-panel #content');
-    
+document.addEventListener('DOMContentLoaded', function () {
+    // Sidebar toggle
+    const sidebarToggle = document.querySelector('#sidebarToggle');
+    const sidebar = document.querySelector('#sidebar');
+    const content = document.querySelector('#content');
+
     if (sidebarToggle) {
-        sidebarToggle.addEventListener('click', function() {
+        sidebarToggle.addEventListener('click', function () {
             sidebar.classList.toggle('collapsed');
             if (window.innerWidth > 768) {
                 content.classList.toggle('expanded');
             }
         });
     }
-    
+
     // Responsive check - đóng sidebar khi màn hình nhỏ
     function checkWidth() {
         if (window.innerWidth < 768) {
@@ -26,13 +26,13 @@ document.addEventListener('DOMContentLoaded', function() {
             sidebar?.classList.remove('collapsed');
         }
     }
-    
+
     // Kiểm tra kích thước khi tải trang
     window.addEventListener('load', checkWidth);
     window.addEventListener('resize', checkWidth);
-    
+
     // Khởi tạo DataTables nếu tồn tại (với namespace .admin-panel)
-    const dataTablesElements = document.querySelectorAll('.admin-panel .datatable');
+    const dataTablesElements = document.querySelectorAll('.datatable');
     if (dataTablesElements.length > 0) {
         dataTablesElements.forEach(table => {
             $(table).DataTable({
@@ -56,15 +56,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Khởi tạo tooltip
-    const tooltipTriggerList = document.querySelectorAll('.admin-panel [data-bs-toggle="tooltip"]');
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     if (tooltipTriggerList.length > 0) {
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
     }
-    
+
     // Xử lý form filters với namespace .admin-panel
-    const filterToggles = document.querySelectorAll('.admin-panel #filterToggle');
+    const filterToggles = document.querySelectorAll('#filterToggle');
     filterToggles.forEach(toggle => {
-        toggle.addEventListener('click', function() {
+        toggle.addEventListener('click', function () {
             const filterPanel = this.closest('.card').querySelector('#filterPanel');
             if (filterPanel) {
                 if (filterPanel.style.display === 'none') {
@@ -75,9 +75,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
+
     // Xử lý các sự kiện modal trong admin panel
-    const adminModals = document.querySelectorAll('.admin-panel .modal');
+    const adminModals = document.querySelectorAll('.modal');
     if (adminModals.length > 0) {
         adminModals.forEach(modal => {
             modal.addEventListener('show.bs.modal', function (event) {
@@ -85,12 +85,12 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-    
+
     // Xử lý sự kiện cho nút xóa với confirm dialog
-    const deleteButtons = document.querySelectorAll('.admin-panel .btn-delete');
+    const deleteButtons = document.querySelectorAll('.btn-delete');
     if (deleteButtons.length > 0) {
         deleteButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
+            button.addEventListener('click', function (e) {
                 if (!confirm('Bạn có chắc chắn muốn xóa mục này không?')) {
                     e.preventDefault();
                 }
@@ -132,18 +132,18 @@ function formatDate(date) {
  */
 function showToast(message, type = 'info') {
     // Kiểm tra nếu đã có container toast
-    let toastContainer = document.querySelector('.admin-panel .toast-container');
-    
+    let toastContainer = document.querySelector('.toast-container');
+
     // Nếu chưa có, tạo mới
     if (!toastContainer) {
         toastContainer = document.createElement('div');
         toastContainer.className = 'toast-container position-fixed bottom-0 end-0 p-3';
         document.body.appendChild(toastContainer);
     }
-    
+
     // Tạo ID duy nhất cho toast
     const toastId = 'toast-' + Date.now();
-    
+
     // Map loại toast sang Bootstrap class
     const typeClass = {
         'success': 'bg-success',
@@ -151,7 +151,7 @@ function showToast(message, type = 'info') {
         'warning': 'bg-warning',
         'info': 'bg-info'
     };
-    
+
     // Tạo HTML cho toast
     const toastHtml = `
         <div id="${toastId}" class="toast align-items-center ${typeClass[type] || 'bg-info'} text-white border-0" role="alert" aria-live="assertive" aria-atomic="true">
@@ -163,10 +163,10 @@ function showToast(message, type = 'info') {
             </div>
         </div>
     `;
-    
+
     // Thêm toast vào container
     toastContainer.insertAdjacentHTML('beforeend', toastHtml);
-    
+
     // Khởi tạo toast và hiển thị
     const toastElement = document.getElementById(toastId);
     const toast = new bootstrap.Toast(toastElement, {

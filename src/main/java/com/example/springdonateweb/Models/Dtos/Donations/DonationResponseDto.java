@@ -20,4 +20,9 @@ public class DonationResponseDto {
     private BigDecimal amount;
     private LocalDateTime donationDate;
     private String donorName;
+
+    private String programName;
+    private String userEmail;
+    private String paymentMethod;
+    private String status;
 }

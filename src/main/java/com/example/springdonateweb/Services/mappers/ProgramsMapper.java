@@ -33,7 +33,8 @@ public interface ProgramsMapper {
             @Mapping(target = "startDate", expression = "java(convertDateToString(entity.getStartDate()))"),
             @Mapping(target = "endDate", expression = "java(convertDateToString(entity.getEndDate()))"),
             @Mapping(target = "remainingDays", expression = "java(calculateRemainingDays(convertDateToString(entity.getStartDate()), convertDateToString(entity.getEndDate())))"),
-            @Mapping(source = "image", target = "image")
+            @Mapping(source = "image", target = "image"),
+            @Mapping(source = "category.categoryId", target = "categoryId")
     })
     ProgramsResponseDto toDto(ProgramsEntity entity);
 
@@ -45,7 +46,7 @@ public interface ProgramsMapper {
 
     default int calculatePercentage(Integer currentAmount, Integer goalAmount) {
         if (goalAmount != null && goalAmount > 0 && currentAmount != null) {
-            return (currentAmount * 100) / goalAmount;
+            return (int) ((currentAmount * 100L) / goalAmount);
         }
         return 0;
     }
@@ -62,6 +63,5 @@ public interface ProgramsMapper {
     default String convertDateToString(Date sqlDate) {
         return sqlDate != null ? sqlDate.toLocalDate().toString() : null;
     }
-
 
 }

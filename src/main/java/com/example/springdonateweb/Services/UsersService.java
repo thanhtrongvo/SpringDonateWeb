@@ -37,7 +37,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UsersService implements IUsersService {
 
-
     private final PasswordEncoder passwordEncoder;
 
     private final UsersMapper usersMapper;
@@ -66,7 +65,6 @@ public class UsersService implements IUsersService {
         return usersRepository.findByIdAndStatusTrue(id);
     }
 
-
     @Override
     public UsersResponseDto update(UserAddDto userAddDto) {
         Optional<UsersEntity> usersEntity = findUserByIdAndStatusTrue(userAddDto.getId());
@@ -78,7 +76,6 @@ public class UsersService implements IUsersService {
             return usersMapper.toResponseDto(result);
         }).orElse(null);
     }
-
 
     @Override
     @Transactional
@@ -97,12 +94,10 @@ public class UsersService implements IUsersService {
         return usersRepository.existsById(id);
     }
 
-
     public UsersResponseDto findByEmail(String email) {
         Optional<UsersEntity> usersEntity = usersRepository.findByEmail(email);
         return usersEntity.map(usersMapper::toResponseDto).orElse(null);
     }
-
 
     @Override
     public UsersResponseDto register(UserCreateDto userCreateDto) {
@@ -113,8 +108,8 @@ public class UsersService implements IUsersService {
         UsersEntity result = usersRepository.save(usersEntity);
         UserDetails userDetails = createUserDetailFromRegister(result);
 
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,
+                null, userDetails.getAuthorities());
         // Lưu Authentication vào SecurityContextHolder
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
@@ -123,8 +118,16 @@ public class UsersService implements IUsersService {
     }
 
     @Override
+    @Transactional
     public UsersResponseDto update(UserUpdateDto userUpdateDto) {
-        return null;
+        Optional<UsersEntity> usersEntity = usersRepository.findByIdAndStatusTrue(userUpdateDto.getId());
+        return usersEntity.map(user -> {
+            user.setName(userUpdateDto.getName());
+            user.setAddress(userUpdateDto.getAddress());
+            user.setPhoneNumber(userUpdateDto.getPhoneNumber());
+            UsersEntity result = usersRepository.save(user);
+            return usersMapper.toResponseDto(result);
+        }).orElse(null);
     }
 
     @Override
@@ -132,8 +135,7 @@ public class UsersService implements IUsersService {
         return new org.springframework.security.core.userdetails.User(
                 usersEntity.getEmail(),
                 usersEntity.getPassword(),
-                List.of(new SimpleGrantedAuthority(usersEntity.getRoleId().toString()))
-        );
+                List.of(new SimpleGrantedAuthority(usersEntity.getRoleId().toString())));
     }
 
     @Override
@@ -182,7 +184,6 @@ public class UsersService implements IUsersService {
         });
     }
 
-
     @Override
     public UsersResponseDto findByIdAndStatusTrue(int id) {
         Optional<UsersEntity> usersEntity = usersRepository.findByIdAndStatusTrue(id);
@@ -215,14 +216,13 @@ public class UsersService implements IUsersService {
                 emailService.sendEmail(
                         person.getEmail(),
                         "Cấp lại mật khẩu",
-                        "Mật khẩu mới của bạn là " + rawPass + " , vui lòng không chia sẽ mật khẩu này cho bất kì ai!!"
-                );
+                        "Mật khẩu mới của bạn là " + rawPass
+                                + " , vui lòng không chia sẽ mật khẩu này cho bất kì ai!!");
             } catch (MessagingException | UnsupportedEncodingException e) {
                 throw new RuntimeException(e);
             }
         });
     }
-
 
     @Override
     public void sendOtp(int id, String email) {
@@ -231,8 +231,7 @@ public class UsersService implements IUsersService {
             emailService.sendEmail(
                     email,
                     "OTP",
-                    "Mã OTP của bạn là: " + otp
-            );
+                    "Mã OTP của bạn là: " + otp);
             Optional<UsersEntity> usersEntity = usersRepository.findByIdAndStatusTrue(id);
             usersEntity.ifPresent(user -> {
                 DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
@@ -274,6 +273,5 @@ public class UsersService implements IUsersService {
             return false;
         }
     }
-
 
 }

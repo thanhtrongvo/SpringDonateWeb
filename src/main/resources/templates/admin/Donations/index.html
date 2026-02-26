@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html layout:decorate="~{admin/fragments/_layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
 <head>
     <title>Donations Management</title>
     <!-- DataTables CSS -->
@@ -9,567 +10,605 @@
             font-size: 1rem;
             font-weight: 600;
         }
-        
+
         .date-col {
             min-width: 100px;
         }
     </style>
 </head>
+
 <body>
-<div layout:fragment="content">
-    <!-- Page Heading -->
-    <div class="d-sm-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-gray-800">Donations Management</h2>
-        <div>
-            <button type="button" class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#donationStatsModal">
-                <i class="bi bi-bar-chart-line me-1"></i> Statistics
-            </button>
-            <a href="#" class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#exportModal">
-                <i class="bi bi-download me-1"></i> Export Data
-            </a>
-        </div>
-    </div>
-    
-    <!-- Statistics Row -->
-    <div class="row mb-4">
-        <!-- Total Donations -->
-        <div class="col-xl-3 col-md-6">
-            <div class="card border-start-primary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <div class="text-xs fw-bold text-primary text-uppercase mb-1">
-                                Total Donations
-                            </div>
-                            <div class="h5 mb-0 fw-bold text-gray-800" th:text="${totalAmount != null ? '$' + #numbers.formatDecimal(totalAmount, 0, 'COMMA', 2, 'POINT') : '$0.00'}">$10,000.00</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="bi bi-currency-dollar fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Total Donors -->
-        <div class="col-xl-3 col-md-6">
-            <div class="card border-start-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <div class="text-xs fw-bold text-success text-uppercase mb-1">
-                                Total Donors
-                            </div>
-                            <div class="h5 mb-0 fw-bold text-gray-800" th:text="${donorCount}">215</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="bi bi-people fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Average Donation -->
-        <div class="col-xl-3 col-md-6">
-            <div class="card border-start-info shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <div class="text-xs fw-bold text-info text-uppercase mb-1">
-                                Average Donation
-                            </div>
-                            <div class="h5 mb-0 fw-bold text-gray-800" th:text="${averageDonation != null ? '$' + #numbers.formatDecimal(averageDonation, 0, 'COMMA', 2, 'POINT') : '$0.00'}">$47.50</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="bi bi-cash-stack fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- This Month -->
-        <div class="col-xl-3 col-md-6">
-            <div class="card border-start-warning shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <div class="text-xs fw-bold text-warning text-uppercase mb-1">
-                                This Month
-                            </div>
-                            <div class="h5 mb-0 fw-bold text-gray-800" th:text="${monthlyAmount != null ? '$' + #numbers.formatDecimal(monthlyAmount, 0, 'COMMA', 2, 'POINT') : '$0.00'}">$5,000.00</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="bi bi-calendar-check fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Donations List Card -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3 d-flex align-items-center">
-            <h6 class="m-0 fw-bold text-primary flex-grow-1">Donation Records</h6>
+    <div layout:fragment="content">
+        <!-- Page Heading -->
+        <div class="d-sm-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-gray-800">Donations Management</h2>
             <div>
-                <button class="btn btn-sm btn-outline-secondary me-2" type="button" id="filterToggle">
-                    <i class="bi bi-funnel me-1"></i> Filters
+                <button type="button" class="btn btn-outline-primary me-2" data-bs-toggle="modal"
+                    data-bs-target="#donationStatsModal">
+                    <i class="bi bi-bar-chart-line me-1"></i> Statistics
                 </button>
+                <a href="#" class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#exportModal">
+                    <i class="bi bi-download me-1"></i> Export Data
+                </a>
             </div>
         </div>
-        <div class="card-body">
-            <!-- Filter Panel (Initially Hidden) -->
-            <div class="bg-light p-3 mb-3 rounded" id="filterPanel" style="display: none;">
-                <form id="filterForm">
-                    <div class="row g-3">
-                        <div class="col-md-3">
-                            <label class="form-label small">Program</label>
-                            <select class="form-select form-select-sm filter-select" name="programId">
-                                <option value="">All Programs</option>
-                                <option th:each="program : ${programs}" th:value="${program.id}" th:text="${program.name}">Program</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label small">Payment Method</label>
-                            <select class="form-select form-select-sm filter-select" name="paymentMethod">
-                                <option value="">All Methods</option>
-                                <option th:each="method : ${paymentMethods}" th:value="${method.id}" th:text="${method.name}">Payment Method</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label small">Status</label>
-                            <select class="form-select form-select-sm filter-select" name="status">
-                                <option value="">All Statuses</option>
-                                <option value="Completed">Completed</option>
-                                <option value="Processing">Processing</option>
-                                <option value="Failed">Failed</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label small">Date From</label>
-                            <input type="date" class="form-control form-control-sm" name="dateFrom">
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label small">Date To</label>
-                            <input type="date" class="form-control form-control-sm" name="dateTo">
-                        </div>
-                        <div class="col-md-1 d-flex align-items-end">
-                            <button type="button" class="btn btn-sm btn-primary w-100" id="applyFilters">
-                                <i class="bi bi-search"></i>
-                            </button>
+
+        <!-- Statistics Row -->
+        <div class="row mb-4">
+            <!-- Total Donations -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card border-start-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="text-xs fw-bold text-primary text-uppercase mb-1">
+                                    Total Donations
+                                </div>
+                                <div class="h5 mb-0 fw-bold text-gray-800"
+                                    th:text="${totalAmount != null ? '$' + #numbers.formatDecimal(totalAmount, 0, 'COMMA', 2, 'POINT') : '$0.00'}">
+                                    $10,000.00</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-currency-dollar fa-2x text-gray-300"></i>
+                            </div>
                         </div>
                     </div>
-                    <div class="row mt-2">
-                        <div class="col-12">
-                            <button type="button" class="btn btn-sm btn-light" id="resetFilters">
-                                <i class="bi bi-x-lg me-1"></i> Reset All Filters
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <div class="table-responsive">
-                <table class="table table-bordered" id="donationsTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Donor</th>
-                            <th>Program</th>
-                            <th>Amount</th>
-                            <th>Payment Method</th>
-                            <th class="date-col">Date</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="donation : ${donations}">
-                            <td th:text="${donation.id}">1001</td>
-                            <td>
-                                <div>
-                                    <span th:text="${donation.userEntity?.name}">John Doe</span>
-                                    <div class="small text-muted" th:text="${donation.userEntity?.email}">john@example.com</div>
-                                </div>
-                            </td>
-                            <td th:text="${donation.programEntity?.name}">Children's Education</td>
-                            <td>
-                                <span class="amount-badge" th:text="${'$' + #numbers.formatDecimal(donation.amount, 0, 'COMMA', 2, 'POINT')}">$250.00</span>
-                            </td>
-                            <td th:text="${donation.paymentMethodEntity?.name}">Credit Card</td>
-                            <td th:text="${#dates.format(donation.createdAt, 'dd/MM/yyyy')}">15/03/2025</td>
-                            <td>
-                                <span th:if="${donation.status == true}" class="badge bg-success">Completed</span>
-                                <span th:if="${donation.status == false}" class="badge bg-danger">Failed</span>
-                            </td>
-                            <td class="text-center">
-                                <div class="btn-group btn-group-sm">
-                                    <a th:href="@{/admin/donations/view/{id}(id=${donation.id})}" class="btn btn-outline-info">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <button type="button" class="btn btn-outline-primary" 
-                                            th:onclick="'openReceiptModal(' + ${donation.id} + ')'">
-                                        <i class="bi bi-receipt"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Pagination -->
-            <div class="d-flex justify-content-between align-items-center mt-4" th:if="${totalPages > 0}">
-                <div class="text-muted small">
-                    Showing <span class="fw-bold" th:text="${donations.size()}">10</span> of 
-                    <span class="fw-bold" th:text="${totalItems}">100</span> entries
                 </div>
-                <nav aria-label="Page navigation">
-                    <ul class="pagination pagination-sm mb-0">
-                        <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-                            <a class="page-link" th:href="@{/admin/donations(page=${currentPage - 1}, size=${size})}" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                        <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${i == currentPage} ? 'active'">
-                            <a class="page-link" th:href="@{/admin/donations(page=${i}, size=${size})}" th:text="${i + 1}">1</a>
-                        </li>
-                        <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
-                            <a class="page-link" th:href="@{/admin/donations(page=${currentPage + 1}, size=${size})}" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
+            </div>
+
+            <!-- Total Donors -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card border-start-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="text-xs fw-bold text-success text-uppercase mb-1">
+                                    Total Donors
+                                </div>
+                                <div class="h5 mb-0 fw-bold text-gray-800" th:text="${donorCount}">215</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-people fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Average Donation -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card border-start-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="text-xs fw-bold text-info text-uppercase mb-1">
+                                    Average Donation
+                                </div>
+                                <div class="h5 mb-0 fw-bold text-gray-800"
+                                    th:text="${averageDonation != null ? '$' + #numbers.formatDecimal(averageDonation, 0, 'COMMA', 2, 'POINT') : '$0.00'}">
+                                    $47.50</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-cash-stack fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- This Month -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card border-start-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="text-xs fw-bold text-warning text-uppercase mb-1">
+                                    This Month
+                                </div>
+                                <div class="h5 mb-0 fw-bold text-gray-800"
+                                    th:text="${monthlyAmount != null ? '$' + #numbers.formatDecimal(monthlyAmount, 0, 'COMMA', 2, 'POINT') : '$0.00'}">
+                                    $5,000.00</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-calendar-check fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    
-    <!-- Export Modal -->
-    <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exportModalLabel">Export Donations Data</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+        <!-- Donations List Card -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex align-items-center">
+                <h6 class="m-0 fw-bold text-primary flex-grow-1">Donation Records</h6>
+                <div>
+                    <button class="btn btn-sm btn-outline-secondary me-2" type="button" id="filterToggle">
+                        <i class="bi bi-funnel me-1"></i> Filters
+                    </button>
                 </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label class="form-label">Date Range</label>
-                            <div class="input-group">
-                                <input type="date" class="form-control" name="startDate">
-                                <span class="input-group-text">to</span>
-                                <input type="date" class="form-control" name="endDate">
+            </div>
+            <div class="card-body">
+                <!-- Filter Panel (Initially Hidden) -->
+                <div class="bg-light p-3 mb-3 rounded" id="filterPanel" style="display: none;">
+                    <form id="filterForm">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label small">Program</label>
+                                <select class="form-select form-select-sm filter-select" name="programId">
+                                    <option value="">All Programs</option>
+                                    <option th:each="program : ${programs}" th:value="${program.id}"
+                                        th:text="${program.name}">Program</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label small">Payment Method</label>
+                                <select class="form-select form-select-sm filter-select" name="paymentMethod">
+                                    <option value="">All Methods</option>
+                                    <option th:each="method : ${paymentMethods}" th:value="${method.id}"
+                                        th:text="${method.name}">Payment Method</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label small">Status</label>
+                                <select class="form-select form-select-sm filter-select" name="status">
+                                    <option value="">All Statuses</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Processing">Processing</option>
+                                    <option value="Failed">Failed</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label small">Date From</label>
+                                <input type="date" class="form-control form-control-sm" name="dateFrom">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label small">Date To</label>
+                                <input type="date" class="form-control form-control-sm" name="dateTo">
+                            </div>
+                            <div class="col-md-1 d-flex align-items-end">
+                                <button type="button" class="btn btn-sm btn-primary w-100" id="applyFilters">
+                                    <i class="bi bi-search"></i>
+                                </button>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Export Format</label>
-                            <div class="d-flex gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="exportFormat" id="formatExcel" value="excel" checked>
-                                    <label class="form-check-label" for="formatExcel">Excel (.xlsx)</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="exportFormat" id="formatCsv" value="csv">
-                                    <label class="form-check-label" for="formatCsv">CSV (.csv)</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="exportFormat" id="formatPdf" value="pdf">
-                                    <label class="form-check-label" for="formatPdf">PDF (.pdf)</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Include Fields</label>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="donorInfo" id="fieldDonor" checked>
-                                        <label class="form-check-label" for="fieldDonor">Donor Information</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="programInfo" id="fieldProgram" checked>
-                                        <label class="form-check-label" for="fieldProgram">Program Information</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="paymentInfo" id="fieldPayment" checked>
-                                        <label class="form-check-label" for="fieldPayment">Payment Information</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="notes" id="fieldNotes">
-                                        <label class="form-check-label" for="fieldNotes">Notes</label>
-                                    </div>
-                                </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <button type="button" class="btn btn-sm btn-light" id="resetFilters">
+                                    <i class="bi bi-x-lg me-1"></i> Reset All Filters
+                                </button>
                             </div>
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary">Export</button>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="donationsTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Donor</th>
+                                <th>Program</th>
+                                <th>Amount</th>
+                                <th>Payment Method</th>
+                                <th class="date-col">Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="donation : ${donations}">
+                                <td th:text="${donation.donationId}">1001</td>
+                                <td>
+                                    <div>
+                                        <span th:text="${donation.donorName}">John Doe</span>
+                                        <div class="small text-muted" th:text="${donation.userEmail}">john@example.com
+                                        </div>
+                                    </div>
+                                </td>
+                                <td th:text="${donation.programName}">Children's Education</td>
+                                <td>
+                                    <span class="amount-badge"
+                                        th:text="${'$' + #numbers.formatDecimal(donation.amount, 0, 'COMMA', 2, 'POINT')}">$250.00</span>
+                                </td>
+                                <td th:text="${donation.paymentMethod}">Credit Card</td>
+                                <td th:text="${#temporals.format(donation.donationDate, 'dd/MM/yyyy HH:mm')}">15/03/2025
+                                </td>
+                                <td>
+                                    <span th:if="${donation.status == 'SUCCESS'}"
+                                        class="badge bg-success">Completed</span>
+                                    <span th:if="${donation.status != 'SUCCESS'}" class="badge bg-danger"
+                                        th:text="${donation.status}">Failed</span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm">
+                                        <a th:href="@{/admin/donations/view/{id}(id=${donation.donationId})}"
+                                            class="btn btn-outline-info">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-primary"
+                                            th:onclick="'openReceiptModal(' + ${donation.donationId} + ')'">
+                                            <i class="bi bi-receipt"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="d-flex justify-content-between align-items-center mt-4" th:if="${totalPages > 0}">
+                    <div class="text-muted small">
+                        Showing <span class="fw-bold" th:text="${donations.size()}">10</span> of
+                        <span class="fw-bold" th:text="${totalItems}">100</span> entries
+                    </div>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination pagination-sm mb-0">
+                            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                                <a class="page-link"
+                                    th:href="@{/admin/donations(page=${currentPage - 1}, size=${size})}"
+                                    aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                                th:classappend="${i == currentPage} ? 'active'">
+                                <a class="page-link" th:href="@{/admin/donations(page=${i}, size=${size})}"
+                                    th:text="${i + 1}">1</a>
+                            </li>
+                            <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                                <a class="page-link"
+                                    th:href="@{/admin/donations(page=${currentPage + 1}, size=${size})}"
+                                    aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <!-- Donation Stats Modal -->
-    <div class="modal fade" id="donationStatsModal" tabindex="-1" aria-labelledby="donationStatsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="donationStatsModalLabel">Donation Statistics</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+        <!-- Export Modal -->
+        <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exportModalLabel">Export Donations Data</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label class="form-label">Date Range</label>
+                                <div class="input-group">
+                                    <input type="date" class="form-control" name="startDate">
+                                    <span class="input-group-text">to</span>
+                                    <input type="date" class="form-control" name="endDate">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Export Format</label>
+                                <div class="d-flex gap-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="exportFormat"
+                                            id="formatExcel" value="excel" checked>
+                                        <label class="form-check-label" for="formatExcel">Excel (.xlsx)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="exportFormat" id="formatCsv"
+                                            value="csv">
+                                        <label class="form-check-label" for="formatCsv">CSV (.csv)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="exportFormat" id="formatPdf"
+                                            value="pdf">
+                                        <label class="form-check-label" for="formatPdf">PDF (.pdf)</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Include Fields</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="donorInfo"
+                                                id="fieldDonor" checked>
+                                            <label class="form-check-label" for="fieldDonor">Donor Information</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="programInfo"
+                                                id="fieldProgram" checked>
+                                            <label class="form-check-label" for="fieldProgram">Program
+                                                Information</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="paymentInfo"
+                                                id="fieldPayment" checked>
+                                            <label class="form-check-label" for="fieldPayment">Payment
+                                                Information</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="notes"
+                                                id="fieldNotes">
+                                            <label class="form-check-label" for="fieldNotes">Notes</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary">Export</button>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <ul class="nav nav-tabs" id="statsTabs" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true">Overview</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="programs-tab" data-bs-toggle="tab" data-bs-target="#programs" type="button" role="tab" aria-controls="programs" aria-selected="false">By Program</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="monthly-tab" data-bs-toggle="tab" data-bs-target="#monthly" type="button" role="tab" aria-controls="monthly" aria-selected="false">Monthly</button>
-                        </li>
-                    </ul>
-                    <div class="tab-content py-3" id="statsTabsContent">
-                        <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="card shadow-sm mb-3">
-                                        <div class="card-header py-2 bg-light">
-                                            <h6 class="m-0 fw-bold">Donation Sources</h6>
-                                        </div>
-                                        <div class="card-body">
-                                            <div style="height: 300px;">
-                                                <canvas id="donationSourceChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Donation Stats Modal -->
+        <div class="modal fade" id="donationStatsModal" tabindex="-1" aria-labelledby="donationStatsModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="donationStatsModalLabel">Donation Statistics</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="nav nav-tabs" id="statsTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="overview-tab" data-bs-toggle="tab"
+                                    data-bs-target="#overview" type="button" role="tab" aria-controls="overview"
+                                    aria-selected="true">Overview</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="programs-tab" data-bs-toggle="tab"
+                                    data-bs-target="#programs" type="button" role="tab" aria-controls="programs"
+                                    aria-selected="false">By Program</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="monthly-tab" data-bs-toggle="tab" data-bs-target="#monthly"
+                                    type="button" role="tab" aria-controls="monthly"
+                                    aria-selected="false">Monthly</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content py-3" id="statsTabsContent">
+                            <div class="tab-pane fade show active" id="overview" role="tabpanel"
+                                aria-labelledby="overview-tab">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card shadow-sm mb-3">
+                                            <div class="card-header py-2 bg-light">
+                                                <h6 class="m-0 fw-bold">Donation Sources</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div style="height: 300px;">
+                                                    <canvas id="donationSourceChart"></canvas>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="card shadow-sm mb-3">
-                                        <div class="card-header py-2 bg-light">
-                                            <h6 class="m-0 fw-bold">Donation Amounts</h6>
-                                        </div>
-                                        <div class="card-body">
-                                            <div style="height: 300px;">
-                                                <canvas id="donationAmountChart"></canvas>
+                                    <div class="col-md-6">
+                                        <div class="card shadow-sm mb-3">
+                                            <div class="card-header py-2 bg-light">
+                                                <h6 class="m-0 fw-bold">Donation Amounts</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div style="height: 300px;">
+                                                    <canvas id="donationAmountChart"></canvas>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="tab-pane fade" id="programs" role="tabpanel" aria-labelledby="programs-tab">
-                            <div class="card shadow-sm">
-                                <div class="card-header py-2 bg-light">
-                                    <h6 class="m-0 fw-bold">Donations by Program</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div style="height: 400px;">
-                                        <canvas id="programsChart"></canvas>
+                            <div class="tab-pane fade" id="programs" role="tabpanel" aria-labelledby="programs-tab">
+                                <div class="card shadow-sm">
+                                    <div class="card-header py-2 bg-light">
+                                        <h6 class="m-0 fw-bold">Donations by Program</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div style="height: 400px;">
+                                            <canvas id="programsChart"></canvas>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="tab-pane fade" id="monthly" role="tabpanel" aria-labelledby="monthly-tab">
-                            <div class="card shadow-sm">
-                                <div class="card-header py-2 bg-light">
-                                    <h6 class="m-0 fw-bold">Monthly Donation Trends</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div style="height: 400px;">
-                                        <canvas id="monthlyChart"></canvas>
+                            <div class="tab-pane fade" id="monthly" role="tabpanel" aria-labelledby="monthly-tab">
+                                <div class="card shadow-sm">
+                                    <div class="card-header py-2 bg-light">
+                                        <h6 class="m-0 fw-bold">Monthly Donation Trends</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div style="height: 400px;">
+                                            <canvas id="monthlyChart"></canvas>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Download Report</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Download Report</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Page-specific scripts -->
-<th:block layout:fragment="scripts">
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize DataTable
-            const table = $('#donationsTable').DataTable({
-                paging: false,  // We use our custom pagination
-                searching: true,
-                ordering: true,
-                info: false,
-                order: [[5, 'desc']]  // Sort by date column (descending)
-            });
-            
-            // Toggle Filter Panel
-            document.getElementById('filterToggle')?.addEventListener('click', function() {
-                const filterPanel = document.getElementById('filterPanel');
-                if (filterPanel) {
-                    filterPanel.style.display = filterPanel.style.display === 'none' ? 'block' : 'none';
-                }
-            });
-            
-            // Apply Filters
-            document.getElementById('applyFilters')?.addEventListener('click', function() {
-                // Custom filter implementation here
-                // This would typically be handled by a form submit to the server
-                // For client-side filtering with DataTables:
-                
-                // For demonstration purposes, let's just reload the page with form parameters
-                const form = document.getElementById('filterForm');
-                if (form) {
-                    const formData = new FormData(form);
-                    const params = new URLSearchParams();
-                    
-                    for (const [key, value] of formData.entries()) {
-                        if (value) params.append(key, value);
+    <!-- Page-specific scripts -->
+    <th:block layout:fragment="scripts">
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Initialize DataTable
+                const table = $('#donationsTable').DataTable({
+                    paging: false,  // We use our custom pagination
+                    searching: true,
+                    ordering: true,
+                    info: false,
+                    order: [[5, 'desc']]  // Sort by date column (descending)
+                });
+
+                // Toggle Filter Panel
+                document.getElementById('filterToggle')?.addEventListener('click', function () {
+                    const filterPanel = document.getElementById('filterPanel');
+                    if (filterPanel) {
+                        filterPanel.style.display = filterPanel.style.display === 'none' ? 'block' : 'none';
                     }
-                    
-                    window.location.href = '/admin/donations?' + params.toString();
+                });
+
+                // Apply Filters
+                document.getElementById('applyFilters')?.addEventListener('click', function () {
+                    // Custom filter implementation here
+                    // This would typically be handled by a form submit to the server
+                    // For client-side filtering with DataTables:
+
+                    // For demonstration purposes, let's just reload the page with form parameters
+                    const form = document.getElementById('filterForm');
+                    if (form) {
+                        const formData = new FormData(form);
+                        const params = new URLSearchParams();
+
+                        for (const [key, value] of formData.entries()) {
+                            if (value) params.append(key, value);
+                        }
+
+                        window.location.href = '/admin/donations?' + params.toString();
+                    }
+                });
+
+                // Reset Filters
+                document.getElementById('resetFilters')?.addEventListener('click', function () {
+                    // Reset form fields
+                    const form = document.getElementById('filterForm');
+                    if (form) form.reset();
+
+                    // Redirect to base URL without parameters
+                    window.location.href = '/admin/donations';
+                });
+
+                // Initialize Charts for the Stats Modal
+                if (typeof Chart !== 'undefined') {
+                    // Donation Sources Chart
+                    const sourceCtx = document.getElementById('donationSourceChart')?.getContext('2d');
+                    if (sourceCtx) {
+                        new Chart(sourceCtx, {
+                            type: 'doughnut',
+                            data: {
+                                labels: ['Website', 'Mobile App', 'Social Media', 'Email Campaign', 'Direct'],
+                                datasets: [{
+                                    data: [35, 25, 20, 15, 5],
+                                    backgroundColor: [
+                                        '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b'
+                                    ]
+                                }]
+                            },
+                            options: {
+                                maintainAspectRatio: false,
+                                cutout: '70%',
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom'
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    // Donation Amounts Chart
+                    const amountCtx = document.getElementById('donationAmountChart')?.getContext('2d');
+                    if (amountCtx) {
+                        new Chart(amountCtx, {
+                            type: 'bar',
+                            data: {
+                                labels: ['$0-$25', '$26-$50', '$51-$100', '$101-$250', '$251-$500', '$500+'],
+                                datasets: [{
+                                    label: 'Number of Donations',
+                                    data: [65, 85, 40, 25, 15, 5],
+                                    backgroundColor: '#4e73df'
+                                }]
+                            },
+                            options: {
+                                maintainAspectRatio: false,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    // Programs Chart
+                    const programsCtx = document.getElementById('programsChart')?.getContext('2d');
+                    if (programsCtx) {
+                        new Chart(programsCtx, {
+                            type: 'bar',
+                            data: {
+                                labels: ['Education Fund', 'Clean Water', 'Food Distribution', 'Medical Supplies', 'Community Support'],
+                                datasets: [{
+                                    label: 'Total Donations ($)',
+                                    data: [25000, 18000, 12000, 15000, 10000],
+                                    backgroundColor: '#1cc88a'
+                                }]
+                            },
+                            options: {
+                                maintainAspectRatio: false,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    // Monthly Chart
+                    const monthlyCtx = document.getElementById('monthlyChart')?.getContext('2d');
+                    if (monthlyCtx) {
+                        new Chart(monthlyCtx, {
+                            type: 'line',
+                            data: {
+                                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                                datasets: [{
+                                    label: 'Donations ($)',
+                                    data: [5000, 7000, 6500, 8000, 9500, 10000, 9000, 11000, 12500, 11500, 13000, 15000],
+                                    fill: false,
+                                    borderColor: '#4e73df',
+                                    tension: 0.1
+                                }]
+                            },
+                            options: {
+                                maintainAspectRatio: false,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    }
                 }
             });
-            
-            // Reset Filters
-            document.getElementById('resetFilters')?.addEventListener('click', function() {
-                // Reset form fields
-                const form = document.getElementById('filterForm');
-                if (form) form.reset();
-                
-                // Redirect to base URL without parameters
-                window.location.href = '/admin/donations';
-            });
-            
-            // Initialize Charts for the Stats Modal
-            if (typeof Chart !== 'undefined') {
-                // Donation Sources Chart
-                const sourceCtx = document.getElementById('donationSourceChart')?.getContext('2d');
-                if (sourceCtx) {
-                    new Chart(sourceCtx, {
-                        type: 'doughnut',
-                        data: {
-                            labels: ['Website', 'Mobile App', 'Social Media', 'Email Campaign', 'Direct'],
-                            datasets: [{
-                                data: [35, 25, 20, 15, 5],
-                                backgroundColor: [
-                                    '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b'
-                                ]
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            cutout: '70%',
-                            plugins: {
-                                legend: {
-                                    position: 'bottom'
-                                }
-                            }
-                        }
-                    });
-                }
-                
-                // Donation Amounts Chart
-                const amountCtx = document.getElementById('donationAmountChart')?.getContext('2d');
-                if (amountCtx) {
-                    new Chart(amountCtx, {
-                        type: 'bar',
-                        data: {
-                            labels: ['$0-$25', '$26-$50', '$51-$100', '$101-$250', '$251-$500', '$500+'],
-                            datasets: [{
-                                label: 'Number of Donations',
-                                data: [65, 85, 40, 25, 15, 5],
-                                backgroundColor: '#4e73df'
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
-                        }
-                    });
-                }
-                
-                // Programs Chart
-                const programsCtx = document.getElementById('programsChart')?.getContext('2d');
-                if (programsCtx) {
-                    new Chart(programsCtx, {
-                        type: 'bar',
-                        data: {
-                            labels: ['Education Fund', 'Clean Water', 'Food Distribution', 'Medical Supplies', 'Community Support'],
-                            datasets: [{
-                                label: 'Total Donations ($)',
-                                data: [25000, 18000, 12000, 15000, 10000],
-                                backgroundColor: '#1cc88a'
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
-                        }
-                    });
-                }
-                
-                // Monthly Chart
-                const monthlyCtx = document.getElementById('monthlyChart')?.getContext('2d');
-                if (monthlyCtx) {
-                    new Chart(monthlyCtx, {
-                        type: 'line',
-                        data: {
-                            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                            datasets: [{
-                                label: 'Donations ($)',
-                                data: [5000, 7000, 6500, 8000, 9500, 10000, 9000, 11000, 12500, 11500, 13000, 15000],
-                                fill: false,
-                                borderColor: '#4e73df',
-                                tension: 0.1
-                            }]
-                        },
-                        options: {
-                            maintainAspectRatio: false,
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
-                        }
-                    });
-                }
+
+            // Function to open receipt modal
+            function openReceiptModal(donationId) {
+                // This function would show a modal with donation receipt
+                // For example purposes, let's just alert the ID, but in a real implementation
+                // you would open a modal with the receipt details
+                alert('Opening receipt for donation ID: ' + donationId);
+
+                // In a real implementation, you might use:
+                // const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
+                // receiptModal.show();
             }
-        });
-        
-        // Function to open receipt modal
-        function openReceiptModal(donationId) {
-            // This function would show a modal with donation receipt
-            // For example purposes, let's just alert the ID, but in a real implementation
-            // you would open a modal with the receipt details
-            alert('Opening receipt for donation ID: ' + donationId);
-            
-            // In a real implementation, you might use:
-            // const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
-            // receiptModal.show();
-        }
-    </script>
-</th:block>
+        </script>
+    </th:block>
 </body>
+
 </html>
-
-

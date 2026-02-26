@@ -22,11 +22,26 @@ public class DonorsService implements IDonorsService {
 
     private final DonorsRepository donorsRepository;
     private final DonorsMapper donorsMapper;
+    private final com.example.springdonateweb.Repositories.ProgramsRepository programsRepository;
+    private final com.example.springdonateweb.Repositories.UsersRepository usersRepository;
+
+    private DonorResponseDto enhanceDto(DonorResponseDto dto) {
+        if (dto == null)
+            return null;
+        if (dto.getProgramId() != null) {
+            programsRepository.findById(dto.getProgramId()).ifPresent(p -> dto.setProgramName(p.getName()));
+        }
+        if (dto.getUserId() != null) {
+            usersRepository.findById(dto.getUserId()).ifPresent(u -> dto.setUserName(u.getName()));
+        }
+        return dto;
+    }
 
     @Override
     public List<DonorResponseDto> findAll() {
         return donorsRepository.findAll().stream()
                 .map(donorsMapper::toDto)
+                .map(this::enhanceDto)
                 .collect(Collectors.toList());
     }
 
@@ -34,8 +49,9 @@ public class DonorsService implements IDonorsService {
     public Page<DonorResponseDto> findDonorsByPage(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<DonorsEntity> donorsPage = donorsRepository.findAll(pageable);
-        return donorsPage.map(donorsMapper::toDto);
+        return donorsPage.map(donorsMapper::toDto).map(this::enhanceDto);
     }
+
     @Override
     public DonorResponseDto findById(int id) {
         return donorsRepository.findById(id)

@@ -42,9 +42,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
 
 @Controller
 @RequiredArgsConstructor
@@ -56,6 +56,7 @@ public class ProgramUserController {
     private final CategoriesService categoriesService;
     private final DonationsService donationService;
     private final BlogService blogService;
+
     @GetMapping("/program")
     public String program(Model model) {
         List<ProgramsResponseDto> program = programsService.findByStatusTrue();
@@ -69,6 +70,18 @@ public class ProgramUserController {
     public String showProgramDetail(@PathVariable int id, Model model) {
         ProgramsResponseDto program = programsService.findByProgramIdAndStatusTrue(id);
         model.addAttribute("program", program);
+
+        if (program != null && program.getCategoryId() != null) {
+            List<ProgramsResponseDto> relatedPrograms = programsService
+                    .findByCategory_CategoryId(program.getCategoryId())
+                    .stream()
+                    .filter(p -> p.getProgramId() != id && p.isStatus()) // Exclude current program and ensure it's
+                                                                         // active
+                    .limit(3) // Only show up to 3 related programs
+                    .collect(Collectors.toList());
+            model.addAttribute("relatedPrograms", relatedPrograms);
+        }
+
         return "client/program-detail";
     }
 

@@ -11,4 +11,8 @@ public class DonorResponseDto {
     private Integer userId;
     private Integer donationId;
     private LocalDateTime donationDate;
+
+    // Added fields
+    private String programName;
+    private String userName;
 }

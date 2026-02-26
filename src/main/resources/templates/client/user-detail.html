@@ -353,11 +353,7 @@
                         </div>
                         
                         <div class="profile-img-container">
-                            <!-- Updated condition to use safe navigation and check if property exists -->
-                            <div th:if="${user['avatar'] != null and #strings.length(user['avatar']) > 0}" class="profile-img">
-                                <img th:src="${user['avatar']}" alt="Profile Picture" class="profile-img">
-                            </div>
-                            <div th:unless="${user['avatar'] != null and #strings.length(user['avatar']) > 0}" class="profile-img-placeholder">
+                            <div class="profile-img-placeholder">
                                 <i class="fas fa-user"></i>
                             </div>
                             <div class="edit-profile-img" title="Change profile picture">
@@ -418,8 +414,8 @@
                             <div class="info-item">
                                 <i class="fas fa-calendar-alt"></i>
                                 <div class="info-item-content">
-                                    <div class="info-item-label">Member Since</div>
-                                    <div class="info-item-value" th:text="${#temporals.format(user.createdAt, 'dd MMM yyyy')}">15 Jan 2025</div>
+                                    <div class="info-item-label">Member</div>
+                                    <div class="info-item-value">Active</div>
                                 </div>
                             </div>
                         </div>
@@ -432,16 +428,16 @@
                             
                             <div class="recent-donations">
                                 <!-- If there are donations, display them -->
-                                <div th:if="${not #lists.isEmpty(donations)}" th:each="donation : ${donations}" class="donation-card">
+                                <div th:if="${donations != null and not #lists.isEmpty(donations)}" th:each="donation : ${donations}" class="donation-card">
                                     <div class="donation-info">
-                                        <div class="donation-program" th:text="${donation.program.name}">Educational Support</div>
-                                        <div class="donation-date" th:text="${#temporals.format(donation.createdAt, 'dd MMM yyyy')}">15 Mar 2025</div>
+                                        <div class="donation-program" th:text="'Program #' + ${donation.programId}">Educational Support</div>
+                                        <div class="donation-date" th:text="${donation.donationDate}">15 Mar 2025</div>
                                     </div>
                                     <div class="donation-amount" th:text="${donation.amount} + ' ₫'">1,000,000 ₫</div>
                                 </div>
                                 
                                 <!-- If no donations, show a message -->
-                                <div th:if="${#lists.isEmpty(donations)}" class="text-center py-3">
+                                <div th:if="${donations == null or #lists.isEmpty(donations)}" class="text-center py-3">
                                     <div class="mb-3">
                                         <i class="far fa-heart text-muted" style="font-size: 2.5rem;"></i>
                                     </div>

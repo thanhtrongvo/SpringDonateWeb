@@ -11,15 +11,31 @@ import java.util.Map;
 
 public interface IDonationsService {
     List<DonationResponseDto> findAll();
+
     DonationResponseDto findById(int id);
+
     DonationResponseDto create(DonationCreateDto donationCreateDto);
+
     DonationResponseDto update(int id, DonationUpdateDto donationUpdateDto);
+
     void delete(int id);
+
     Page<DonationResponseDto> findDonationsByPage(int page, int size);
+
     List<DonationResponseDto> findByUserId(int userId);
+
     Map<String, BigDecimal> getTotalDonationsByDay();
+
     List<Map<String, Object>> getTopDonors(int limit);
 
     // Thêm phương thức getTotalDonationsByProgram vào đây
     Map<Integer, BigDecimal> getTotalDonationsByProgram();
+
+    BigDecimal getTotalDonations();
+
+    long countDistinctDonors();
+
+    BigDecimal getAverageDonation();
+
+    BigDecimal getMonthlyDonations();
 }

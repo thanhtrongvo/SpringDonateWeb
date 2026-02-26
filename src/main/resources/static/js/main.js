@@ -127,43 +127,48 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     // Form validation
     const form = document.querySelector('form');
-    form.addEventListener('submit', function(event) {
-        if (!form.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-        form.classList.add('was-validated');
-    });
-});
-document.getElementById('sendOtpBtn').addEventListener('click', function() {
-    const newEmail = document.getElementById('newEmail').value;
-    if (newEmail) {
-        fetch('/send-otp', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({ newEmail: newEmail })
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data); 
-            if (data.success) {
-                document.getElementById('otp').disabled = false;
-                document.getElementById('submitBtn').disabled = false;
-                alert('OTP sent to your new email address.');
-            } else {
-                alert('Failed to send OTP. Please try again.');
+    if (form) {
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred. Please try again.');
+            form.classList.add('was-validated');
         });
-    } else {
-        alert('Please enter a new email address.');
     }
 });
+var sendOtpBtn = document.getElementById('sendOtpBtn');
+if (sendOtpBtn) {
+    sendOtpBtn.addEventListener('click', function() {
+        const newEmail = document.getElementById('newEmail').value;
+        if (newEmail) {
+            fetch('/send-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({ newEmail: newEmail })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data); 
+                if (data.success) {
+                    document.getElementById('otp').disabled = false;
+                    document.getElementById('submitBtn').disabled = false;
+                    alert('OTP sent to your new email address.');
+                } else {
+                    alert('Failed to send OTP. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        } else {
+            alert('Please enter a new email address.');
+        }
+    });
+}
 
 // Show toast 
 document.addEventListener('DOMContentLoaded', function () {

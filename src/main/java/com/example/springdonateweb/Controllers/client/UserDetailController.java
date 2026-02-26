@@ -1,8 +1,10 @@
 package com.example.springdonateweb.Controllers.client;
 
+import com.example.springdonateweb.Models.Dtos.Donations.DonationResponseDto;
 import com.example.springdonateweb.Models.Dtos.Users.ChangeEmailRequestDto;
 import com.example.springdonateweb.Models.Dtos.Users.UserUpdateDto;
 import com.example.springdonateweb.Models.Dtos.Users.UsersResponseDto;
+import com.example.springdonateweb.Services.DonationsService;
 import com.example.springdonateweb.Services.UsersService;
 import com.example.springdonateweb.util.SecurityUtil;
 import jakarta.validation.Valid;
@@ -17,9 +19,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
 
 @Controller
 @RequiredArgsConstructor
@@ -28,21 +31,45 @@ import java.util.Map;
 public class UserDetailController {
 
     private final UsersService usersService;
-
+    private final DonationsService donationsService;
 
     @GetMapping("/user-detail")
     public String userDetail(Model model) {
         String getUser = SecurityUtil.getSessionUser();
         UsersResponseDto user = usersService.findByEmail(getUser);
         model.addAttribute("user", user);
+        // Add donations to model for the recent donations section
+        List<DonationResponseDto> donations = Collections.emptyList();
+        try {
+            donations = donationsService.findByUserId(user.getId());
+        } catch (Exception e) {
+            log.warn("Could not load donations for user: {}", e.getMessage());
+        }
+        model.addAttribute("donations", donations);
         return "client/user-detail";
     }
 
-    @PostMapping("user-detail")
+    @GetMapping("/edit-profile")
+    public String editProfile(Model model) {
+        String getUser = SecurityUtil.getSessionUser();
+        UsersResponseDto user = usersService.findByEmail(getUser);
+
+        UserUpdateDto updateDto = new UserUpdateDto();
+        updateDto.setId(user.getId());
+        updateDto.setName(user.getName());
+        updateDto.setEmail(user.getEmail());
+        updateDto.setAddress(user.getAddress());
+        updateDto.setPhoneNumber(user.getPhoneNumber());
+
+        model.addAttribute("user", updateDto);
+        return "client/edit-profile";
+    }
+
+    @PostMapping("/edit-profile")
     public String updateUser(@Valid @ModelAttribute("user") UserUpdateDto user,
-                             BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+            BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            return "client/user-detail";
+            return "client/edit-profile";
         }
         usersService.update(user);
         redirectAttributes.addFlashAttribute("success", "Update user successfully");
@@ -89,8 +116,7 @@ public class UserDetailController {
     @PostMapping("/change-email")
     public String changeEmail(
             @ModelAttribute("changeEmail") ChangeEmailRequestDto requestDto,
-            RedirectAttributes redirectAttributes
-    ) {
+            RedirectAttributes redirectAttributes) {
         String userId = SecurityUtil.getSessionUser();
         if (userId != null) {
             UsersResponseDto user = usersService.findByEmail(userId);
@@ -110,17 +136,17 @@ public class UserDetailController {
 
     @PostMapping("/change-password")
     public String changePassword(@RequestParam("oldPassword") String oldPassword,
-                                 @RequestParam("newPassword") String newPassword,
-                                 RedirectAttributes redirectAttributes) {
+            @RequestParam("newPassword") String newPassword,
+            RedirectAttributes redirectAttributes) {
         String userId = SecurityUtil.getSessionUser();
         if (userId != null) {
             UsersResponseDto user = usersService.findByEmail(userId);
             int id = user.getId();
             if (usersService.checkPassword(id, oldPassword)) {
-                    usersService.changePassword(id, newPassword);
-                    redirectAttributes.addAttribute("updatePassSuccess", true);
-                    return "redirect:/user-detail";
-                
+                usersService.changePassword(id, newPassword);
+                redirectAttributes.addAttribute("updatePassSuccess", true);
+                return "redirect:/user-detail";
+
             } else {
                 redirectAttributes.addAttribute("invalidOtpOrPass", true);
                 return "redirect:/change-password";

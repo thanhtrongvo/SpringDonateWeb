@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html layout:decorate="~{admin/fragments/_layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
 <head>
   <title>Programs Management</title>
   <!-- DataTables CSS -->
@@ -11,11 +12,11 @@
       object-fit: cover;
       border-radius: 4px;
     }
-    
+
     .progress-sm {
       height: 5px;
     }
-    
+
     .program-description {
       max-width: 300px;
       overflow: hidden;
@@ -24,195 +25,203 @@
     }
   </style>
 </head>
+
 <body>
-<div layout:fragment="content">
-  <!-- Page Heading -->
-  <div class="d-sm-flex justify-content-between align-items-center mb-4">
-    <h2 class="text-gray-800">Programs Management</h2>
-    <a th:href="@{/admin/programs/create}" class="btn btn-primary shadow-sm">
-      <i class="bi bi-plus-circle me-1"></i> Create New Program
-    </a>
-  </div>
+  <div layout:fragment="content">
+    <!-- Page Heading -->
+    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+      <h2 class="text-gray-800">Programs Management</h2>
+      <a th:href="@{/admin/programs/create}" class="btn btn-primary shadow-sm">
+        <i class="bi bi-plus-circle me-1"></i> Create New Program
+      </a>
+    </div>
 
-  <!-- Programs List Card -->
-  <div class="card shadow mb-4">
-    <div class="card-header py-3 d-flex align-items-center">
-      <h6 class="m-0 fw-bold text-primary flex-grow-1">All Programs</h6>
-      <div>
-        <button class="btn btn-sm btn-outline-secondary me-2" type="button" id="filterToggle">
-          <i class="bi bi-funnel me-1"></i> Filters
-        </button>
-        <div class="btn-group">
-          <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-download me-1"></i> Export
+    <!-- Programs List Card -->
+    <div class="card shadow mb-4">
+      <div class="card-header py-3 d-flex align-items-center">
+        <h6 class="m-0 fw-bold text-primary flex-grow-1">All Programs</h6>
+        <div>
+          <button class="btn btn-sm btn-outline-secondary me-2" type="button" id="filterToggle">
+            <i class="bi bi-funnel me-1"></i> Filters
           </button>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-excel me-2"></i>Excel</a></li>
-            <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-pdf me-2"></i>PDF</a></li>
-            <li><a class="dropdown-item" href="#"><i class="bi bi-printer me-2"></i>Print</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="card-body">
-      <!-- Filter Panel (Initially Hidden) -->
-      <div class="bg-light p-3 mb-3 rounded" id="filterPanel" style="display: none;">
-        <div class="row g-3">
-          <div class="col-md-3">
-            <label class="form-label small">Category</label>
-            <select class="form-select form-select-sm filter-select" data-column="3">
-              <option value="">All Categories</option>
-              <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}">Category</option>
-            </select>
-          </div>
-          <div class="col-md-3">
-            <label class="form-label small">Status</label>
-            <select class="form-select form-select-sm filter-select" data-column="5">
-              <option value="">All Statuses</option>
-              <option value="Active">Active</option>
-              <option value="Completed">Completed</option>
-              <option value="Pending">Pending</option>
-            </select>
-          </div>
-          <div class="col-md-6 d-flex align-items-end">
-            <button class="btn btn-sm btn-primary me-2" id="applyFilters">
-              <i class="bi bi-check-lg me-1"></i> Apply
+          <div class="btn-group">
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <i class="bi bi-download me-1"></i> Export
             </button>
-            <button class="btn btn-sm btn-light" id="resetFilters">
-              <i class="bi bi-x-lg me-1"></i> Reset
-            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-excel me-2"></i>Excel</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-pdf me-2"></i>PDF</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-printer me-2"></i>Print</a></li>
+            </ul>
           </div>
         </div>
       </div>
+      <div class="card-body">
+        <!-- Filter Panel (Initially Hidden) -->
+        <div class="bg-light p-3 mb-3 rounded" id="filterPanel" style="display: none;">
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label class="form-label small">Category</label>
+              <select class="form-select form-select-sm filter-select" data-column="3">
+                <option value="">All Categories</option>
+                <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}">
+                  Category</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label small">Status</label>
+              <select class="form-select form-select-sm filter-select" data-column="5">
+                <option value="">All Statuses</option>
+                <option value="Active">Active</option>
+                <option value="Completed">Completed</option>
+                <option value="Pending">Pending</option>
+              </select>
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+              <button class="btn btn-sm btn-primary me-2" id="applyFilters">
+                <i class="bi bi-check-lg me-1"></i> Apply
+              </button>
+              <button class="btn btn-sm btn-light" id="resetFilters">
+                <i class="bi bi-x-lg me-1"></i> Reset
+              </button>
+            </div>
+          </div>
+        </div>
 
-      <div class="table-responsive">
-        <table class="table table-bordered" id="programsTable" width="100%" cellspacing="0">
-          <thead>
-            <tr>
-              <th width="70">Image</th>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Category</th>
-              <th>Progress</th>
-              <th>Status</th>
-              <th width="120">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr th:each="program : ${programs}">
-              <td class="text-center">
-                <img th:src="@{'/img/' + ${program.imgUrl}}" alt="Program Image" class="program-image" 
-                   onerror="this.src='/img/default-program.jpg'"/>
-              </td>
-              <td th:text="${program.name}">Program Name</td>
-              <td>
-                <span class="program-description" th:text="${program.description}">Program Description</span>
-              </td>
-              <td th:text="${program.categoryEntity?.name}">Category</td>
-              <td>
-                <div class="d-flex align-items-center">
-                  <div class="flex-grow-1 me-2">
-                    <div class="progress progress-sm">
-                      <div class="progress-bar" role="progressbar" th:style="'width:' + ${program.progress} + '%'" 
-                          th:aria-valuenow="${program.progress}" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="table-responsive">
+          <table class="table table-bordered" id="programsTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th width="70">Image</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Progress</th>
+                <th>Status</th>
+                <th width="120">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="program : ${programs}">
+                <td class="text-center">
+                  <img th:src="@{${program.image}}" alt="Program Image" class="program-image"
+                    onerror="this.src='/img/default-program.jpg'" />
+                </td>
+                <td th:text="${program.name}">Program Name</td>
+                <td>
+                  <span class="program-description" th:text="${program.description}">Program Description</span>
+                </td>
+                <td th:text="${program.category}">Category</td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 me-2">
+                      <div class="progress progress-sm">
+                        <div class="progress-bar" role="progressbar"
+                          th:style="'width:' + ${program.percentageAchieved} + '%'"
+                          th:aria-valuenow="${program.percentageAchieved}" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
                     </div>
+                    <span class="small" th:text="${program.percentageAchieved + '%'}">60%</span>
                   </div>
-                  <span class="small" th:text="${program.progress + '%'}">60%</span>
-                </div>
-              </td>
-              <td>
-                <span th:if="${program.status == true}" class="badge bg-success">Active</span>
-                <span th:if="${program.status == false}" class="badge bg-danger">Inactive</span>
-              </td>
-              <td class="text-center">
-                <div class="btn-group btn-group-sm">
-                  <a th:href="@{/admin/programs/edit/{id}(id=${program.id})}" class="btn btn-outline-primary">
-                    <i class="bi bi-pencil"></i>
-                  </a>
-                  <a th:href="@{/admin/programs/view/{id}(id=${program.id})}" class="btn btn-outline-info">
-                    <i class="bi bi-eye"></i>
-                  </a>
-                  <a th:href="@{/admin/programs/delete/{id}(id=${program.id})}" class="btn btn-outline-danger"
-                    onclick="return confirm('Are you sure you want to delete this program?');">
-                    <i class="bi bi-trash"></i>
-                  </a>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Pagination -->
-      <div class="d-flex justify-content-between align-items-center mt-4" th:if="${totalPages > 0}">
-        <div class="text-muted small">
-          Showing <span class="fw-bold" th:text="${programs.size()}">10</span> of 
-          <span class="fw-bold" th:text="${totalItems}">100</span> entries
+                </td>
+                <td>
+                  <span th:if="${program.status == true}" class="badge bg-success">Active</span>
+                  <span th:if="${program.status == false}" class="badge bg-danger">Inactive</span>
+                </td>
+                <td class="text-center">
+                  <div class="btn-group btn-group-sm">
+                    <a th:href="@{/admin/programs/edit/{id}(id=${program.programId})}" class="btn btn-outline-primary">
+                      <i class="bi bi-pencil"></i>
+                    </a>
+                    <a th:href="@{/program/{id}(id=${program.programId})}" class="btn btn-outline-info">
+                      <i class="bi bi-eye"></i>
+                    </a>
+                    <a th:href="@{/admin/programs/delete/{id}(id=${program.programId})}" class="btn btn-outline-danger"
+                      onclick="return confirm('Are you sure you want to delete this program?');">
+                      <i class="bi bi-trash"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <nav aria-label="Page navigation">
-          <ul class="pagination pagination-sm mb-0">
-            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-              <a class="page-link" th:href="@{/admin/programs(page=${currentPage - 1}, size=${size})}" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-              </a>
-            </li>
-            <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${i == currentPage} ? 'active'">
-              <a class="page-link" th:href="@{/admin/programs(page=${i}, size=${size})}" th:text="${i + 1}">1</a>
-            </li>
-            <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
-              <a class="page-link" th:href="@{/admin/programs(page=${currentPage + 1}, size=${size})}" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
+
+        <!-- Pagination -->
+        <div class="d-flex justify-content-between align-items-center mt-4" th:if="${totalPages > 0}">
+          <div class="text-muted small">
+            Showing <span class="fw-bold" th:text="${programs.size()}">10</span> of
+            <span class="fw-bold" th:text="${totalItems}">100</span> entries
+          </div>
+          <nav aria-label="Page navigation">
+            <ul class="pagination pagination-sm mb-0">
+              <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                <a class="page-link" th:href="@{/admin/programs(page=${currentPage - 1}, size=${size})}"
+                  aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                th:classappend="${i == currentPage} ? 'active'">
+                <a class="page-link" th:href="@{/admin/programs(page=${i}, size=${size})}" th:text="${i + 1}">1</a>
+              </li>
+              <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                <a class="page-link" th:href="@{/admin/programs(page=${currentPage + 1}, size=${size})}"
+                  aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Page-specific scripts -->
-<th:block layout:fragment="scripts">
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Initialize DataTable
-      const table = $('#programsTable').DataTable({
-        paging: false,  // We use our custom pagination
-        searching: true,
-        ordering: true,
-        info: false
-      });
-      
-      // Toggle Filter Panel
-      document.getElementById('filterToggle').addEventListener('click', function() {
-        const filterPanel = document.getElementById('filterPanel');
-        if (filterPanel.style.display === 'none') {
-          filterPanel.style.display = 'block';
-        } else {
-          filterPanel.style.display = 'none';
-        }
-      });
-      
-      // Apply Filters
-      document.getElementById('applyFilters').addEventListener('click', function() {
-        document.querySelectorAll('.filter-select').forEach(select => {
-          const columnIndex = select.getAttribute('data-column');
-          const value = select.value;
-          if (value) {
-            table.column(columnIndex).search(value).draw();
+  <!-- Page-specific scripts -->
+  <th:block layout:fragment="scripts">
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // Initialize DataTable
+        const table = $('#programsTable').DataTable({
+          paging: false,  // We use our custom pagination
+          searching: true,
+          ordering: true,
+          info: false
+        });
+
+        // Toggle Filter Panel
+        document.getElementById('filterToggle').addEventListener('click', function () {
+          const filterPanel = document.getElementById('filterPanel');
+          if (filterPanel.style.display === 'none') {
+            filterPanel.style.display = 'block';
+          } else {
+            filterPanel.style.display = 'none';
           }
         });
-      });
-      
-      // Reset Filters
-      document.getElementById('resetFilters').addEventListener('click', function() {
-        document.querySelectorAll('.filter-select').forEach(select => {
-          select.value = '';
+
+        // Apply Filters
+        document.getElementById('applyFilters').addEventListener('click', function () {
+          document.querySelectorAll('.filter-select').forEach(select => {
+            const columnIndex = select.getAttribute('data-column');
+            const value = select.value;
+            if (value) {
+              table.column(columnIndex).search(value).draw();
+            }
+          });
         });
-        table.search('').columns().search('').draw();
+
+        // Reset Filters
+        document.getElementById('resetFilters').addEventListener('click', function () {
+          document.querySelectorAll('.filter-select').forEach(select => {
+            select.value = '';
+          });
+          table.search('').columns().search('').draw();
+        });
       });
-    });
-  </script>
-</th:block>
+    </script>
+  </th:block>
 </body>
+
 </html>

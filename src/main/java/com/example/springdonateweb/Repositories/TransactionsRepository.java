@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TransactionsRepository extends JpaRepository<TransactionsEntity, Integer> {
     Page<TransactionsEntity> findAll(Pageable pageable);
+
+    java.util.Optional<TransactionsEntity> findByDonationId(Integer donationId);
 }
