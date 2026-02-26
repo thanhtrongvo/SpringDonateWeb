@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/user")
@@ -22,11 +23,19 @@ public class UsersController {
     public String index(
             Model model,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Page<UsersResponseDto> userPage = usersService.findUsersByPage(page, size);
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortField,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            @RequestParam(defaultValue = "") String keyword) {
+        Page<UsersResponseDto> userPage = usersService.findUsersByPage(page, size, sortField, sortDir, keyword);
         model.addAttribute("list", userPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", userPage.getTotalPages());
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("size", size);
         return "user/index"; // Đường dẫn tới view index.html
     }
 
@@ -37,7 +46,8 @@ public class UsersController {
     }
 
     @PostMapping("/create")
-    public String createUser(@Valid @ModelAttribute("user") UserAddDto userAddDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String createUser(@Valid @ModelAttribute("user") UserAddDto userAddDto, BindingResult bindingResult,
+            RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "user/create";
         }
@@ -78,7 +88,6 @@ public class UsersController {
         redirectAttributes.addFlashAttribute("success", "User updated successfully");
         return "redirect:/admin/user"; // Quay lại danh sách người dùng
     }
-
 
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable int id, RedirectAttributes redirectAttributes) {

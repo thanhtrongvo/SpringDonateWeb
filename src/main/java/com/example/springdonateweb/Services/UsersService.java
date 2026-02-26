@@ -146,9 +146,15 @@ public class UsersService implements IUsersService {
     }
 
     @Override
-    public Page<UsersResponseDto> findUsersByPage(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<UsersEntity> userPage = usersRepository.findAll(pageable);
+    public Page<UsersResponseDto> findUsersByPage(int page, int size, String sortField, String sortDir,
+            String keyword) {
+        org.springframework.data.domain.Sort sort = sortDir
+                .equalsIgnoreCase(org.springframework.data.domain.Sort.Direction.ASC.name())
+                        ? org.springframework.data.domain.Sort.by(sortField).ascending()
+                        : org.springframework.data.domain.Sort.by(sortField).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<UsersEntity> userPage = usersRepository.searchUsers(keyword, pageable);
         return userPage.map(usersMapper::toResponseDto);
     }
 

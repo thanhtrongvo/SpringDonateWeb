@@ -94,6 +94,11 @@ public class DonationsService implements IDonationsService {
     }
 
     @Override
+    public List<Map<String, Object>> getTotalDonationsByPaymentMethod() {
+        return donationsRepository.getTotalDonationsByPaymentMethod();
+    }
+
+    @Override
     public List<DonationResponseDto> findAll() {
         return donationsRepository.findAll().stream()
                 .map(donationsMapper::toDto)
@@ -128,9 +133,14 @@ public class DonationsService implements IDonationsService {
     }
 
     @Override
-    public Page<DonationResponseDto> findDonationsByPage(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<DonationsEntity> donationPage = donationsRepository.findAll(pageable);
+    public Page<DonationResponseDto> findDonationsByPage(int page, int size, String sortField, String sortDir,
+            String keyword) {
+        org.springframework.data.domain.Sort sort = sortDir.equalsIgnoreCase("asc")
+                ? org.springframework.data.domain.Sort.by(sortField).ascending()
+                : org.springframework.data.domain.Sort.by(sortField).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<DonationsEntity> donationPage = donationsRepository.searchDonations(keyword, pageable);
         return donationPage.map(donationsMapper::toDto).map(this::enhanceDto);
     }
 

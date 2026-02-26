@@ -13,26 +13,39 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DonationsRepository extends JpaRepository<DonationsEntity, Integer> {
-    // Các phương thức tìm kiếm bổ sung nếu cần
-    Page<DonationsEntity> findAll(Pageable pageable);
+        // Các phương thức tìm kiếm bổ sung nếu cần
+        Page<DonationsEntity> findAll(Pageable pageable);
 
-    List<DonationsEntity> findByUserId(int userId);
+        @Query("SELECT d FROM DonationsEntity d WHERE (:keyword IS NULL OR :keyword = '' OR " +
+                        "LOWER(d.donorName) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+        Page<DonationsEntity> searchDonations(
+                        @org.springframework.data.repository.query.Param("keyword") String keyword,
+                        Pageable pageable);
 
-    @Query("SELECT d.donorName AS donorName, SUM(d.amount) AS totalAmount " +
-            "FROM DonationsEntity d " +
-            "GROUP BY d.donorName " +
-            "ORDER BY totalAmount DESC")
-    List<Map<String, Object>> findTopDonors(Pageable pageable);
+        List<DonationsEntity> findByUserId(int userId);
 
-    @Query("SELECT SUM(d.amount) FROM DonationsEntity d")
-    java.math.BigDecimal getTotalDonations();
+        @Query("SELECT d.donorName AS donorName, SUM(d.amount) AS totalAmount " +
+                        "FROM DonationsEntity d " +
+                        "GROUP BY d.donorName " +
+                        "ORDER BY totalAmount DESC")
+        List<Map<String, Object>> findTopDonors(Pageable pageable);
 
-    @Query("SELECT COUNT(DISTINCT d.userId) FROM DonationsEntity d")
-    long countDistinctDonors();
+        @Query("SELECT pm.methodName AS paymentMethod, SUM(d.amount) AS totalAmount " +
+                        "FROM DonationsEntity d, TransactionsEntity t, PaymentmethodsEntity pm " +
+                        "WHERE d.donationId = t.donationId AND t.paymentMethodId = pm.paymentMethodId " +
+                        "GROUP BY pm.methodName " +
+                        "ORDER BY totalAmount DESC")
+        List<Map<String, Object>> getTotalDonationsByPaymentMethod();
 
-    @Query("SELECT COUNT(d.donationId) FROM DonationsEntity d")
-    long countTotalDonations();
+        @Query("SELECT SUM(d.amount) FROM DonationsEntity d")
+        java.math.BigDecimal getTotalDonations();
 
-    @Query("SELECT SUM(d.amount) FROM DonationsEntity d WHERE MONTH(d.donationDate) = MONTH(CURRENT_DATE) AND YEAR(d.donationDate) = YEAR(CURRENT_DATE)")
-    java.math.BigDecimal getMonthlyDonations();
+        @Query("SELECT COUNT(DISTINCT d.userId) FROM DonationsEntity d")
+        long countDistinctDonors();
+
+        @Query("SELECT COUNT(d.donationId) FROM DonationsEntity d")
+        long countTotalDonations();
+
+        @Query("SELECT SUM(d.amount) FROM DonationsEntity d WHERE MONTH(d.donationDate) = MONTH(CURRENT_DATE) AND YEAR(d.donationDate) = YEAR(CURRENT_DATE)")
+        java.math.BigDecimal getMonthlyDonations();
 }

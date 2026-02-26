@@ -122,6 +122,16 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex align-items-center">
                 <h6 class="m-0 fw-bold text-primary flex-grow-1">Donation Records</h6>
+                <form th:action="@{/admin/donations}" method="get" class="d-flex me-3">
+                    <input type="hidden" name="sortField" th:value="${sortField}">
+                    <input type="hidden" name="sortDir" th:value="${sortDir}">
+                    <input type="hidden" name="size" th:value="${size}">
+                    <input type="text" name="keyword" th:value="${keyword}" class="form-control form-control-sm me-2"
+                        placeholder="Search donor name...">
+                    <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-search"></i></button>
+                    <a th:href="@{/admin/donations}" class="btn btn-secondary btn-sm ms-1"><i
+                            class="bi bi-x-circle"></i></a>
+                </form>
                 <div>
                     <button class="btn btn-sm btn-outline-secondary me-2" type="button" id="filterToggle">
                         <i class="bi bi-funnel me-1"></i> Filters
@@ -186,12 +196,52 @@
                     <table class="table table-bordered" id="donationsTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Donor</th>
-                                <th>Program</th>
-                                <th>Amount</th>
+                                <th>
+                                    <a class="text-dark text-decoration-none"
+                                        th:href="@{'/admin/donations?page=' + ${currentPage} + '&size=' + ${size} + '&sortField=donationId&sortDir=' + ${reverseSortDir} + '&keyword=' + ${keyword}}">
+                                        ID <i th:if="${sortField == 'donationId'}"
+                                            th:class="${sortDir == 'asc' ? 'bi bi-sort-up' : 'bi bi-sort-down'}"></i>
+                                        <i th:unless="${sortField == 'donationId'}"
+                                            class="bi bi-filter text-muted opacity-50"></i>
+                                    </a>
+                                </th>
+                                <th>
+                                    <a class="text-dark text-decoration-none"
+                                        th:href="@{'/admin/donations?page=' + ${currentPage} + '&size=' + ${size} + '&sortField=donorName&sortDir=' + ${reverseSortDir} + '&keyword=' + ${keyword}}">
+                                        Donor <i th:if="${sortField == 'donorName'}"
+                                            th:class="${sortDir == 'asc' ? 'bi bi-sort-up' : 'bi bi-sort-down'}"></i>
+                                        <i th:unless="${sortField == 'donorName'}"
+                                            class="bi bi-filter text-muted opacity-50"></i>
+                                    </a>
+                                </th>
+                                <th>
+                                    <a class="text-dark text-decoration-none"
+                                        th:href="@{'/admin/donations?page=' + ${currentPage} + '&size=' + ${size} + '&sortField=programId&sortDir=' + ${reverseSortDir} + '&keyword=' + ${keyword}}">
+                                        Program <i th:if="${sortField == 'programId'}"
+                                            th:class="${sortDir == 'asc' ? 'bi bi-sort-up' : 'bi bi-sort-down'}"></i>
+                                        <i th:unless="${sortField == 'programId'}"
+                                            class="bi bi-filter text-muted opacity-50"></i>
+                                    </a>
+                                </th>
+                                <th>
+                                    <a class="text-dark text-decoration-none"
+                                        th:href="@{'/admin/donations?page=' + ${currentPage} + '&size=' + ${size} + '&sortField=amount&sortDir=' + ${reverseSortDir} + '&keyword=' + ${keyword}}">
+                                        Amount <i th:if="${sortField == 'amount'}"
+                                            th:class="${sortDir == 'asc' ? 'bi bi-sort-up' : 'bi bi-sort-down'}"></i>
+                                        <i th:unless="${sortField == 'amount'}"
+                                            class="bi bi-filter text-muted opacity-50"></i>
+                                    </a>
+                                </th>
                                 <th>Payment Method</th>
-                                <th class="date-col">Date</th>
+                                <th>
+                                    <a class="text-dark text-decoration-none"
+                                        th:href="@{'/admin/donations?page=' + ${currentPage} + '&size=' + ${size} + '&sortField=donationDate&sortDir=' + ${reverseSortDir} + '&keyword=' + ${keyword}}">
+                                        Date <i th:if="${sortField == 'donationDate'}"
+                                            th:class="${sortDir == 'asc' ? 'bi bi-sort-up' : 'bi bi-sort-down'}"></i>
+                                        <i th:unless="${sortField == 'donationDate'}"
+                                            class="bi bi-filter text-muted opacity-50"></i>
+                                    </a>
+                                </th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -222,7 +272,7 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group btn-group-sm">
-                                        <a th:href="@{/admin/donations/view/{id}(id=${donation.donationId})}"
+                                        <a th:href="@{/program/{id}(id=${donation.programId})}"
                                             class="btn btn-outline-info">
                                             <i class="bi bi-eye"></i>
                                         </a>
@@ -247,19 +297,20 @@
                         <ul class="pagination pagination-sm mb-0">
                             <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
                                 <a class="page-link"
-                                    th:href="@{/admin/donations(page=${currentPage - 1}, size=${size})}"
+                                    th:href="@{/admin/donations(page=${currentPage - 1}, size=${size}, sortField=${sortField}, sortDir=${sortDir}, keyword=${keyword})}"
                                     aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             </li>
                             <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
                                 th:classappend="${i == currentPage} ? 'active'">
-                                <a class="page-link" th:href="@{/admin/donations(page=${i}, size=${size})}"
+                                <a class="page-link"
+                                    th:href="@{/admin/donations(page=${i}, size=${size}, sortField=${sortField}, sortDir=${sortDir}, keyword=${keyword})}"
                                     th:text="${i + 1}">1</a>
                             </li>
-                            <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                            <li class="page-item" th:classappend="${currentPage >= totalPages - 1} ? 'disabled'">
                                 <a class="page-link"
-                                    th:href="@{/admin/donations(page=${currentPage + 1}, size=${size})}"
+                                    th:href="@{/admin/donations(page=${currentPage + 1}, size=${size}, sortField=${sortField}, sortDir=${sortDir}, keyword=${keyword})}"
                                     aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
@@ -446,6 +497,7 @@
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 // Initialize DataTable
+                /*
                 const table = $('#donationsTable').DataTable({
                     paging: false,  // We use our custom pagination
                     searching: true,
@@ -453,6 +505,7 @@
                     info: false,
                     order: [[5, 'desc']]  // Sort by date column (descending)
                 });
+                */
 
                 // Toggle Filter Panel
                 document.getElementById('filterToggle')?.addEventListener('click', function () {

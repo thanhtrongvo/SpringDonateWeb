@@ -25,11 +25,22 @@ public class DonationsController {
     public String index(
             Model model,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Page<DonationResponseDto> donationPage = donationsService.findDonationsByPage(page, size);
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "donationId") String sortField,
+            @RequestParam(defaultValue = "desc") String sortDir,
+            @RequestParam(defaultValue = "") String keyword) {
+        Page<DonationResponseDto> donationPage = donationsService.findDonationsByPage(page, size, sortField, sortDir,
+                keyword);
         model.addAttribute("donations", donationPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", donationPage.getTotalPages());
+        model.addAttribute("totalItems", donationPage.getTotalElements());
+
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("size", size);
 
         model.addAttribute("totalAmount", donationsService.getTotalDonations());
         model.addAttribute("donorCount", donationsService.countDistinctDonors());
@@ -49,6 +60,12 @@ public class DonationsController {
     @ResponseBody
     public Map<String, BigDecimal> getTotalDonationsByDay() {
         return donationsService.getTotalDonationsByDay();
+    }
+
+    @GetMapping("/payment-methods")
+    @ResponseBody
+    public List<Map<String, Object>> getTotalDonationsByPaymentMethod() {
+        return donationsService.getTotalDonationsByPaymentMethod();
     }
 
     @GetMapping("/total-donations-by-program")

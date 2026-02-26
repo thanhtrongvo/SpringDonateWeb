@@ -20,7 +20,7 @@ public interface IDonationsService {
 
     void delete(int id);
 
-    Page<DonationResponseDto> findDonationsByPage(int page, int size);
+    Page<DonationResponseDto> findDonationsByPage(int page, int size, String sortField, String sortDir, String keyword);
 
     List<DonationResponseDto> findByUserId(int userId);
 
@@ -30,6 +30,8 @@ public interface IDonationsService {
 
     // Thêm phương thức getTotalDonationsByProgram vào đây
     Map<Integer, BigDecimal> getTotalDonationsByProgram();
+
+    List<Map<String, Object>> getTotalDonationsByPaymentMethod();
 
     BigDecimal getTotalDonations();
 
