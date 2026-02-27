@@ -47,7 +47,7 @@ Hỗ trợ thanh toán nhanh chóng, an toàn thông qua cổng VNPAY Sandbox tr
 ### 4. Bảng điều khiển Quản trị (Admin Dashboard)
 Thống kê toàn bộ dữ liệu hệ thống bằng con số và các dạng biểu đồ chuyên nghiệp (Pie Chart, Doughnut Chart, Bar Chart, Line Chart).
 
-![Admin Dashboard Analytics](docs/images/admin_dashboard.webp)
+![Admin Dashboard Analytics](docs/images/admin_dashboard_v4.webp)
 
 ### 5. Quản lý Chiến dịch dành cho Admin (Programs Management)
 Quản trị viên có thể theo dõi danh sách, thay đổi trạng thái và xem tiến độ trực tiếp với giao diện lưới (Data Table) tiện lợi.
