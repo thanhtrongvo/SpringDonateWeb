@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 import java.nio.file.OpenOption;
 import java.security.Principal;
 import java.util.List;
@@ -42,37 +41,34 @@ public class HomeController {
     private final DonationsService donationService;
     private final BlogService blogService;
 
-
     IUsersService usersService;
 
     @GetMapping("/")
     public String index(Model model, @RequestParam(value = "filter", required = false) String filter) {
-        String userId = SecurityUtil.getSessionUser(); 
-
+        String userId = SecurityUtil.getSessionUser();
 
         if (userId != null) {
-            UsersResponseDto user = usersService.findByEmail(userId); 
+            UsersResponseDto user = usersService.findByEmail(userId);
             List<ProgramsResponseDto> program = programsService.findByStatusTrue();
             if (user != null) {
-               
-                if (user.getRoleId() == 1) {  
-                    return "redirect:/admin/user"; 
+
+                if (user.getRoleId() == 1) {
+                    return "redirect:/admin/user";
                 }
 
                 model.addAttribute("program", program);
                 model.addAttribute("userEmail", user.getEmail());
 
-                return "index"; 
+                return "index";
             } else {
                 return "redirect:/login"; // Redirect to login if user not found
             }
         } else {
-            return "index"; 
+            return "index";
         }
     }
-    
 
-   @GetMapping("/my-donations")
+    @GetMapping("/my-donations")
     public String getMyDonations(Model model, Principal principal) {
         String getUser = SecurityUtil.getSessionUser();
         UsersResponseDto user = usersService.findByEmail(getUser);
@@ -80,7 +76,5 @@ public class HomeController {
         model.addAttribute("donations", donations);
         return "client/my-donation";
     }
-    
-
 
 }

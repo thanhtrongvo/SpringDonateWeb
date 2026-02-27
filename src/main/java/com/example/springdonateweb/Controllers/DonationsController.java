@@ -70,8 +70,14 @@ public class DonationsController {
 
     @GetMapping("/total-donations-by-program")
     @ResponseBody
-    public Map<Integer, BigDecimal> getTotalDonationsByProgram() {
+    public List<Map<String, Object>> getTotalDonationsByProgram() {
         return donationsService.getTotalDonationsByProgram();
+    }
+
+    @GetMapping("/total-donations-by-category")
+    @ResponseBody
+    public List<Map<String, Object>> getTotalDonationsByCategory() {
+        return donationsService.getTotalDonationsByCategory();
     }
 
     @GetMapping("/create")

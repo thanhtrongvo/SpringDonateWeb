@@ -121,4 +121,9 @@ public class ProgramsService implements IProgramsService {
                 .map(programsMapper::toDto)
                 .orElse(null);
     }
+
+    @Override
+    public List<java.util.Map<String, Object>> getProgramProgress() {
+        return programsRepository.getProgramProgress();
+    }
 }

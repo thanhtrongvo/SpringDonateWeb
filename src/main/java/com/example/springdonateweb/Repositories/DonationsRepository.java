@@ -48,4 +48,18 @@ public interface DonationsRepository extends JpaRepository<DonationsEntity, Inte
 
         @Query("SELECT SUM(d.amount) FROM DonationsEntity d WHERE MONTH(d.donationDate) = MONTH(CURRENT_DATE) AND YEAR(d.donationDate) = YEAR(CURRENT_DATE)")
         java.math.BigDecimal getMonthlyDonations();
+
+        @Query("SELECT p.name AS programName, SUM(d.amount) AS totalAmount " +
+                        "FROM DonationsEntity d, ProgramsEntity p " +
+                        "WHERE d.programId = p.programId " +
+                        "GROUP BY p.name " +
+                        "ORDER BY totalAmount DESC")
+        List<Map<String, Object>> getTotalDonationsByProgram();
+
+        @Query("SELECT p.category.name AS categoryName, SUM(d.amount) AS totalAmount " +
+                        "FROM DonationsEntity d, ProgramsEntity p " +
+                        "WHERE d.programId = p.programId " +
+                        "GROUP BY p.category.name " +
+                        "ORDER BY totalAmount DESC")
+        List<Map<String, Object>> getTotalDonationsByCategory();
 }

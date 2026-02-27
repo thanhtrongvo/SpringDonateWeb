@@ -44,4 +44,16 @@ public class ChartController {
 
         return "admin/Chart/index";
     }
+
+    @GetMapping("/chart/user-growth")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public java.util.List<java.util.Map<String, Object>> getUserGrowth() {
+        return usersService.getNewUsersByDay();
+    }
+
+    @GetMapping("/chart/program-progress")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public java.util.List<java.util.Map<String, Object>> getProgramProgress() {
+        return programsService.getProgramProgress();
+    }
 }

@@ -280,4 +280,9 @@ public class UsersService implements IUsersService {
         }
     }
 
+    @Override
+    public List<java.util.Map<String, Object>> getNewUsersByDay() {
+        return usersRepository.getNewUsersByDay();
+    }
+
 }

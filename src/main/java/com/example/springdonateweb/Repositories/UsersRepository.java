@@ -12,22 +12,29 @@ import java.util.Optional;
 
 @Repository
 public interface UsersRepository extends JpaRepository<UsersEntity, Integer> {
-    Optional<UsersEntity> findByEmail(String email);
+        Optional<UsersEntity> findByEmail(String email);
 
-    // Optional<UsersEntity> findByIdAndStatusTrue(Integer id);
-    boolean existsByEmail(String email);
+        // Optional<UsersEntity> findByIdAndStatusTrue(Integer id);
+        boolean existsByEmail(String email);
 
-    List<UsersEntity> findByStatusTrue();
+        List<UsersEntity> findByStatusTrue();
 
-    Optional<UsersEntity> findByIdAndStatusTrue(int id);
+        Optional<UsersEntity> findByIdAndStatusTrue(int id);
 
-    // boolean existsByIdAndStatusTrue(Integer id);
-    Optional<UsersEntity> findByEmailAndStatusTrue(String email);
+        // boolean existsByIdAndStatusTrue(Integer id);
+        Optional<UsersEntity> findByEmailAndStatusTrue(String email);
 
-    @Query("SELECT u FROM UsersEntity u WHERE (:keyword IS NULL OR :keyword = '' OR " +
-            "LOWER(u.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-            "LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%')))")
-    org.springframework.data.domain.Page<UsersEntity> searchUsers(@Param("keyword") String keyword,
-            org.springframework.data.domain.Pageable pageable);
+        @Query("SELECT u FROM UsersEntity u WHERE (:keyword IS NULL OR :keyword = '' OR " +
+                        "LOWER(u.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+                        "LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+        org.springframework.data.domain.Page<UsersEntity> searchUsers(@Param("keyword") String keyword,
+                        org.springframework.data.domain.Pageable pageable);
+
+        @Query(value = "SELECT DATE(created_at) AS date, COUNT(*) AS userCount " +
+                        "FROM users " +
+                        "WHERE created_at >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) " +
+                        "GROUP BY DATE(created_at) " +
+                        "ORDER BY date ASC", nativeQuery = true)
+        List<java.util.Map<String, Object>> getNewUsersByDay();
 
 }

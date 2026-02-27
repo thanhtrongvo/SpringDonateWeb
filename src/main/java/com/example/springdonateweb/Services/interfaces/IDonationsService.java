@@ -29,7 +29,9 @@ public interface IDonationsService {
     List<Map<String, Object>> getTopDonors(int limit);
 
     // Thêm phương thức getTotalDonationsByProgram vào đây
-    Map<Integer, BigDecimal> getTotalDonationsByProgram();
+    List<Map<String, Object>> getTotalDonationsByProgram();
+
+    List<Map<String, Object>> getTotalDonationsByCategory();
 
     List<Map<String, Object>> getTotalDonationsByPaymentMethod();
 

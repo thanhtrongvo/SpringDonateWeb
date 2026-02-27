@@ -19,12 +19,12 @@ SET FOREIGN_KEY_CHECKS=1;
 -- 1. Users (password: 123456 - BCrypt encoded)
 -- ============================================
 -- roleId: 1 = ADMIN, 2 = USER
-INSERT INTO users (name, email, password, role_id, address, phone_number, status) VALUES
-('Admin SGU', 'admin@sguheart.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 1, '273 An Dương Vương, Quận 5, TP.HCM', '0901234567', true),
-('Nguyễn Văn An', 'an.nguyen@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 2, '123 Nguyễn Trãi, Quận 1, TP.HCM', '0912345678', true),
-('Trần Thị Bình', 'binh.tran@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 2, '456 Lê Lợi, Quận 3, TP.HCM', '0923456789', true),
-('Lê Minh Châu', 'chau.le@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 2, '789 Võ Văn Tần, Quận 10, TP.HCM', '0934567890', true),
-('Phạm Đức Duy', 'duy.pham@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 2, '321 Hai Bà Trưng, Quận 1, TP.HCM', '0945678901', true);
+INSERT INTO users (name, email, password, role_id, address, phone_number, status, created_at) VALUES
+('Admin SGU', 'admin@sguheart.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 1, '273 An Dương Vương, Quận 5, TP.HCM', '0901234567', true, '2026-01-01 08:00:00'),
+('Nguyễn Văn An', 'an.nguyen@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 2, '123 Nguyễn Trãi, Quận 1, TP.HCM', '0912345678', true, '2026-01-05 10:15:00'),
+('Trần Thị Bình', 'binh.tran@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 2, '456 Lê Lợi, Quận 3, TP.HCM', '0923456789', true, '2026-01-10 14:30:00'),
+('Lê Minh Châu', 'chau.le@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 2, '789 Võ Văn Tần, Quận 10, TP.HCM', '0934567890', true, '2026-01-15 09:45:00'),
+('Phạm Đức Duy', 'duy.pham@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 2, '321 Hai Bà Trưng, Quận 1, TP.HCM', '0945678901', true, '2026-02-01 16:20:00');
 
 -- ============================================
 -- 2. Categories

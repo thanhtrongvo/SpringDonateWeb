@@ -54,29 +54,14 @@ public class DonationsService implements IDonationsService {
         return dto;
     }
 
-    public Map<Integer, BigDecimal> getTotalDonationsByProgram() {
-        // Lấy tất cả các khoản quyên góp
-        List<DonationResponseDto> donations = donationsRepository.findAll().stream()
-                .map(donationEntity -> DonationResponseDto.builder()
-                        .donationId(donationEntity.getDonationId())
-                        .userId(donationEntity.getUserId())
-                        .programId(donationEntity.getProgramId())
-                        .amount(donationEntity.getAmount())
-                        .donationDate(donationEntity.getDonationDate())
-                        .donorName(donationEntity.getDonorName())
-                        .build())
-                .collect(Collectors.toList());
+    @Override
+    public List<Map<String, Object>> getTotalDonationsByProgram() {
+        return donationsRepository.getTotalDonationsByProgram();
+    }
 
-        // Nhóm theo programId và tính tổng số tiền quyên góp cho mỗi chương trình
-        Map<Integer, BigDecimal> programTotalDonations = donations.stream()
-                .collect(Collectors.groupingBy(
-                        DonationResponseDto::getProgramId,
-                        Collectors.reducing(BigDecimal.ZERO, DonationResponseDto::getAmount, BigDecimal::add)));
-
-        System.out.println("Total Donations by Program: " + programTotalDonations); // Log để kiểm tra dữ liệu
-        System.out.println("Donations Data: " + donations);
-        System.out.println("Total Donations by Program: " + programTotalDonations);
-        return programTotalDonations;
+    @Override
+    public List<Map<String, Object>> getTotalDonationsByCategory() {
+        return donationsRepository.getTotalDonationsByCategory();
     }
 
     @Override

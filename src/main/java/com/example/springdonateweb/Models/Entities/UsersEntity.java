@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-
 @Getter
 @Setter
 @Builder
@@ -56,6 +55,16 @@ public class UsersEntity implements UserDetails {
     @Column(name = "change_email", length = 100, nullable = true)
     private String changeEmail;
 
+    @Column(name = "created_at", updatable = false)
+    private Timestamp createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) {
+            createdAt = new Timestamp(System.currentTimeMillis());
+        }
+    }
+
     public String getName() {
         return name;
     }
@@ -74,7 +83,6 @@ public class UsersEntity implements UserDetails {
                 '}';
     }
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -88,7 +96,6 @@ public class UsersEntity implements UserDetails {
         authorities.add(new SimpleGrantedAuthority(roleName));
         return authorities;
     }
-
 
     @Override
     public String getUsername() {
@@ -115,9 +122,3 @@ public class UsersEntity implements UserDetails {
         return true;
     }
 }
-
-
-
-
-
-

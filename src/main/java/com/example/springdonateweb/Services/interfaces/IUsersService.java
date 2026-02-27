@@ -54,4 +54,6 @@ public interface IUsersService {
     void changeEmail(int id);
 
     boolean checkOtp(int id, String otp);
+
+    List<java.util.Map<String, Object>> getNewUsersByDay();
 }

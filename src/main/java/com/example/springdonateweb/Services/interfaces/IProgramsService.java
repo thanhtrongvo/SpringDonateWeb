@@ -9,16 +9,25 @@ import java.util.List;
 
 public interface IProgramsService {
     List<ProgramsResponseDto> findAll();
+
     ProgramsResponseDto findById(int id);
+
     ProgramsResponseDto create(ProgramCreateDto programCreateDto);
+
     ProgramsResponseDto update(ProgramUpdateDto programUpdateDto);
+
     void delete(int id);
+
     List<ProgramsResponseDto> findByStatusTrue();
     // Phương thức mới cho phân trang
 
     Page<ProgramsResponseDto> findProgramsByPage(int page, int size);
+
     List<ProgramsResponseDto> findByCategory_CategoryId(int categoryId);
 
     Page<ProgramsResponseDto> findProgramsByPageAndStatusTrue(int page, int size);
+
     ProgramsResponseDto findByProgramIdAndStatusTrue(int id);
+
+    List<java.util.Map<String, Object>> getProgramProgress();
 }
