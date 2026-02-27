@@ -49,10 +49,10 @@ Thống kê toàn bộ dữ liệu hệ thống bằng con số và các dạng 
 
 ![Admin Dashboard Analytics](docs/images/admin_dashboard_v4.webp)
 
-### 5. Quản lý Chiến dịch dành cho Admin (Programs Management)
-Quản trị viên có thể theo dõi danh sách, thay đổi trạng thái và xem tiến độ trực tiếp với giao diện lưới (Data Table) tiện lợi.
+### 5. Quản lý Đa năng dành cho Admin (Management Interfaces)
+Quản trị viên có thể theo dõi danh sách Người Dùng, thay đổi trạng thái Chiến Dịch, quản lý Quyên Góp trực tiếp với giao diện lưới (Data Table) tiện lợi, cho phép Tìm kiếm (Search) và Sắp xếp (Sort) linh hoạt.
 
-![Admin Programs Management](docs/images/admin_programs.png)
+![Admin Management Interfaces](docs/images/admin_management.webp)
 
 ---
 
