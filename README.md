@@ -32,7 +32,7 @@
 ### 1. Giao diện Trang chủ (Client Homepage)
 Giao diện sáng sủa với các nút kêu gọi hành động (Call To Action) rõ ràng, làm nổi bật những chương trình tiêu biểu.
 
-![SGU Heart Homepage](docs/images/homepage.png)
+![SGU Heart Homepage](docs/images/homepage_demo.webp)
 
 ### 2. Chi tiết Chương trình & Tin Tức
 Hiển thị đầy đủ thông tin chương trình, thanh tiến độ quyên góp và các chiến dịch liên quan. Nội dung Blog được trình bày rõ ràng, giàu thông tin.
