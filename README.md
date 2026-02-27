@@ -42,7 +42,7 @@ Hiển thị đầy đủ thông tin, thanh tiến độ quyên góp, và các c
 ### 3. Tích hợp Thanh toán VNPAY (Quyên góp)
 Hỗ trợ thanh toán nhanh chóng, an toàn thông qua cổng VNPAY Sandbox trực tiếp trên nền tảng với đầy đủ mã giao dịch.
 
-![VNPAY Secure Checkout](docs/images/vnpay_checkout.webp)
+![VNPAY Secure Checkout](docs/images/vnpay_checkout_v2.webp)
 
 ### 4. Bảng điều khiển Quản trị (Admin Dashboard)
 Thống kê toàn bộ dữ liệu hệ thống bằng con số và các dạng biểu đồ chuyên nghiệp (Pie Chart, Doughnut Chart, Bar Chart, Line Chart).
